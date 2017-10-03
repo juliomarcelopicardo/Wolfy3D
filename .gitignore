@@ -49,3 +49,5 @@ build/obj/
 *.opendb
 
 *.db
+
+build/chrome_debugger\.json
