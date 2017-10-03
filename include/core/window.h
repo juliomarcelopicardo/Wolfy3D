@@ -31,7 +31,9 @@ class CoreWindow {
 /*******************************************************************************
 ***                               Public methods                             ***
 *******************************************************************************/
+
   void init(const int32 width, const int32 height, const char* name = "SilverLynx Engine");
+  void close();
 
 /*******************************************************************************
 ***                               Attributes                                 ***
@@ -52,6 +54,17 @@ class CoreWindow {
  private:
   CoreWindow(const CoreWindow& copy);
   CoreWindow& operator=(const CoreWindow& copy);
+
+  // This variable is a pointer to a device. In Direct3D, a device is an object that is intended to be a virtual representation of your video adapter.
+  // What this line of code means is that we will create a COM object called ID3D11Device.
+  // When COM makes this object, we will ignore it, and access it only indirectly using this pointer.
+  ID3D11Device *device_;
+  // A device context is similar to a device, but it is responsible for managing the GPU
+  // and the rendering pipeline(the device mostly handles video memory).
+  // This object is used to render graphics and to determine how they will be rendered.
+  ID3D11DeviceContext *device_context_;
+  // the swap chain is the series of buffers which take turns being rendered on.
+  IDXGISwapChain *swap_chain_;
 
 }; /* WINDOW */
 

@@ -21,6 +21,8 @@ int32 main() {
   char textico[256];
   sprintf_s(textico, "Iniciando ventana con dimensiones %d x %d", Window::Width(), Window::Height());
 
+  Window::Close();
+
   OutputDebugString(textico);
   return 0;
 }
