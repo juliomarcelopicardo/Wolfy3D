@@ -34,6 +34,8 @@ class CoreWindow {
 
   void init(const int32 width, const int32 height, const char* name = "SilverLynx Engine");
   void close();
+  void startRenderFrame(float r = 0.0f, float g = 0.2f, float b = 0.4f, float a = 1.0f);
+  void endRenderFrame();
 
 /*******************************************************************************
 ***                               Attributes                                 ***
@@ -65,6 +67,9 @@ class CoreWindow {
   ID3D11DeviceContext *device_context_;
   // the swap chain is the series of buffers which take turns being rendered on.
   IDXGISwapChain *swap_chain_;
+  // Render target used to render our main window.
+  ID3D11RenderTargetView *backbuffer_;
+
 
 }; /* WINDOW */
 
