@@ -1,4 +1,4 @@
-/** Copyright Julio Picardo and Antonio Diaz. SouthBros 2017-18, all rights reserveds.
+/** Copyright Julio Picardo and Antonio Diaz. SouthBros 2017-18, all rights reserved.
 *
 *  @project SilverLynx
 *  @authors Julio Marcelo Picardo <picardope@esat-alumni.com>
@@ -16,10 +16,10 @@
 namespace SLX {
 int32 main() {
   
-  WindowInit(1024, 978);
+  Window::Init(1024, 978);
 
   char textico[256];
-  sprintf_s(textico, "Iniciando ventana con dimensiones %d x %d", WindowWidth(), WindowHeight());
+  sprintf_s(textico, "Iniciando ventana con dimensiones %d x %d", Window::Width(), Window::Height());
 
   OutputDebugString(textico);
   return 0;

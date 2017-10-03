@@ -1,4 +1,4 @@
-/** Copyright Julio Picardo and Antonio Diaz. SouthBros 2017-18, all rights reserveds.
+/** Copyright Julio Picardo and Antonio Diaz. SouthBros 2017-18, all rights reserved.
 *
 *  @project SilverLynx
 *  @authors Julio Marcelo Picardo <picardope@esat-alumni.com>
@@ -6,7 +6,7 @@
 *
 */
 
-#include "silverlynx.h"
+#include "SilverLynx/globals.h"
 #include "core/window.h"
 
 namespace SLX {
@@ -15,14 +15,14 @@ namespace SLX {
 ***                        Constructor and destructor                        ***
 *******************************************************************************/
 
-Window::Window() {
+CoreWindow::CoreWindow() {
   width_ = 800;
   height_ = 600;
 }
 
-Window::~Window() {}
+CoreWindow::~CoreWindow() {}
 
-void Window::init(const int32 width, const int32 height, const char * name) {
+void CoreWindow::init(const int32 width, const int32 height, const char * name) {
 
   width_ = width;
   height_ = height;
@@ -81,7 +81,7 @@ void Window::init(const int32 width, const int32 height, const char * name) {
 /*******************************************************************************
 ***         Se entrara aqui cada vez que el sistema mande un mensaje         ***
 *******************************************************************************/
-LRESULT CALLBACK Window::WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam) {
+LRESULT CALLBACK CoreWindow::WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam) {
   /* TODO: Entender que cojones pasa aqui dentro*/
   PAINTSTRUCT ps;
   HDC hdc;
