@@ -51,42 +51,18 @@ project "SilverLynx"
   includedirs {
     "$(DXSDK_DIR)Include",
     path.join(PROJ_DIR, "include/"),
-  	path.join(PROJ_DIR, "src/"),
-    --[[
-    -- LUA
-    path.join(PROJ_DIR, "deps/lua/include/"),
-    path.join(PROJ_DIR, "deps/lua/src/"),
-    -- IMGUI
-    path.join(PROJ_DIR, "deps/imgui/include/"),
-    path.join(PROJ_DIR, "deps/imgui/src/"),
-    -- GLM
-    path.join(PROJ_DIR, "deps/glm/include/"),
-    path.join(PROJ_DIR, "deps/glm/src/"),
-    ]]
   }
 
   files {
     path.join(PROJ_DIR, "src/*.cc"),
+    path.join(PROJ_DIR, "src/core/*.cc"),
+    path.join(PROJ_DIR, "src/SilverLynx/*.cc"),
     path.join(PROJ_DIR, "include/*.h"),
     path.join(PROJ_DIR, "include/core/*.h"),
-    path.join(PROJ_DIR, "include/utils/*.h"),
-    path.join(PROJ_DIR, "assets/geometries/*.*"),
-    path.join(PROJ_DIR, "assets/materials/*.*"),
-    path.join(PROJ_DIR, "assets/textures/*.*"),
-    --[[
-    -- LUA
-    path.join(PROJ_DIR, "deps/lua/src/*.*"),
-    -- IMGUI
-    path.join(PROJ_DIR, "deps/imgui/src/*.*"),
-    -- GLM
-    path.join(PROJ_DIR, "deps/glm/include/GLM/detail/*.*"),
-    path.join(PROJ_DIR, "deps/glm/include/GLM/gtc/*.*"),
-    path.join(PROJ_DIR, "deps/glm/include/GLM/gtx/*.*"),
-    path.join(PROJ_DIR, "deps/glm/include/GLM/simd/*.*"),
-    path.join(PROJ_DIR, "deps/glm/include/GLM/*.*"),
-    path.join(PROJ_DIR, "deps/glm/src/*.cpp"),
-    ]]
-
+    path.join(PROJ_DIR, "include/SilverLynx/*.h"),
+    path.join(PROJ_DIR, "data/geometries/*.*"),
+    path.join(PROJ_DIR, "data/materials/*.*"),
+    path.join(PROJ_DIR, "data/textures/*.*"),
   }
 
   configuration "Debug"
@@ -117,16 +93,11 @@ function GenerateProject(name)
   includedirs {
     "$(DXSDK_DIR)Include",
     path.join(PROJ_DIR, "include/"),
-    --[[
-    path.join(PROJ_DIR, "build/lua_files/"),
-    path.join(PROJ_DIR, "deps/lua/include/"),
-    path.join(PROJ_DIR, "deps/imgui/include/"),
-    path.join(PROJ_DIR, "deps/glm/include/"),
-    ]]
+    path.join(PROJ_DIR, "src/"),
   }
 
   files {
-    path.join(PROJ_DIR, "assets/"..name.."/*.*"),
+    path.join(PROJ_DIR, "data/"..name.."/*.*"),
     path.join(PROJ_DIR, "examples/"..name.."/*.*"),
   }
 
