@@ -20,6 +20,10 @@ void Init(const int32 width,
   Core::instance().window_.init(width, height, display_name);
 }
 
+void Close() {
+  Core::instance().window_.close();
+}
+
 int32 Height() {
   return Core::instance().window_.height_;
 }
