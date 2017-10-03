@@ -23,6 +23,9 @@ int32 main() {
 
   Window::Close();
 
+  // Al usar un winmain, nos vemos obligados a usar una aplicacion de tipo win32 que no
+  // tiene ventana de consola de comandos, asi que con esta funcion sera como hacer 
+  // un printf pero los mensajes apareceran en la ventana OUTPUT del VISUAL PREMOH.
   OutputDebugString(textico);
   return 0;
 }

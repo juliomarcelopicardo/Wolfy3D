@@ -27,23 +27,27 @@
 #pragma region MAIN
 
 SLX::int32 WINAPI WinMain(HINSTANCE hInstance,
-  HINSTANCE hPrevInstance,
-  LPSTR lpCmdLine,
-  SLX::int32 nCmdShow) {
-
-  // Al usar un winmain, nos vemos obligados a usar una aplicacion de tipo win32 que no
-  // tiene ventana de consola de comandos, asi que con esta funcion sera como hacer 
-  // un printf pero los mensajes apareceran en la ventana OUTPUT del VISUAL PREMOH.
-  OutputDebugString(" Ejecutando el MAIN PRINCIPAL");
+                          HINSTANCE hPrevInstance,
+                          LPSTR lpCmdLine,
+                          SLX::int32 nCmdShow) {
 
   auto& core = SLX::Core::instance();
+
+  // Determinamos el tiempo inicial y abrimos el fichero del debugger.
+  core.start_time_ = std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::steady_clock::now().time_since_epoch()).count();
+  core.debugger_.StartChromeDebuggerFile();
 
   // guardamos los datos de la ventana(instancia) que nos facilita windows. 
   core.window_.instance_handle_ = hInstance;
   core.window_.nCmdShow = nCmdShow;
 
-  //SLX::Core::instance().start_time_ = std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::steady_clock::now().time_since_epoch()).count();
-  return SLX::main();
+  // Ejemplo absurdo para ver cuanto dura el main.
+  core.debugger_.GenerateTextChromeDebuggerFile(SLX::kDebuggerFileState_Start, "Categoria", "Hilo principal");
+  SLX::int32 main_return = SLX::main();
+  core.debugger_.GenerateTextChromeDebuggerFile(SLX::kDebuggerFileState_End, "Categoria", "Hilo principal");
+
+  core.debugger_.CloseChromeDebuggerFile(); // Cerramos el fichero del debugger.
+  return main_return;
 }
 
 #pragma endregion 

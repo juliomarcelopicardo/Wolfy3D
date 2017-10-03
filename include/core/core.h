@@ -16,6 +16,33 @@
 
 namespace SLX {
 
+
+/*******************************************************************************
+***                             Chrome Debugger                              ***
+*******************************************************************************/
+const char kChromeDebuggerJSonPath[] = "./../build/chrome_debugger.json";
+
+const enum DebuggerFileState {
+  kDebuggerFileState_Start = 0,
+  kDebuggerFileState_End = 1,
+};
+
+struct ChromeDebugger {
+  ChromeDebugger();
+
+  void StartChromeDebuggerFile();
+  void CloseChromeDebuggerFile();
+  void GenerateTextChromeDebuggerFile(DebuggerFileState state, 
+                                      const char* category_name,
+                                      const char* thread_name);
+
+  FILE* file;
+  //std::mutex mutex;
+  bool opened;
+};
+
+
+
 /*******************************************************************************
 ********************************************************************************
 ***                                                                          ***
@@ -41,6 +68,8 @@ class Core {
 *******************************************************************************/
 
   CoreWindow window_;
+  ChromeDebugger debugger_;
+
 
   uint64 start_time_;
 
