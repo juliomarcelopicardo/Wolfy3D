@@ -24,6 +24,14 @@ void Close() {
   Core::instance().window_.close();
 }
 
+void StartFrame() {
+  Core::instance().window_.startRenderFrame();
+}
+
+void EndFrame() {
+  Core::instance().window_.endRenderFrame();
+}
+
 int32 Height() {
   return Core::instance().window_.height_;
 }

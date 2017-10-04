@@ -108,13 +108,58 @@ void CoreWindow::init(const int32 width, const int32 height, const char * name) 
                                 &device_,
                                 NULL,
                                 &device_context_);
+
+  /////////////////////////////////////////////
+  // Create D3D Backbuffer (main render target)
+  
+  // An ID3D11Texture2D is an object that stores a flat image.
+  ID3D11Texture2D *pBackBuffer;
+  
+  // get the address of the back buffer
+  // The first parameter is the number of the back buffer to get. We are only using one back buffer on this chain, and it is back buffer #0.
+  // The second parameter is a number identifying the ID3D11Texture2D COM object. __uuidof extracts the info from it.
+  swap_chain_->GetBuffer(0, __uuidof(ID3D11Texture2D), (LPVOID*)&pBackBuffer);
+
+  // use the back buffer address to create the render target
+  device_->CreateRenderTargetView(pBackBuffer, NULL, &backbuffer_);
+  pBackBuffer->Release();
+
+  // set the render target as the back buffer
+  device_context_->OMSetRenderTargets(1, &backbuffer_, NULL);
+
+  /////////////////////////////////////////////
+  // Create D3D Viewport
+
+  D3D11_VIEWPORT viewport;
+  ZeroMemory(&viewport, sizeof(D3D11_VIEWPORT));
+
+  viewport.TopLeftX = 0;
+  viewport.TopLeftY = 0;
+  viewport.Width = width_;
+  viewport.Height = height_;
+
+  // RSSetViewports() is a function that activates viewport structs.
+  // The first parameter is the number of viewports being used, 
+  // and the second parameter is the address of a list of pointers to the viewport structs.
+  device_context_->RSSetViewports(1, &viewport);
 }
 
 void CoreWindow::close() {
   // close and release all existing COM objects
   swap_chain_->Release();
   device_->Release();
+  backbuffer_->Release();
   device_context_->Release();
+}
+
+void CoreWindow::startRenderFrame(float r, float g, float b, float a) {
+  // clear the back buffer to a deep blue
+  device_context_->ClearRenderTargetView(backbuffer_, D3DXCOLOR(r,g,b,a));
+}
+
+void CoreWindow::endRenderFrame() {
+  // switch the back buffer and the front buffer
+  swap_chain_->Present(0, 0);
 }
 
 /*******************************************************************************
