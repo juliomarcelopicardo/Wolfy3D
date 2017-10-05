@@ -40,5 +40,9 @@ int32 Width() {
   return Core::instance().window_.width_;
 }
 
+bool IsOpened() {
+  return Core::instance().window_.is_opened_;
+}
+
 }; /* Window */
 }; /* SLX */
