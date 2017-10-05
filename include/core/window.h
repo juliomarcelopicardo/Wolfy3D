@@ -43,6 +43,7 @@ class CoreWindow {
 
   int32 width_;
   int32 height_;
+  bool is_opened_;
 
   WNDCLASSEX window_class_info_; // Esta es la clase que guarda la informacion de la ventana.
   HINSTANCE instance_handle_; // handle, id o puntero a la instancia actual (de la APP).
@@ -69,6 +70,7 @@ class CoreWindow {
   IDXGISwapChain *swap_chain_;
   // Render target used to render our main window.
   ID3D11RenderTargetView *backbuffer_;
+  ID3D11DepthStencilView *depth_stencil_view;
 
 
 }; /* WINDOW */
