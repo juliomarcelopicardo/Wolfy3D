@@ -1,4 +1,4 @@
-/** Copyright Julio Picardo and Antonio Diaz. SouthBros 2017-18, all rights reserved.
+﻿/** Copyright Julio Picardo and Antonio Diaz. SouthBros 2017-18, all rights reserved.
 *
 *  @project SilverLynx
 *  @authors Julio Marcelo Picardo <picardope@esat-alumni.com>
@@ -9,38 +9,333 @@
 #include "SilverLynx/globals.h"
 #include "core/d3d.h"
 #include "core/core.h"
+#include <string>
 
 namespace SLX {
 
+  
+  /*******************************************************************************
+  ***                        Constructor and destructor                        ***
+  *******************************************************************************/
 
   DirectXFramework::DirectXFramework() {
-
+    device_ = 0;
+    device_context_ = 0;
+    swap_chain_ = 0;
+    render_target_view_ = 0;
+    depth_stencil_view_ = 0;
+    depth_stencil_buffer_ = 0;
+    depth_stencil_state_ = 0;
+    raster_state_ = 0;
   }
 
   DirectXFramework::~DirectXFramework() {
-    // close and release all existing COM objects
-    swap_chain_->Release();
-    device_->Release();
-    backbuffer_->Release();
-    device_context_->Release();
+    shutdown();
   }
 
-  void DirectXFramework::init() {
+  /*******************************************************************************
+  ***                               Public methods                             ***
+  *******************************************************************************/
 
-    /////////////////////////////////////////////////////////////////
-    // D3D Initialization
-    ////////////////////////////////////////////////////////////////
+  bool DirectXFramework::init() {
+
+    unsigned int screen_width = (unsigned int)Core::instance().window_.width_;
+    unsigned int screen_height = (unsigned int)Core::instance().window_.height_;
+
+    // Init Video card adapter and settings
+    if (!initVideoCard()) {
+      MessageBox(NULL, "[D3D] Error initVideoCard.", "Error", MB_OK);
+      return false;
+    }
+
+    // Init Swap chain description
+    if (!initSwapChainDescription()) {
+      MessageBox(NULL, "[D3D] Error initSwapChainDescription.", "Error", MB_OK);
+      return false;
+    }
+
+    if (!initBackBuffer()) {
+      MessageBox(NULL, "[D3D] Error initBackBuffer.", "Error", MB_OK);
+      return false;
+    }
+
+    if (!initDepthBufferDescription()) {
+      MessageBox(NULL, "[D3D] Error initDepthBufferDescription.", "Error", MB_OK);
+      return false;
+    }
+
+    if (!initDepthStencilDescription()) {
+      MessageBox(NULL, "[D3D] Error initDepthStencilDescription.", "Error", MB_OK);
+      return false;
+    }
+
+    if (!initStencilView()) {
+      MessageBox(NULL, "[D3D] Error initStencilView.", "Error", MB_OK);
+      return false;
+    }
+
+    if (!initRaster()) {
+      MessageBox(NULL, "[D3D] Error initRaster.", "Error", MB_OK);
+      return false;
+    }
+
+
+    //////////////////////////////////////////////
+    // Setup Viewport for Rendering
+
+    D3D11_VIEWPORT viewport;
+    ZeroMemory(&viewport, sizeof(D3D11_VIEWPORT));
+
+    viewport.TopLeftX = 0;
+    viewport.TopLeftY = 0;
+    viewport.MinDepth = 0.0f;
+    viewport.MaxDepth = 1.0f;
+    viewport.Width = (float)SLX::Core::instance().window_.width_;
+    viewport.Height = (float)SLX::Core::instance().window_.height_;
+
+    // RSSetViewports() is a function that activates viewport structs.
+    // The first parameter is the number of viewports being used, 
+    // and the second parameter is the address of a list of pointers to the viewport structs.
+    device_context_->RSSetViewports(1, &viewport);
+
+    //////////////////////////////////////////////
+    // Setup The Projection Matrix
+
+    // Setup the projection matrix.
+    float fov = (float)D3DX_PI / 4.0f;
+    float aspect = (float)SLX::Core::instance().window_.width_ / (float)SLX::Core::instance().window_.height_;
+
+    // Create the projection matrix for 3D rendering.
+    D3DXMatrixPerspectiveFovLH(&projection_matrix_, fov, aspect, SCREEN_NEAR, SCREEN_DEPTH);
+
+    // Initialize the world matrix to the identity matrix.
+    D3DXMatrixIdentity(&world_matrix_);
+
+    // Create an orthographic projection matrix for 2D rendering.
+    D3DXMatrixOrthoLH(&ortho_matrix_, (float)SLX::Core::instance().window_.width_,
+      (float)SLX::Core::instance().window_.height_, SCREEN_NEAR, SCREEN_DEPTH);
+
+    return true;
+
+  }
+
+  void DirectXFramework::startRenderFrame(float r, float g, float b, float a) {
+    // clear the back buffer to a deep blue
+    device_context_->ClearRenderTargetView(render_target_view_, D3DXCOLOR(r, g, b, a));
+    device_context_->ClearDepthStencilView(depth_stencil_view_, D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0);
+  }
+
+  void DirectXFramework::endRenderFrame() {
+    // Present the back buffer to the screen since rendering is complete.
+    if (VSYNC_ENABLED) {
+      // Lock to screen refresh rate.
+      swap_chain_->Present(1, 0);
+    } else {
+      // Present as fast as possible.
+      swap_chain_->Present(0, 0);
+    }
+  }
+
+  void DirectXFramework::shutdown() {
+    // close and release all existing COM objects
+    // Before shutting down set to windowed mode or 
+    // when you release the swap chain it will throw an exception.
+    if (swap_chain_) {
+      swap_chain_->SetFullscreenState(false, NULL);
+    }
+
+    if (raster_state_) {
+      raster_state_->Release();
+      raster_state_ = 0;
+    }
+
+    if (depth_stencil_view_) {
+      depth_stencil_view_->Release();
+      depth_stencil_view_ = 0;
+    }
+
+    if (depth_stencil_state_) {
+      depth_stencil_state_->Release();
+      depth_stencil_state_ = 0;
+    }
+
+    if (depth_stencil_buffer_) {
+      depth_stencil_buffer_->Release();
+      depth_stencil_buffer_ = 0;
+    }
+
+    if (render_target_view_) {
+      render_target_view_->Release();
+      render_target_view_ = 0;
+    }
+
+    if (device_context_) {
+      device_context_->Release();
+      device_context_ = 0;
+    }
+
+    if (device_) {
+      device_->Release();
+      device_ = 0;
+    }
+
+    if (swap_chain_) {
+      swap_chain_->Release();
+      swap_chain_ = 0;
+    }
+  }
+
+  /*******************************************************************************
+  ***                              Private methods                             ***
+  *******************************************************************************/
+
+  bool DirectXFramework::initVideoCard() {
+
+    // Variables used for error checking
+    HRESULT result;
+    int error;
+
+    // Video card variables
+    IDXGIFactory* factory;
+    IDXGIAdapter* adapter;
+    IDXGIOutput* adapterOutput;
+    DXGI_MODE_DESC* displayModeList;
+    DXGI_ADAPTER_DESC adapterDesc;
+    unsigned int number_modes;
+
+    unsigned int i, numerator, denominator, stringLength;
+    unsigned int screen_width = (unsigned int)Core::instance().window_.width_;
+    unsigned int screen_height = (unsigned int)Core::instance().window_.height_;
+
+    // Create a DirectX graphics interface factory.
+    result = CreateDXGIFactory(__uuidof(IDXGIFactory), (void**)&factory);
+    if (FAILED(result)) {
+      MessageBox(NULL, "[D3D] Error creating DirectX graphics interface factory.", "Error", MB_OK);
+      return false;
+    }
+
+    // Use the factory to create an adapter for the primary graphics interface (video card).
+    result = factory->EnumAdapters(0, &adapter);
+    if (FAILED(result)) {
+      MessageBox(NULL, "[D3D] Error creating adapter for primary graphics interface.", "Error", MB_OK);
+      return false;
+    }
+
+    // Enumerate the primary adapter output (monitor).
+    result = adapter->EnumOutputs(0, &adapterOutput);
+    if (FAILED(result)) {
+      MessageBox(NULL, "[D3D] Error creating primary adapter output (monitor)", "Error", MB_OK);
+      return false;
+    }
+
+    // Get the number of modes that fit the DXGI_FORMAT_R8G8B8A8_UNORM display format for the adapter output (monitor).
+    result = adapterOutput->GetDisplayModeList(DXGI_FORMAT_R8G8B8A8_UNORM, DXGI_ENUM_MODES_INTERLACED, &number_modes, NULL);
+    if (FAILED(result)) {
+      MessageBox(NULL, "[D3D] Error obtaining number of modes DXGI_FORMAT_R8G8B8A8_UNORM.", "Error", MB_OK);
+      return false;
+    }
+
+    // Create a list to hold all the possible display modes for this monitor/video card combination.
+    displayModeList = new DXGI_MODE_DESC[number_modes];
+    if (!displayModeList) {
+      return false;
+    }
+
+    // Now fill the display mode list structures.
+    result = adapterOutput->GetDisplayModeList(DXGI_FORMAT_R8G8B8A8_UNORM, DXGI_ENUM_MODES_INTERLACED, &number_modes, displayModeList);
+    if (FAILED(result)) {
+      MessageBox(NULL, "[D3D] Error obtaining display mode list structures.", "Error", MB_OK);
+      return false;
+    }
+
+    // Now go through all the display modes and find the one that matches the screen width and height.
+    // When a match is found store the numerator and denominator of the refresh rate for that monitor.
+    for (i = 0; i < number_modes; i++) {
+      if (displayModeList[i].Width == screen_width) {
+        if (displayModeList[i].Height == screen_height) {
+          numerator = displayModeList[i].RefreshRate.Numerator;
+          denominator = displayModeList[i].RefreshRate.Denominator;
+        }
+      }
+    }
+
+    // Get the adapter (video card) description.
+    result = adapter->GetDesc(&adapterDesc);
+    if (FAILED(result)) {
+      MessageBox(NULL, "[D3D] Error obtaining adapter video card description.", "Error", MB_OK);
+      return false;
+    }
+
+    // Store the dedicated video card memory in megabytes.
+    video_card_memory_ = (SLX::int32)(adapterDesc.DedicatedVideoMemory / 1024 / 1024);
+
+    // Convert the name of the video card to a charactver array and store it.
+    error = wcstombs_s(&stringLength, video_card_description_, 128, adapterDesc.Description, 128);
+    if (error != 0) {
+      return false;
+    }
+
+    // Release the display mode list.
+    delete[] displayModeList;
+    displayModeList = 0;
+
+    // Release the adapter output.
+    adapterOutput->Release();
+    adapterOutput = 0;
+
+    // Release the adapter.
+    adapter->Release();
+    adapter = 0;
+
+    // Release the factory.
+    factory->Release();
+    factory = 0;
+
+    return true;
+  }
+
+  bool DirectXFramework::initSwapChainDescription() {
+
+    HRESULT result;
+    unsigned int numerator, denominator;
 
     // create a struct to hold information about the swap chain
     DXGI_SWAP_CHAIN_DESC swap_chain_description;
-
     // clear out the struct for use
     ZeroMemory(&swap_chain_description, sizeof(DXGI_SWAP_CHAIN_DESC));
 
-    
+    // Set to a single back buffer.
+    swap_chain_description.BufferCount = 1;
+
+    // Set the width and height of the back buffer.
+    swap_chain_description.BufferDesc.Width = Core::instance().window_.width_;
+    swap_chain_description.BufferDesc.Height = Core::instance().window_.height_;
+
+    // Set regular 32-bit surface for the back buffer.
+    swap_chain_description.BufferDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM; // use 32-bit color
+
+    // Set the refresh rate of the back buffer.
+    if (VSYNC_ENABLED) {
+      swap_chain_description.BufferDesc.RefreshRate.Numerator = numerator;
+      swap_chain_description.BufferDesc.RefreshRate.Denominator = denominator;
+    } else {
+      swap_chain_description.BufferDesc.RefreshRate.Numerator = 0;
+      swap_chain_description.BufferDesc.RefreshRate.Denominator = 1;
+    }
+
+    // Turn multisampling off.
+    swap_chain_description.SampleDesc.Count = 1;
+    swap_chain_description.SampleDesc.Quality = 0;
+
+    // Set to full screen or windowed mode.
+    if (FULLSCREEN) {
+      swap_chain_description.Windowed = false;
+    } else {
+      swap_chain_description.Windowed = true;
+    }
+
     // fill the swap chain description struct
-    swap_chain_description.BufferCount = 1;                                                      // one back buffer
-    swap_chain_description.BufferDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;                       // use 32-bit color
+    swap_chain_description.BufferCount = 1;                                                      // one back buffer                  
     swap_chain_description.BufferDesc.Width = Core::instance().window_.width_;
     swap_chain_description.BufferDesc.Height = Core::instance().window_.height_;
     swap_chain_description.BufferUsage = DXGI_USAGE_RENDER_TARGET_OUTPUT;                        // how swap chain is to be used
@@ -51,21 +346,33 @@ namespace SLX {
     swap_chain_description.BufferDesc.ScanlineOrdering = DXGI_MODE_SCANLINE_ORDER_UNSPECIFIED;   // Set the scan line ordering to unspecified.
     swap_chain_description.BufferDesc.Scaling = DXGI_MODE_SCALING_UNSPECIFIED;                   // Set the scaling to unspecified.
     swap_chain_description.SwapEffect = DXGI_SWAP_EFFECT_DISCARD;                                // Discard the back buffer contents after presenting.                                                     // Don't set the advanced flags.
-    
-    // create a device, device context and swap chain using the information in the scd struct
-    HRESULT result = D3D11CreateDeviceAndSwapChain(NULL,
-                                                   D3D_DRIVER_TYPE_HARDWARE,
-                                                   NULL,
-                                                   NULL,
-                                                   NULL,
-                                                   NULL,
-                                                   D3D11_SDK_VERSION,
-                                                   &swap_chain_description,
-                                                   &swap_chain_,
-                                                   &device_,
-                                                   NULL,
-                                                   &device_context_);
-  
+
+                                                                                                 // create a device, device context and swap chain using the information in the scd struct
+    result = D3D11CreateDeviceAndSwapChain(NULL,
+                                           D3D_DRIVER_TYPE_HARDWARE,
+                                           NULL,
+                                           NULL,
+                                           NULL,
+                                           NULL,
+                                           D3D11_SDK_VERSION,
+                                           &swap_chain_description,
+                                           &swap_chain_,
+                                           &device_,
+                                           NULL,
+                                           &device_context_);
+
+    if (FAILED(result)) {
+      MessageBox(NULL, "[D3D] Error creating device context and swap chain.", "Error", MB_OK);
+      return false;
+    }
+
+    return true;
+  }
+
+  bool DirectXFramework::initBackBuffer() {
+
+    HRESULT result;
+
     /////////////////////////////////////////////
     // Create D3D Backbuffer (main render target)
 
@@ -75,37 +382,58 @@ namespace SLX {
     // get the address of the back buffer
     // The first parameter is the number of the back buffer to get. We are only using one back buffer on this chain, and it is back buffer #0.
     // The second parameter is a number identifying the ID3D11Texture2D COM object. __uuidof extracts the info from it.
-    swap_chain_->GetBuffer(0, __uuidof(ID3D11Texture2D), (LPVOID*)&pBackBuffer);
+    result = swap_chain_->GetBuffer(0, __uuidof(ID3D11Texture2D), (LPVOID*)&pBackBuffer);
+    if (FAILED(result)) {
+      return false;
+    }
 
     // use the back buffer address to create the render target
-    result = device_->CreateRenderTargetView(pBackBuffer, NULL, &backbuffer_);
-    pBackBuffer->Release();
-
-    // set the render target as the back buffer
-    device_context_->OMSetRenderTargets(1, &backbuffer_, NULL);
-
-    /////////////////////////////////////////////
-    // Create D3D Viewport
-
-    ID3D11Texture2D* stencil_depth_buffer;
-    D3D11_TEXTURE2D_DESC texture_stencil_depth_description;
-    ZeroMemory(&texture_stencil_depth_description, sizeof(D3D11_TEXTURE2D_DESC));
-
-    texture_stencil_depth_description.Width = SLX::Core::instance().window_.width_;
-    texture_stencil_depth_description.Height = SLX::Core::instance().window_.height_;
-    texture_stencil_depth_description.MipLevels = 1;
-    texture_stencil_depth_description.ArraySize = 1;
-    texture_stencil_depth_description.Format = DXGI_FORMAT_D32_FLOAT_S8X24_UINT;
-    texture_stencil_depth_description.SampleDesc.Count = 1;
-    texture_stencil_depth_description.SampleDesc.Quality = 0;
-    texture_stencil_depth_description.Usage = D3D11_USAGE_DEFAULT;
-    texture_stencil_depth_description.BindFlags = D3D11_BIND_DEPTH_STENCIL;
-    texture_stencil_depth_description.CPUAccessFlags = 0;
-    texture_stencil_depth_description.MiscFlags = 0;
-    result = device_->CreateTexture2D(&texture_stencil_depth_description, NULL, &stencil_depth_buffer);
+    result = device_->CreateRenderTargetView(pBackBuffer, NULL, &render_target_view_);
     if (FAILED(result)) {
-      MessageBox(NULL, "Error creating texture", "Error", MB_OK);
+      MessageBox(NULL, "[D3D] Error creating back buffer rendertarget.", "Error", MB_OK);
+      return false;
     }
+
+    pBackBuffer->Release();
+    pBackBuffer = 0;
+
+    return true;
+  }
+
+  bool DirectXFramework::initDepthBufferDescription() {
+
+    HRESULT result;
+    D3D11_TEXTURE2D_DESC depth_buffer_description;
+
+    // Initialize the description of the depth buffer.
+    ZeroMemory(&depth_buffer_description, sizeof(D3D11_TEXTURE2D_DESC));
+
+    // Set up the description of the depth buffer.
+    depth_buffer_description.Width = Core::instance().window_.width_;
+    depth_buffer_description.Height = Core::instance().window_.height_;
+    depth_buffer_description.MipLevels = 1;
+    depth_buffer_description.ArraySize = 1;
+    depth_buffer_description.Format = DXGI_FORMAT_D32_FLOAT_S8X24_UINT;
+    depth_buffer_description.SampleDesc.Count = 1;
+    depth_buffer_description.SampleDesc.Quality = 0;
+    depth_buffer_description.Usage = D3D11_USAGE_DEFAULT;
+    depth_buffer_description.BindFlags = D3D11_BIND_DEPTH_STENCIL;
+    depth_buffer_description.CPUAccessFlags = 0;
+    depth_buffer_description.MiscFlags = 0;
+
+    // Create the texture for the depth buffer using the filled out description.
+    result = device_->CreateTexture2D(&depth_buffer_description, NULL, &depth_stencil_buffer_);
+    if (FAILED(result)) {
+      MessageBox(NULL, "Error creating the texture for the depth buffer.", "Error", MB_OK);
+      return false;
+    }
+
+    return true;
+  }
+
+  bool DirectXFramework::initDepthStencilDescription() {
+
+    HRESULT result;
 
     //////////////////////////////////////////////
     // Setup description of Stencil 
@@ -135,13 +463,22 @@ namespace SLX {
     depth_stencil_description.BackFace.StencilPassOp = D3D11_STENCIL_OP_KEEP;
     depth_stencil_description.BackFace.StencilFunc = D3D11_COMPARISON_ALWAYS;
 
+    // Create the depth stencil state.
+    result = device_->CreateDepthStencilState(&depth_stencil_description, &depth_stencil_state_);
+    if (FAILED(result)) {
+      MessageBox(NULL, "Error creating the stencil state.", "Error", MB_OK);
+      return false;
+    }
 
-    //////////////////////////////////////////////
-    // Setup State of Stencil 
+    // Set the depth stencil state.
+    device_context_->OMSetDepthStencilState(depth_stencil_state_, 1);
 
-    ID3D11DepthStencilState* depth_stencil_state;
-    device_->CreateDepthStencilState(&depth_stencil_description, &depth_stencil_state);
-    device_context_->OMSetDepthStencilState(depth_stencil_state, 1);
+    return true;
+  }
+
+  bool DirectXFramework::initStencilView() {
+
+    HRESULT result;
 
     //////////////////////////////////////////////
     // Setup Depth Stencil View
@@ -153,15 +490,26 @@ namespace SLX {
     depth_stencil_view_desc.ViewDimension = D3D11_DSV_DIMENSION_TEXTURE2D;
     depth_stencil_view_desc.Texture2D.MipSlice = 0;
 
-    device_->CreateDepthStencilView(stencil_depth_buffer, &depth_stencil_view_desc, &depth_stencil_view);
+    result = device_->CreateDepthStencilView(depth_stencil_buffer_, &depth_stencil_view_desc, &depth_stencil_view_);
     
     // Bind the render target view and depth stencil buffer to the output render pipeline.
-    device_context_->OMSetRenderTargets(1, &backbuffer_, depth_stencil_view);
+    device_context_->OMSetRenderTargets(1, &render_target_view_, depth_stencil_view_);
+
+    if (FAILED(result)) {
+      MessageBox(NULL, "Error creating the stencil view description.", "Error", MB_OK);
+      return false;
+    }
+
+    return true;
+  }
+
+  bool DirectXFramework::initRaster() {
 
     //////////////////////////////////////////////
     // Setup the raster description which will determine
     // how and what polygons will be drawn.
 
+    HRESULT result;
     ID3D11RasterizerState* rasterizer;
     D3D11_RASTERIZER_DESC rasterizer_desc;
     ZeroMemory(&rasterizer_desc, sizeof(D3D11_RASTERIZER_DESC));
@@ -180,66 +528,11 @@ namespace SLX {
 
     result = device_->CreateRasterizerState(&rasterizer_desc, &rasterizer);
     if (FAILED(result)) {
-      MessageBox(NULL, "Rasterizer not created", "Warning", MB_OK);
+      MessageBox(NULL, "Rasterizer not created.", "Warning", MB_OK);
+      return false;
     }
 
-    // Now set the rasterizer state.
-    device_context_->RSSetState(rasterizer);
-
-    //////////////////////////////////////////////
-    // Setup Viewport for Rendering
-
-    D3D11_VIEWPORT viewport;
-    ZeroMemory(&viewport, sizeof(D3D11_VIEWPORT));
-
-    viewport.TopLeftX = 0;
-    viewport.TopLeftY = 0;
-    viewport.MinDepth = 0.0f;
-    viewport.MaxDepth = 1.0f;
-    viewport.Width = SLX::Core::instance().window_.width_;
-    viewport.Height = SLX::Core::instance().window_.height_;
-
-    // RSSetViewports() is a function that activates viewport structs.
-    // The first parameter is the number of viewports being used, 
-    // and the second parameter is the address of a list of pointers to the viewport structs.
-    device_context_->RSSetViewports(1, &viewport);
-
-    //////////////////////////////////////////////
-    // Setup The Projection Matrix
-
-    // Setup the projection matrix.
-    float fov = (float)D3DX_PI / 4.0f;
-    float aspect = (float)SLX::Core::instance().window_.width_ / (float)SLX::Core::instance().window_.height_;
-
-    // Create the projection matrix for 3D rendering.
-    D3DXMatrixPerspectiveFovLH(&projection_matrix_, fov, aspect, SCREEN_NEAR, SCREEN_DEPTH);
-
-    // Initialize the world matrix to the identity matrix.
-    D3DXMatrixIdentity(&world_matrix_);
-
-    // Create an orthographic projection matrix for 2D rendering.
-    D3DXMatrixOrthoLH(&ortho_matrix_, (float)SLX::Core::instance().window_.width_,
-      (float)SLX::Core::instance().window_.height_, SCREEN_NEAR, SCREEN_DEPTH);
-
-  }
-
-  void DirectXFramework::startRenderFrame(float r, float g, float b, float a) {
-    // clear the back buffer to a deep blue
-    device_context_->ClearRenderTargetView(backbuffer_, D3DXCOLOR(r, g, b, a));
-    device_context_->ClearDepthStencilView(depth_stencil_view, D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0);
-  }
-
-  void DirectXFramework::endRenderFrame() {
-    // switch the back buffer and the front buffer
-    swap_chain_->Present(0, 0);
-  }
-
-  void DirectXFramework::shutdown() {
-    // close and release all existing COM objects
-    swap_chain_->Release();
-    device_->Release();
-    backbuffer_->Release();
-    device_context_->Release();
+    return true;
   }
 
 }; /* SLX */
