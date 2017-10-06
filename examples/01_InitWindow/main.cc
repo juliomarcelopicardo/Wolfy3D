@@ -11,6 +11,8 @@
 #include <Windows.h>
 #include <string>
 #include "silverlynx.h"
+#include "core/geometry.h"
+#include "core/material.h"
 
 
 namespace SLX {
@@ -18,12 +20,18 @@ int32 main() {
   
   Window::Init(1024, 978);
 
+  CoreGeometry geo;
+  CoreMaterial mat;
+
+  geo.init();
+  mat.init();
+
   char textico[256];
   sprintf_s(textico, "Iniciando ventana con dimensiones %d x %d", Window::Width(), Window::Height());
 
   while (Window::IsOpened()) {
     Window::StartFrame();
-
+    geo.render();
     // Render objects, etc.
 
     Window::EndFrame();
