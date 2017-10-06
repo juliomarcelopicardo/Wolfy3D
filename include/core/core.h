@@ -11,6 +11,7 @@
 
 #include "silverlynx.h"
 #include "window.h"
+#include "d3d.h"
 #include <stdio.h>
 
 
@@ -68,6 +69,7 @@ class Core {
 *******************************************************************************/
 
   CoreWindow window_;
+  DirectXFramework d3d_;
   ChromeDebugger debugger_;
 
 
