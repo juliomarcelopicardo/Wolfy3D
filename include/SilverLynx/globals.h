@@ -38,6 +38,7 @@ const int32 ejemplo = 69;
 const float SCREEN_DEPTH = 1000.0f;
 const float SCREEN_NEAR = 0.1f;
 const bool VSYNC_ENABLED = false;
+const bool FULLSCREEN = false;
 
 /*******************************************************************************
 ***                                 ENUMS                                    ***
