@@ -6,12 +6,10 @@
 *
 */
 
-#ifndef __SILVERLYNX_H__
-#define __SILVERLYNX_H__ 1
 
-#include "SilverLynx/globals.h"
-#include "SilverLynx/window.h"
-#include "SilverLynx/input.h"
-#include "SilverLynx/time.h"
+namespace SLX {
+namespace Input {
 
-#endif
+
+}; /* Input */
+}; /* SLX */

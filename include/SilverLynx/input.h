@@ -6,12 +6,18 @@
 *
 */
 
-#ifndef __SILVERLYNX_H__
-#define __SILVERLYNX_H__ 1
+#ifndef __SILVERLYNX_INPUT_H__
+#define __SILVERLYNX_INPUT_H__ 1
 
 #include "SilverLynx/globals.h"
-#include "SilverLynx/window.h"
-#include "SilverLynx/input.h"
-#include "SilverLynx/time.h"
+
+namespace SLX {
+namespace Input {
+
+double MousePosX();
+double MousePosY();
+
+}; /* Input */
+}; /* SLX */
 
 #endif

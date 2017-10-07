@@ -1,4 +1,4 @@
-/** Copyright Julio Picardo and Antonio Diaz. SouthBros 2017-18, all rights reserveds.
+/** Copyright Julio Picardo and Antonio Diaz. SouthBros 2017-18, all rights reserved.
 *
 *  @project SilverLynx
 *  @authors Julio Marcelo Picardo <picardope@esat-alumni.com>
@@ -18,20 +18,25 @@
 
 namespace SLX {
 
-class Window {
+class CoreWindow {
 
  public:
 
 /*******************************************************************************
 ***                        Constructor and destructor                        ***
 *******************************************************************************/
-  Window();
-  ~Window();
+  CoreWindow();
+  ~CoreWindow();
 
 /*******************************************************************************
 ***                               Public methods                             ***
 *******************************************************************************/
+
   void init(const int32 width, const int32 height, const char* name = "SilverLynx Engine");
+  void setupWindowClassInfo();
+  void setupWindowHandle(const char* window_display_name);
+  void updateMessages();
+  
 
 /*******************************************************************************
 ***                               Attributes                                 ***
@@ -39,6 +44,7 @@ class Window {
 
   int32 width_;
   int32 height_;
+  bool is_opened_;
 
   WNDCLASSEX window_class_info_; // Esta es la clase que guarda la informacion de la ventana.
   HINSTANCE instance_handle_; // handle, id o puntero a la instancia actual (de la APP).
@@ -50,8 +56,9 @@ class Window {
 ***                         Private Copy Constructor                         ***
 *******************************************************************************/
  private:
-  Window(const Window& copy);
-  Window& operator=(const Window& copy);
+  CoreWindow(const CoreWindow& copy);
+  CoreWindow& operator=(const CoreWindow& copy);
+
 
 }; /* WINDOW */
 
