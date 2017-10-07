@@ -13,6 +13,8 @@
 #include "window.h"
 #include "d3d.h"
 #include <stdio.h>
+#include "core/material.h"
+#include "core/geometry.h"
 
 
 namespace SLX {

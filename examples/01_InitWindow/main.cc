@@ -31,7 +31,7 @@ int32 main() {
 
   while (Window::IsOpened()) {
     Window::StartFrame();
-    geo.render();
+    geo.render(&mat);
     // Render objects, etc.
 
     Window::EndFrame();

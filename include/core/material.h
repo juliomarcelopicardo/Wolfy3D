@@ -11,7 +11,6 @@
 
 #include "silverlynx.h"
 #include "D3DX11.h"
-#include "D3dx9math.h"
 #include <vector>
 
 namespace SLX {
