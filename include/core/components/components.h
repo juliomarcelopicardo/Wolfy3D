@@ -10,7 +10,7 @@
 #define __COMPONENTS_H__ 1
 
 #include "silverlynx.h"
-#include "components/transform.h"
+#include "core/components/transform.h"
 
 namespace SLX {
 
