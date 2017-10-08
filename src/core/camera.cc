@@ -62,4 +62,35 @@ void CoreCamera::setupView() {
   DirectX::XMStoreFloat4x4(&view_matrix_, view);
 }
 
+
+/*******************************************************************************
+***                            Setters & Getters                             ***
+*******************************************************************************/
+
+void CoreCamera::set_position(const float x, const float y, const float z) {
+  position_ = { x, y, z };
+  setupView();
+}
+
+void CoreCamera::set_target(const float x, const float y, const float z) {
+  target_ = { x, y, z };
+  setupView();
+}
+
+DirectX::XMVECTOR CoreCamera::position() {
+  return DirectX::XMLoadFloat3(&position_);
+}
+
+DirectX::XMVECTOR CoreCamera::target() {
+  return DirectX::XMLoadFloat3(&target_);
+}
+
+DirectX::XMMATRIX CoreCamera::projectionMatrix() {
+  return DirectX::XMLoadFloat4x4(&projection_matrix_);
+}
+
+DirectX::XMMATRIX CoreCamera::viewMatrix() {
+  return DirectX::XMLoadFloat4x4(&view_matrix_);
+}
+
 }; /* SLX */
