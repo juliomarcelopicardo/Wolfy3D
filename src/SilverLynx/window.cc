@@ -25,9 +25,12 @@ void Close() {
   Core::instance().d3d_.shutdown();
 }
 
-void StartFrame() {
-  Core::instance().window_.updateMessages();
+bool StartFrame() {
+  if (!Core::instance().window_.updateMessages()) {
+    return false;
+  }
   Core::instance().d3d_.startRenderFrame();
+  return true;
 }
 
 void EndFrame() {

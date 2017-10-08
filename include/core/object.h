@@ -6,20 +6,17 @@
 *
 */
 
-#ifndef __GEOMETRY_H__
-#define __GEOMETRY_H__ 1
+#ifndef __OBJECT_H__
+#define __OBJECT_H__ 1
 
 #include "silverlynx.h"
-#include "DirectXMath.h"
-#include "D3D11.h"
+#include "components/components.h"
 #include <vector>
 
 namespace SLX {
 
-  class CoreMaterial;
+class Object {
 
-class CoreGeometry {
-  
  public:
 
 /*******************************************************************************
@@ -27,46 +24,24 @@ class CoreGeometry {
 *******************************************************************************/
 
   /// Default class constructor.
-  CoreGeometry();
+  Object();
 
   /// Default class destructor.
-  ~CoreGeometry();
+  ~Object();
 
 /*******************************************************************************
 ***                               Public methods                             ***
 *******************************************************************************/
 
-  ///--------------------------------------------------------------------------
-  /// @fn   bool init();
-  ///
-  /// @brief  Initializes the Geometry.
-  /// @return true if successfully initialized, false otherwise.
-  ///--------------------------------------------------------------------------
-  bool init();
+  void init();
+  void update();
 
-  ///--------------------------------------------------------------------------
-  /// @fn   render();
-  ///
-  /// @brief  renders the Geometry.
-  ///--------------------------------------------------------------------------
-  void render(const CoreMaterial* material);
 
 /*******************************************************************************
 ***                               Attributes                                 ***
 *******************************************************************************/
 
-  /// Verices info.
-  std::vector<DirectX::XMFLOAT3> vertex_position_;
-  /// Vertices buffer.
-  ID3D11Buffer* vertex_buffer_;
 
-  /// Vertices indices.
-  std::vector<uint32> vertex_index_;
-  /// Indices buffer.
-  ID3D11Buffer* vertex_index_buffer_;
-
-  /// Matrices buffer
-  ID3D11Buffer* matrix_buffer_;
 
 /*******************************************************************************
 ***                           Private                                        ***
@@ -85,7 +60,7 @@ class CoreGeometry {
 
 
 
-}; /* CoreGeometry */
+}; /* Object */
 
 }; /* SLX */
 

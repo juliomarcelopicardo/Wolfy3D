@@ -7,14 +7,12 @@
 */
 
 #include "SilverLynx/globals.h"
-#include "core/geometry.h"
+#include "core/components/transform.h"
 #include "core/core.h"
 #include "core/window.h"
 
 namespace SLX {
 
   
-
-
 
 }; /* SLX */

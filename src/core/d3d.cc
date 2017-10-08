@@ -79,7 +79,6 @@ namespace SLX {
       return false;
     }
 
-
     //////////////////////////////////////////////
     // Setup Viewport for Rendering
 
@@ -134,6 +133,8 @@ namespace SLX {
       // Present as fast as possible.
       swap_chain_->Present(0, 0);
     }
+
+
   }
 
   void DirectXFramework::shutdown() {
@@ -408,6 +409,9 @@ namespace SLX {
 
     pBackBuffer->Release();
     pBackBuffer = 0;
+
+    // set the render target as the back buffer
+    device_context_->OMSetRenderTargets(1, &render_target_view_, NULL);
 
     return true;
   }
