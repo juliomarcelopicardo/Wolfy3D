@@ -35,25 +35,82 @@ namespace SLX {
 
   bool CoreGeometry::init() {
 
+
+
     // QUAD de ejemplo
-    int32 num_vertices = 4;
-    int32 num_indices = 6;
+    int32 num_vertices = 24;
+    int32 num_indices = 36;
 
     // Rellenamos info de vertices e indices.
     vertex_position_.resize(num_vertices);
     vertex_index_.resize(num_indices);
 
-    vertex_position_[0] = { -1.0f, -1.0f, 0.0f };
-    vertex_position_[1] = { 1.0f, -1.0f, 0.0f };
-    vertex_position_[2] = { -1.0f, 1.0f, 0.0f };
-    vertex_position_[3] = { 1.0f, 1.0f, 0.0f };
+    vertex_position_[0] = { -0.5f, 0.5f, -0.5f };
+    vertex_position_[1] = { 0.5f, 0.5f, -0.5f };
+    vertex_position_[2] = { -0.5f, -0.5f, -0.5f };
+    vertex_position_[3] = { 0.5f, -0.5f, -0.5f };
+
+    vertex_position_[4] = { -0.5f, 0.5f, 0.5f };
+    vertex_position_[5] = { 0.5f, 0.5f, 0.5f };
+    vertex_position_[6] = { -0.5f, -0.5f, 0.5f };
+    vertex_position_[7] = { 0.5f, -0.5f, 0.5f };
+
+    vertex_position_[8] = { -0.5f, 0.5f, -0.5f };
+    vertex_position_[9] = { -0.5f, -0.5f, -0.5f };
+    vertex_position_[10] = { -0.5f, 0.5f, 0.5f };
+    vertex_position_[11] = { -0.5f, -0.5f, 0.5f };
+
+    vertex_position_[12] = { 0.5f, 0.5f, -0.5f };
+    vertex_position_[13] = { 0.5f, -0.5f, -0.5f };
+    vertex_position_[14] = { 0.5f, 0.5f, 0.5f };
+    vertex_position_[15] = { 0.5f, -0.5f, 0.5f };
+
+    vertex_position_[16] = { -0.5f, -0.5f, -0.5f };
+    vertex_position_[17] = { -0.5f, -0.5f, 0.5f };
+    vertex_position_[18] = { 0.5f, -0.5f, -0.5f };
+    vertex_position_[19] = { 0.5f, -0.5f, 0.5f };
+
+    vertex_position_[20] = { -0.5f, 0.5f, 0.5f };
+    vertex_position_[21] = { -0.5f, 0.5f, -0.5f };
+    vertex_position_[22] = { 0.5f, 0.5f, 0.5f };
+    vertex_position_[23] = { 0.5f, 0.5f, -0.5f };
 
     vertex_index_[0] = 0;
-    vertex_index_[1] = 1;
-    vertex_index_[2] = 2;
-    vertex_index_[3] = 2;
-    vertex_index_[4] = 1;
-    vertex_index_[5] = 3;
+    vertex_index_[1] = 2;
+    vertex_index_[2] = 3;
+    vertex_index_[3] = 0;
+    vertex_index_[4] = 3;
+    vertex_index_[5] = 1;
+    vertex_index_[6] = 5;
+    vertex_index_[7] = 7;
+    vertex_index_[8] = 6;
+    vertex_index_[9] = 5;
+    vertex_index_[10] = 6;
+    vertex_index_[11] = 4;
+    vertex_index_[12] = 10;
+    vertex_index_[13] = 11;
+    vertex_index_[14] = 9;
+    vertex_index_[15] = 9;
+    vertex_index_[16] = 8;
+    vertex_index_[17] = 10;
+    vertex_index_[18] = 12;
+    vertex_index_[19] = 13;
+    vertex_index_[20] = 15;
+    vertex_index_[21] = 12;
+    vertex_index_[22] = 15;
+    vertex_index_[23] = 14;
+    vertex_index_[24] = 16;
+    vertex_index_[25] = 17;
+    vertex_index_[26] = 19;
+    vertex_index_[27] = 16;
+    vertex_index_[28] = 19;
+    vertex_index_[29] = 18;
+    vertex_index_[30] = 20;
+    vertex_index_[31] = 21;
+    vertex_index_[32] = 23;
+    vertex_index_[33] = 20;
+    vertex_index_[34] = 23;
+    vertex_index_[35] = 22;
 
     // Creamos un buffer para subir la informacion de los vertices a la grafica.
     D3D11_BUFFER_DESC vertex_description;
@@ -98,7 +155,7 @@ namespace SLX {
     ZeroMemory(&matrix_description, sizeof(D3D11_BUFFER_DESC));
 
     matrix_description.Usage = D3D11_USAGE_DYNAMIC;
-    matrix_description.ByteWidth = sizeof(DirectX::XMMATRIX) * 3;
+    matrix_description.ByteWidth = sizeof(DirectX::XMFLOAT4X4) * 3;
     matrix_description.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
     matrix_description.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
 
@@ -117,9 +174,11 @@ namespace SLX {
     auto& window = Core::instance().window_;
     auto* device_context = Core::instance().d3d_.deviceContext();
 
-    DirectX::XMVECTOR camera_position = DirectX::XMVectorSet(0.0, 5.0, -10.0, 1.0f);
-    DirectX::XMVECTOR camera_look_at = DirectX::XMVectorSet(0.0f, 0.0f, 0.0f, 1.0f);
-    DirectX::XMVECTOR camera_up = DirectX::XMVectorSet(0.0f, 1.0f, 0.0f, 1.0f);
+    DirectX::XMFLOAT3 camera_position(0.0, 5.0, -10.0);
+    DirectX::XMFLOAT3 camera_look_at(0.0f, 0.0f, 0.0f);
+    DirectX::XMFLOAT3 camera_up(0.0f, 1.0f, 0.0f);
+
+    
     DirectX::XMMATRIX model, view, projection;
 
     DirectX::XMMATRIX scale, rotation, translation, result;
@@ -127,30 +186,35 @@ namespace SLX {
     scale = DirectX::XMMatrixScaling(5.0f, 5.0f, 5.0f);
     rotation = DirectX::XMMatrixRotationRollPitchYaw(0.0f, 0.2f, 0.0f);
     translation = DirectX::XMMatrixTranslation(1.0f, 0.0f, 0.0f);
-    model = scale * rotation * translation;
+    result = scale * rotation * translation;
+    model = DirectX::XMMatrixTranspose(result);
 
-    //model = DirectX::XMMatrixTranspose(result);
+    result = DirectX::XMMatrixLookAtLH(DirectX::XMLoadFloat3(&camera_position),
+                                       DirectX::XMLoadFloat3(&camera_look_at),
+                                       DirectX::XMLoadFloat3(&camera_up));
 
-    view = DirectX::XMMatrixLookAtLH(camera_position, camera_look_at, camera_up);
+    view = DirectX::XMMatrixTranspose(result);
 
-    //view = DirectX::XMMatrixTranspose(result);
-
-    projection = DirectX::XMMatrixPerspectiveFovLH(DirectX::XMConvertToRadians(45.0f), 
+    result = DirectX::XMMatrixPerspectiveFovLH(DirectX::XMConvertToRadians(45.0f), 
                                                window.width_ / window.height_, 
                                                0.01f, 
                                                100.0f);
 
-    //projection = DirectX::XMMatrixTranspose(result);
+    projection = DirectX::XMMatrixTranspose(result);
 
+    DirectX::XMFLOAT4X4 mvp[3];
+    DirectX::XMStoreFloat4x4(mvp, DirectX::XMMatrixIdentity());
+    DirectX::XMStoreFloat4x4(&mvp[1], view);
+    DirectX::XMStoreFloat4x4(&mvp[2], projection);
 
     D3D11_MAPPED_SUBRESOURCE new_matrices;
     ZeroMemory(&new_matrices, sizeof(D3D11_MAPPED_SUBRESOURCE));
     device_context->Map(matrix_buffer_, 0, D3D11_MAP_WRITE_DISCARD, 0, &new_matrices);
-    memcpy(new_matrices.pData, &model, sizeof(DirectX::XMMATRIX) * 3);
+    memcpy(new_matrices.pData, mvp, sizeof(DirectX::XMFLOAT4X4) * 3);
     device_context->Unmap(matrix_buffer_, 0);
 
-    unsigned int stride = sizeof(DirectX::XMFLOAT3);
-    unsigned int offset = 0;
+    uint32 stride = sizeof(DirectX::XMFLOAT3);
+    uint32 offset = 0;
 
     device_context->IASetVertexBuffers(0, 1, &vertex_buffer_, &stride, &offset);
     device_context->IASetIndexBuffer(vertex_index_buffer_, DXGI_FORMAT_R32_UINT, 0);

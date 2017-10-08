@@ -54,7 +54,7 @@ class DirectXFramework {
   /// @param  b blue color
   /// @param  a alpha color
   ///--------------------------------------------------------------------------
-  void startRenderFrame(float r = 0.0f, float g = 0.3f, float b = 0.0f, float a = 1.0f);
+  void startRenderFrame(float r = 0.6f, float g = 0.6f, float b = 0.6f, float a = 1.0f);
 
   ///--------------------------------------------------------------------------
   /// @fn   endRenderFrame();
