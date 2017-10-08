@@ -24,7 +24,7 @@ void InitMaximized(const bool full_screen_mode = false,
                          const char* title = "Silverlynx Window");
 void InitByLua(const char* lua_path);
 bool IsOpened();
-void StartFrame();
+bool StartFrame();
 void EndFrame();
 void Clear(float red = 0.0f, float green = 0.3f, float blue = 0.0f);
 void Destroy();

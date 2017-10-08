@@ -6,14 +6,12 @@
 *
 */
 
-  
-
-#include <Windows.h>
+ 
 #include <string>
 #include "silverlynx.h"
 #include "core/geometry.h"
 #include "core/material.h"
-
+#include "core/core.h"
 
 namespace SLX {
 int32 main() {
@@ -29,9 +27,10 @@ int32 main() {
   char textico[256];
   sprintf_s(textico, "Iniciando ventana con dimensiones %d x %d", Window::Width(), Window::Height());
 
-  while (Window::IsOpened()) {
-    Window::StartFrame();
-    // Render objects, etc.
+
+  // enter the main loop:
+  while (Window::StartFrame() && Window::IsOpened()) {
+
     geo.render(&mat);
 
     Window::EndFrame();
