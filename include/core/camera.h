@@ -49,10 +49,10 @@ class CoreCamera {
   /// @param z_near Distance from the viewer to the near clipping plane(always positive).
   /// @param z_far Distance from the viewer to the far clipping plane(always positive).
   ///--------------------------------------------------------------------------
-  void setupPerspective(const double field_of_view,
-                        const double aspect_ratio,
-                        const double z_near,
-                        const double z_far);
+  void setupPerspective(const float field_of_view,
+                        const float aspect_ratio,
+                        const float z_near,
+                        const float z_far);
 
 
   ///--------------------------------------------------------------------------
@@ -70,12 +70,12 @@ class CoreCamera {
   /// @param near, far Distances to the nearer and farther depth clipping planes.
   ///  These values are negative if the plane is to be behind the viewer.
   ///--------------------------------------------------------------------------
-  void setupOrthographic(const double left,
-                         const double right,
-                         const double bottom,
-                         const double top,
-                         const double z_near,
-                         const double z_far);
+  void setupOrthographic(const float left,
+                         const float right,
+                         const float bottom,
+                         const float top,
+                         const float z_near,
+                         const float z_far);
 
   ///--------------------------------------------------------------------------
   /// @fn   setupView()
