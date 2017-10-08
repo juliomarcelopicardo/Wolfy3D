@@ -8,6 +8,7 @@
 
 #include "SilverLynx/globals.h"
 #include "core/camera.h"
+#include "core/core.h"
 
 namespace SLX {
 
@@ -16,7 +17,12 @@ namespace SLX {
 *******************************************************************************/
 
   /// Default class constructor.
-  CoreCamera::CoreCamera() {}
+  CoreCamera::CoreCamera() {
+    position_ = { 0.0f, 5.0f, -10.0f };
+    target_ = { 0.0f, 0.0f, 0.0f };
+    setupPerspective(DirectX::XMConvertToRadians(45.0f), 1024.0f / 978.0f, 0.1f, 100.0f);
+    setupView();
+  }
 
   /// Default class destructor.
   CoreCamera::~CoreCamera() {}
