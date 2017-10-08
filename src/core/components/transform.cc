@@ -35,7 +35,7 @@ namespace SLX {
   }
 
 
-  void TransformComponent::set_position(float x, float y, float z) {
+  void TransformComponent::set_position(const float32 x, const float32 y, const float32 z) {
     position_ = DirectX::XMFLOAT3(x, y, z);
   }
 
@@ -43,7 +43,7 @@ namespace SLX {
     return rotation_;
   }
 
-  void TransformComponent::set_rotation(float x, float y, float z) {
+  void TransformComponent::set_rotation(const float32 x, const float32 y, const float32 z) {
     rotation_ = DirectX::XMFLOAT3(x, y, z);
   }
 
@@ -51,7 +51,7 @@ namespace SLX {
     return scale_;
   }
 
-  void TransformComponent::set_scale(float x, float y, float z) {
+  void TransformComponent::set_scale(const float32 x, const float32 y, const float32 z) {
     scale_ = DirectX::XMFLOAT3(x, y, z);
   }
 

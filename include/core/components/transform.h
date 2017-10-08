@@ -48,7 +48,7 @@ namespace SLX {
     ///
     /// @brief  Transform position setter.
     ///--------------------------------------------------------------------------
-    void set_position(float x, float y, float z);
+    void set_position(const float32 x, const float32 y, const float32 z);
 
     ///--------------------------------------------------------------------------
     /// @fn   DirectX::XMFLOAT3& rotation() const;
@@ -63,7 +63,7 @@ namespace SLX {
     ///
     /// @brief  Transform rotation setter.
     ///--------------------------------------------------------------------------
-    void set_rotation(float x, float y, float z);
+    void set_rotation(const float32 x, const float32 y, const float32 z);
 
     ///--------------------------------------------------------------------------
     /// @fn   DirectX::XMFLOAT3 scale() const;
@@ -78,7 +78,7 @@ namespace SLX {
     ///
     /// @brief  Transform scale setter.
     ///--------------------------------------------------------------------------
-    void set_scale(float x, float y, float z);
+    void set_scale(const float32 x, const float32 y, const float32 z);
 
     ///--------------------------------------------------------------------------
     /// @fn   DirectX::XMFLOAT4X4 local_matrix().
