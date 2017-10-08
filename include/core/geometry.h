@@ -10,14 +10,16 @@
 #define __GEOMETRY_H__ 1
 
 #include "silverlynx.h"
-#include "D3DX11.h"
-#include "D3dx9math.h"
+#include "DirectXMath.h"
+#include "D3D11.h"
 #include <vector>
 
 namespace SLX {
 
-class CoreGeometry {
+  class CoreMaterial;
 
+class CoreGeometry {
+  
  public:
 
 /*******************************************************************************
@@ -47,14 +49,14 @@ class CoreGeometry {
   ///
   /// @brief  renders the Geometry.
   ///--------------------------------------------------------------------------
-  void render();
+  void render(const CoreMaterial* material);
 
 /*******************************************************************************
 ***                               Attributes                                 ***
 *******************************************************************************/
 
   /// Verices info.
-  std::vector<D3DXVECTOR3> vertex_position_;
+  std::vector<DirectX::XMFLOAT3> vertex_position_;
   /// Vertices buffer.
   ID3D11Buffer* vertex_buffer_;
 
@@ -63,12 +65,9 @@ class CoreGeometry {
   /// Indices buffer.
   ID3D11Buffer* vertex_index_buffer_;
 
-  /*
-    TODO: Sacar todo esto a una clase base	
-  */
-  D3DXMATRIX model;
-	D3DXMATRIX view;
-	D3DXMATRIX projection;
+  /// Matrices buffer
+  ID3D11Buffer* matrix_buffer_;
+
 /*******************************************************************************
 ***                           Private                                        ***
 *******************************************************************************/
