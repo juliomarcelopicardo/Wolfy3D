@@ -13,6 +13,7 @@
 #include "window.h"
 #include "d3d.h"
 #include <stdio.h>
+#include "core/camera.h"
 #include "core/material.h"
 #include "core/geometry.h"
 
@@ -77,8 +78,7 @@ class Core {
 
   uint64 start_time_;
 
-
-
+  CoreCamera cam_;
 
 
 /*******************************************************************************
