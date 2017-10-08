@@ -7,8 +7,10 @@
 */
 
 #include "SilverLynx/globals.h"
+#include "SilverLynx/time.h"
 #include "core/geometry.h"
 #include "core/core.h"
+#include "core/camera.h"
 #include "core/window.h"
 
 namespace SLX {
@@ -173,39 +175,24 @@ namespace SLX {
 
     auto& window = Core::instance().window_;
     auto* device_context = Core::instance().d3d_.deviceContext();
-
-    DirectX::XMFLOAT3 camera_position(0.0, 5.0, -10.0);
-    DirectX::XMFLOAT3 camera_look_at(0.0f, 0.0f, 0.0f);
-    DirectX::XMFLOAT3 camera_up(0.0f, 1.0f, 0.0f);
-
+    auto& cam = Core::instance().cam_;
     
+    // --------------------- TEMPORAL HASTA QUE HAYA NODOS U OBJECTS.
     DirectX::XMMATRIX model, view, projection;
-
     DirectX::XMMATRIX scale, rotation, translation, result;
 
-    scale = DirectX::XMMatrixScaling(5.0f, 5.0f, 5.0f);
-    rotation = DirectX::XMMatrixRotationRollPitchYaw(0.0f, 0.2f, 0.0f);
-    translation = DirectX::XMMatrixTranslation(1.0f, 0.0f, 0.0f);
+    float sin_value = DirectX::XMScalarSin((float)Time() * 0.001f);
+    scale = DirectX::XMMatrixScaling(sin_value, sin_value, sin_value);
+    rotation = DirectX::XMMatrixRotationRollPitchYaw(0.0f, (float)Time() * 0.01f, 0.0f);
+    translation = DirectX::XMMatrixTranslation(sin_value, 0.0f, 0.0f);
     result = scale * rotation * translation;
     model = DirectX::XMMatrixTranspose(result);
-
-    result = DirectX::XMMatrixLookAtLH(DirectX::XMLoadFloat3(&camera_position),
-                                       DirectX::XMLoadFloat3(&camera_look_at),
-                                       DirectX::XMLoadFloat3(&camera_up));
-
-    view = DirectX::XMMatrixTranspose(result);
-
-    result = DirectX::XMMatrixPerspectiveFovLH(DirectX::XMConvertToRadians(45.0f), 
-                                               window.width_ / window.height_, 
-                                               0.01f, 
-                                               100.0f);
-
-    projection = DirectX::XMMatrixTranspose(result);
+    // ------------------------
 
     DirectX::XMFLOAT4X4 mvp[3];
-    DirectX::XMStoreFloat4x4(mvp, DirectX::XMMatrixIdentity());
-    DirectX::XMStoreFloat4x4(&mvp[1], view);
-    DirectX::XMStoreFloat4x4(&mvp[2], projection);
+    DirectX::XMStoreFloat4x4(mvp, model); 
+    DirectX::XMStoreFloat4x4(&mvp[1], DirectX::XMMatrixTranspose(Core::instance().cam_.viewMatrix()));
+    DirectX::XMStoreFloat4x4(&mvp[2], DirectX::XMMatrixTranspose(Core::instance().cam_.projectionMatrix()));
 
     D3D11_MAPPED_SUBRESOURCE new_matrices;
     ZeroMemory(&new_matrices, sizeof(D3D11_MAPPED_SUBRESOURCE));
