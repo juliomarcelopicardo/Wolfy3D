@@ -139,7 +139,33 @@ class CoreCamera {
   ///--------------------------------------------------------------------------
   DirectX::XMVECTOR target();
 
+  ///--------------------------------------------------------------------------
+  /// @fn   DirectX::XMVECTOR up()
+  ///
+  /// @brief Vector Up getter.
+  ///
+  /// @return a XMVECTOR with the global up vector of the camera
+  ///--------------------------------------------------------------------------
+  DirectX::XMVECTOR up();
 
+  ///--------------------------------------------------------------------------
+  /// @fn   DirectX::XMVECTOR forward()
+  ///
+  /// @brief Vector Forward getter.
+  ///
+  /// @return a XMVECTOR with the global forward vector of the camera
+  ///--------------------------------------------------------------------------
+  DirectX::XMVECTOR forward();
+
+  ///--------------------------------------------------------------------------
+  /// @fn   DirectX::XMVECTOR right()
+  ///
+  /// @brief Vector Right getter.
+  ///
+  /// @return a XMVECTOR with the global right vector of the camera
+  ///--------------------------------------------------------------------------
+  DirectX::XMVECTOR right();
+  
   ///--------------------------------------------------------------------------
   /// @fn   DirectX::XMMATRIX projectionMatrix()
   ///

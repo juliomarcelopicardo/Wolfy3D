@@ -52,18 +52,14 @@ void CoreCamera::setupOrthographic(const float left, const float right,
 
 
 void CoreCamera::setupView() {
-
   DirectX::XMVECTOR position = DirectX::XMLoadFloat3(&position_);
   DirectX::XMVECTOR target = DirectX::XMLoadFloat3(&target_);
-
   DirectX::XMVECTOR inverse_dir = DirectX::XMVector3Normalize(DirectX::XMVectorSubtract(position, target));
   DirectX::XMVECTOR up = DirectX::XMVectorSet(0.0f, 1.0f, 0.0f, 0.0f);
   DirectX::XMVECTOR right = DirectX::XMVector3Normalize(DirectX::XMVector3Cross(up, inverse_dir));
   up = DirectX::XMVector3Cross(inverse_dir, right);
 
-  DirectX::XMMATRIX view = DirectX::XMMatrixLookAtLH(DirectX::XMLoadFloat3(&position_),
-                                                      DirectX::XMLoadFloat3(&target_),
-                                                      up);
+  DirectX::XMMATRIX view = DirectX::XMMatrixLookAtLH(position, target, up);
 
   DirectX::XMStoreFloat4x4(&view_matrix_, view);
 }
@@ -89,6 +85,30 @@ DirectX::XMVECTOR CoreCamera::position() {
 
 DirectX::XMVECTOR CoreCamera::target() {
   return DirectX::XMLoadFloat3(&target_);
+}
+
+DirectX::XMVECTOR CoreCamera::up() {
+  DirectX::XMVECTOR position = DirectX::XMLoadFloat3(&position_);
+  DirectX::XMVECTOR target = DirectX::XMLoadFloat3(&target_);
+  DirectX::XMVECTOR inverse_dir = DirectX::XMVector3Normalize(DirectX::XMVectorSubtract(position, target));
+  DirectX::XMVECTOR up = DirectX::XMVectorSet(0.0f, 1.0f, 0.0f, 0.0f);
+  DirectX::XMVECTOR right = DirectX::XMVector3Normalize(DirectX::XMVector3Cross(up, inverse_dir));
+  up = DirectX::XMVector3Cross(inverse_dir, right);
+  return up;
+}
+
+DirectX::XMVECTOR CoreCamera::forward() {
+  DirectX::XMVECTOR position = DirectX::XMLoadFloat3(&position_);
+  DirectX::XMVECTOR target = DirectX::XMLoadFloat3(&target_);
+  return DirectX::XMVector3Normalize(DirectX::XMVectorSubtract(target, position));
+}
+
+DirectX::XMVECTOR CoreCamera::right() {
+  DirectX::XMVECTOR position = DirectX::XMLoadFloat3(&position_);
+  DirectX::XMVECTOR target = DirectX::XMLoadFloat3(&target_);
+  DirectX::XMVECTOR inverse_dir = DirectX::XMVector3Normalize(DirectX::XMVectorSubtract(position, target));
+  DirectX::XMVECTOR up = DirectX::XMVectorSet(0.0f, 1.0f, 0.0f, 0.0f);
+  return DirectX::XMVector3Normalize(DirectX::XMVector3Cross(up, inverse_dir));
 }
 
 DirectX::XMMATRIX CoreCamera::projectionMatrix() {
