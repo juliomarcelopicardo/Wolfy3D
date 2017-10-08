@@ -10,11 +10,7 @@
 #define __WINDOW_H__ 1
 
 #include "silverlynx.h"
-#include <d3d11.h>
-#include <d3dx11.h>
-#include <d3dx10.h>
 #include <Windows.h>
-
 
 namespace SLX {
 
@@ -22,42 +18,85 @@ class CoreWindow {
 
  public:
 
-/*******************************************************************************
-***                        Constructor and destructor                        ***
-*******************************************************************************/
+  /*******************************************************************************
+  ***                        Public Attributes                                 ***
+  *******************************************************************************/
+
+  /// Window width.
+  int32 width_;
+  /// Window height.
+  int32 height_;
+  /// Specifies how the application windows should be display( to O.S.)
+  int32 nCmdShow;
+  /// Whether the window is opened or not.
+  bool is_opened_;
+  /// MSG struct to hold and peek new system messages.
+  MSG message_;
+  /// Struct holding all the window related information.
+  WNDCLASSEX window_class_info_;
+  /// Handle to the current application instance.
+  HINSTANCE instance_handle_;
+  /// Handle to the current window.
+  HWND window_handle_;
+
+  /// Window callback for handling events.
+  static LRESULT CALLBACK WndProc(HWND, UINT, WPARAM, LPARAM);
+
+  /*******************************************************************************
+  ***                        Constructor and destructor                        ***
+  *******************************************************************************/
+
+  /// Default class constructor.
   CoreWindow();
+  
+  /// Default class destructor.
   ~CoreWindow();
 
-/*******************************************************************************
-***                               Public methods                             ***
-*******************************************************************************/
+  /*******************************************************************************
+  ***                               Public methods                             ***
+  *******************************************************************************/
 
+  ///--------------------------------------------------------------------------
+  /// @fn   init(const int32 width, const int32 height, const char* name = "SilverLynx Engine");
+  ///
+  /// @brief  Initializes the window with the specified width, height and window name.
+  /// @param  width width of the window.
+  /// @param  height height of the window.
+  /// @param  name name of the window.
+  ///--------------------------------------------------------------------------
   void init(const int32 width, const int32 height, const char* name = "SilverLynx Engine");
-  void setupWindowClassInfo();
-  void setupWindowHandle(const char* window_display_name);
-  void updateMessages();
-  
 
-/*******************************************************************************
-***                               Attributes                                 ***
-*******************************************************************************/
+  ///--------------------------------------------------------------------------
+  /// @fn   bool updateMessages();
+  ///
+  /// @brief  Updates and processes windows system messages on window.
+  /// @return true if the window should keep updating, false if user closed it.
+  ///--------------------------------------------------------------------------
+  bool updateMessages();
 
-  int32 width_;
-  int32 height_;
-  bool is_opened_;
+  /*******************************************************************************
+  ***                               Private                                    ***
+  *******************************************************************************/
 
-  WNDCLASSEX window_class_info_; // Esta es la clase que guarda la informacion de la ventana.
-  HINSTANCE instance_handle_; // handle, id o puntero a la instancia actual (de la APP).
-  HWND window_handle_; // Handle en esta ocasion de la ventana.
-  int32 nCmdShow; // por defecto SW_SHOWNORMAL que no se lo que es.
-  static LRESULT CALLBACK WndProc(HWND, UINT, WPARAM, LPARAM); // callback de eventos.
-
-/*******************************************************************************
-***                         Private Copy Constructor                         ***
-*******************************************************************************/
  private:
-  CoreWindow(const CoreWindow& copy);
-  CoreWindow& operator=(const CoreWindow& copy);
+
+   /*******************************************************************************
+   ***                              Private methods                             ***
+   *******************************************************************************/
+
+   ///--------------------------------------------------------------------------
+   /// @fn  void setupWindowClassInfo();
+   ///
+   /// @brief  setups the window info such as window class name, mouse icons...
+   ///--------------------------------------------------------------------------
+   void setupWindowClassInfo();
+
+   ///--------------------------------------------------------------------------
+   /// @fn  setupWindowHandle(const char* window_display_name);
+   ///
+   /// @brief  creates the window handle with it's flag and initial config.
+   ///--------------------------------------------------------------------------
+   void setupWindowHandle(const char* window_display_name);
 
 
 }; /* WINDOW */

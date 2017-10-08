@@ -24,6 +24,10 @@ namespace SLX {
 
   CoreWindow::~CoreWindow() {}
 
+  /*******************************************************************************
+  ***                               Public methods                             ***
+  *******************************************************************************/
+
   void CoreWindow::init(const int32 width, const int32 height, const char * name) {
 
     instance_handle_ = GetModuleHandle(NULL);
@@ -36,97 +40,105 @@ namespace SLX {
     is_opened_ = true;
   }
 
+  bool CoreWindow::updateMessages() {
+
+    // We use PeekMessage because getmessage is blocking until receives a message, and PeekMessage is not blocking.
+    if (PeekMessage(&message_, NULL, 0, 0, PM_REMOVE)) {
+      TranslateMessage(&message_); //In case we got a keyboard message, translate it in a right way.
+      DispatchMessage(&message_); // Dispatch the message to the WinProc function.
+    }
+ 
+    if (message_.message == WM_QUIT)
+      return false;
+
+    return true;
+  }
+
+  /*******************************************************************************
+  ***                              Private methods                             ***
+  *******************************************************************************/
+
   void CoreWindow::setupWindowClassInfo() {
 
-    //-------------- Rellenamos la info ventana (wndclassex). -----------------//
-    window_class_info_.cbSize = sizeof(WNDCLASSEX); // le asignamos un tamaño a la estructura.
-    window_class_info_.hInstance = instance_handle_; // Le decimos el handle de la instancia.
-    window_class_info_.lpfnWndProc = WndProc; // Definimos la funcion callback para recibir eventos.
+    //-------------- Fill window info (wndclassex). -----------------//
+    window_class_info_.cbSize = sizeof(WNDCLASSEX); // assign struct size
+    window_class_info_.hInstance = instance_handle_; // assign instance handle
+    window_class_info_.lpfnWndProc = WndProc; // assign the callback function to receive events
 
-                                              // estilos posibles de ventana (TODO: Mirar los que hay), estos son para que se redimensione.
+                                              // Window style flags
     window_class_info_.style = CS_HREDRAW | CS_VREDRAW;
 
-    //Si necesitaramos mas memoria para la instancia, se indicaria en estos dos valores.
+    // If we need more memory for the instance we would assign it here
     window_class_info_.cbClsExtra = 0;
     window_class_info_.cbWndExtra = 0;
 
-    // punteros o handles al cursor, icono, recursos de menu... por defecto no se usan.
+    // Window cursor handles, icon, menu...
     window_class_info_.hIcon = LoadIcon(NULL, IDI_WINLOGO);
     window_class_info_.hIconSm = window_class_info_.hIcon;
     window_class_info_.hCursor = LoadCursor(NULL, IDC_HAND);
     window_class_info_.hbrBackground = NULL;
     window_class_info_.lpszMenuName = NULL;
 
-    // Le asignamos un nombre a la clase, para luego relacionarla con la instancia.
+    // Assign window class name to be redirected to the instance
     window_class_info_.lpszClassName = "SilverLynxWindowClass";
 
-    //-------------- Registramos la clase en el sistema. -----------------//
+    //-------------- Register class in the system -----------------//
     if (!RegisterClassEx(&window_class_info_)) {
-      OutputDebugString(" ERROR: No se ha podido registrar la clase de la ventana.");
+      OutputDebugString(" ERROR: Window could not be registered.");
     }
   }
 
   void CoreWindow::setupWindowHandle(const char* window_display_name) {
 
-  //-------------- Preparamos el quad -----------------//
-  RECT quad = { 0, 0, width_, height_ };
-  AdjustWindowRect(&quad, WS_OVERLAPPEDWINDOW, FALSE);
+    //-------------- Prepare quad -----------------//
+    RECT quad = { 0, 0, width_, height_ };
+    AdjustWindowRect(&quad, WS_OVERLAPPEDWINDOW, FALSE);
 
-  //-------------- Creamos la ventanica -----------------//
-  window_handle_ = CreateWindow(window_class_info_.lpszClassName, // nombre de la clase.
-    window_display_name, // Nombre mostrado en la barra de titulo.
-    WS_OVERLAPPEDWINDOW, //  (WS_OVERLAPPED | WS_CAPTION | WS_SYSMENU | WS_THICKFRAME | WS_MINIMIZEBOX | WS_MAXIMIZEBOX)
-    CW_USEDEFAULT, // Posicion X
-    CW_USEDEFAULT, // Posicion Y
-    quad.right - quad.left, // Ancho
-    quad.bottom - quad.top, // Alto
-    NULL, // Handle a una ventana padre.
-    NULL, // Handle a un menu.
-    instance_handle_, // Handle a la handle de la instancia de la app.
-    NULL); // Opcional, no se lo que hace.
+    //-------------- Create window -----------------//
+    window_handle_ = CreateWindow(window_class_info_.lpszClassName, // class name
+                                  window_display_name, // title name
+                                  WS_OVERLAPPEDWINDOW, //  (WS_OVERLAPPED | WS_CAPTION | WS_SYSMENU | WS_THICKFRAME | WS_MINIMIZEBOX | WS_MAXIMIZEBOX)
+                                  CW_USEDEFAULT, // X Position
+                                  CW_USEDEFAULT, // Y Position
+                                  quad.right - quad.left, // Width
+                                  quad.bottom - quad.top, // Height
+                                  NULL, // Parent window handle
+                                  NULL, // Menu handle
+                                  instance_handle_, // Instance application handle
+                                  NULL);
 
-  if (!window_handle_) {
-    OutputDebugString(" ERROR: No se ha podido crear la ventana.");
+    if (!window_handle_) {
+      OutputDebugString(" ERROR: Window couldn't be created.");
+    }
+
+    ShowWindow(window_handle_, nCmdShow);
+    SetForegroundWindow(window_handle_);
+    SetFocus(window_handle_);
   }
 
-  ShowWindow(window_handle_, nCmdShow);
-  SetForegroundWindow(window_handle_);
-  SetFocus(window_handle_);
-}
+  /*******************************************************************************
+  ***                              Window callback                             ***
+  *******************************************************************************/
 
-void CoreWindow::updateMessages() {
-  MSG message;
-  // We use PeekMessage because getmessage is blocking until receives a message, and PeekMessage is not blocking.
-  if (PeekMessage(&message, NULL, 0, 0, PM_REMOVE)) {
-    TranslateMessage(&message); //In case we got a keyboard message, translate it in a right way.
-    DispatchMessage(&message); // Dispatch the message to the WinProc function.
-  }
- 
-}
-
-/*******************************************************************************
-***         Se entrara aqui cada vez que el sistema mande un mensaje         ***
-*******************************************************************************/
-LRESULT CALLBACK CoreWindow::WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam) {
-  /* TODO: Entender que cojones pasa aqui dentro*/
-  PAINTSTRUCT ps;
-  HDC hdc;
+  LRESULT CALLBACK CoreWindow::WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam) {
+    PAINTSTRUCT ps;
+    HDC hdc;
   
-  switch (message) {
+    switch (message) {
     
-  case WM_PAINT:
-    hdc = BeginPaint(hWnd, &ps);
-    EndPaint(hWnd, &ps);
-    break;
+    case WM_PAINT:
+      hdc = BeginPaint(hWnd, &ps);
+      EndPaint(hWnd, &ps);
+      break;
 
-  case WM_DESTROY:
-    PostQuitMessage(0);
-    SLX::Core::instance().window_.is_opened_ = false;
-    break;
+    case WM_DESTROY:
+      PostQuitMessage(0);
+      SLX::Core::instance().window_.is_opened_ = false;
+      break;
 
 
+    }
+    return DefWindowProc(hWnd, message, wParam, lParam);
   }
-  return DefWindowProc(hWnd, message, wParam, lParam);
-}
 
 }; /* SLX */
