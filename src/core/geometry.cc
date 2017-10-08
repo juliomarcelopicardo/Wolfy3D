@@ -171,9 +171,8 @@ namespace SLX {
     return true;
   }
 
-  void CoreGeometry::render(const CoreMaterial* material) {
+  void CoreGeometry::render(const CoreMaterial* material, int32 test) {
 
-    auto& window = Core::instance().window_;
     auto* device_context = Core::instance().d3d_.deviceContext();
     auto& cam = Core::instance().cam_;
     
@@ -184,7 +183,13 @@ namespace SLX {
     float sin_value = DirectX::XMScalarSin((float)Time() * 0.001f);
     scale = DirectX::XMMatrixScaling(sin_value, sin_value, sin_value);
     rotation = DirectX::XMMatrixRotationRollPitchYaw(0.0f, (float)Time() * 0.01f, 0.0f);
+    if (test == 1) {
+      translation = DirectX::XMMatrixTranslation(0.0f, sin_value, 0.0f);
+    }
+    else {
+
     translation = DirectX::XMMatrixTranslation(sin_value, 0.0f, 0.0f);
+    }
     result = scale * rotation * translation;
     model = DirectX::XMMatrixTranspose(result);
     // ------------------------

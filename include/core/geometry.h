@@ -49,7 +49,7 @@ class CoreGeometry {
   ///
   /// @brief  renders the Geometry.
   ///--------------------------------------------------------------------------
-  void render(const CoreMaterial* material);
+  void render(const CoreMaterial* material, int32 test);
 
 /*******************************************************************************
 ***                               Attributes                                 ***

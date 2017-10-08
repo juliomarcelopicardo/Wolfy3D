@@ -18,10 +18,11 @@ int32 main() {
   
   Window::Init(1024, 978);
 
-  CoreGeometry geo;
+  CoreGeometry geo, geo2;
   CoreMaterial mat;
 
   geo.init();
+  geo2.init();
   mat.init();
 
   char textico[256];
@@ -31,7 +32,8 @@ int32 main() {
   // enter the main loop:
   while (Window::StartFrame() && Window::IsOpened()) {
 
-    geo.render(&mat);
+    geo.render(&mat, 0);
+    geo.render(&mat, 1);
 
     Window::EndFrame();
   }
