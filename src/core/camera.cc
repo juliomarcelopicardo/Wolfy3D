@@ -16,7 +16,7 @@ namespace SLX {
 ***                        Constructor and destructor                        ***
 *******************************************************************************/
 
-/// Default class constructor.
+  /// Default class constructor.
 CoreCamera::CoreCamera() {
   position_ = { 0.0f, 5.0f, -10.0f };
   target_ = { 0.0f, 0.0f, 0.0f };
@@ -64,6 +64,15 @@ void CoreCamera::setupView() {
   DirectX::XMStoreFloat4x4(&view_matrix_, view);
 }
 
+/*******************************************************************************
+***                          Public methods                                  ***
+*******************************************************************************/
+
+void CoreCamera::render(Object* obj) {
+  if (obj->render3D_) {
+    obj->render3D_->render(obj->transform_);
+  }
+}
 
 /*******************************************************************************
 ***                            Setters & Getters                             ***

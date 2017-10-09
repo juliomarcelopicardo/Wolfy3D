@@ -14,6 +14,8 @@
 #include <vector>
 
 namespace SLX {
+  
+  class Object;
 
 class CoreCamera {
 
@@ -94,6 +96,18 @@ class CoreCamera {
   /// @param z_far Distance from the viewer to the far clipping plane (always positive).
   ///--------------------------------------------------------------------------
   void setupView();
+
+  /*******************************************************************************
+  ***                          Public methods                                  ***
+  *******************************************************************************/
+
+  ///--------------------------------------------------------------------------
+  /// @fn   void render(Object* obj);
+  ///
+  /// @brief Renders an object into the window.
+  /// @param obj object to be rendered.
+  ///--------------------------------------------------------------------------
+  void render(Object* obj);
 
   /*******************************************************************************
   ***                            Setters & Getters                             ***
