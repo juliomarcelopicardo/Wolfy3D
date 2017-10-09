@@ -58,6 +58,12 @@ namespace SLX {
   ***                                 ENUMS                                    ***
   *******************************************************************************/
 
+  enum class ComponentType {
+    None,
+    Transform,
+    Render3D
+  };
+
   enum EjemploEnum {
     kEjemploEnum_A = 0,
     kEjemploEnum_B = 1
