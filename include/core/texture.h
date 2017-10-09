@@ -33,18 +33,26 @@ class CoreTexture {
 *******************************************************************************/
 
   ///--------------------------------------------------------------------------
-  /// @fn   bool init();
+  /// @fn   bool load(const char* texture_path);
   ///
-  /// @brief  Initializes the Texture.
+  /// @brief  Loads a texture froma a file.
   /// @return true if successfully initialized, false otherwise.
   ///--------------------------------------------------------------------------
-  bool init();
+  bool load(const char* texture_path);
+
+  ///--------------------------------------------------------------------------
+  /// @fn   use(const uint32 texture_channel);
+  ///
+  /// @brief  Use the existing texture.
+  /// @param texture_channel sets the channel number of the texture in the shader.
+  ///--------------------------------------------------------------------------
+  void use(const uint32 texture_channel = 1);
 
 /*******************************************************************************
 ***                               Attributes                                 ***
 *******************************************************************************/
-
-
+  /// Texture handle.
+  ID3D11ShaderResourceView* texture_handle_;
 
 /*******************************************************************************
 ***                           Private                                        ***
