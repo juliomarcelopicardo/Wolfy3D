@@ -26,9 +26,10 @@ namespace SLX {
 
   CoreGeometry::~CoreGeometry() {
     vertex_index_.clear();
-    vertex_position_.clear();
+    vertex_data_.clear();
     if (vertex_buffer_) { vertex_buffer_->Release(); }
     if (vertex_index_buffer_) { vertex_index_buffer_->Release(); }
+    if (matrix_buffer_) { matrix_buffer_->Release(); }
   }
 
   /*******************************************************************************
@@ -37,45 +38,44 @@ namespace SLX {
 
   bool CoreGeometry::init() {
 
-
-
-    // QUAD de ejemplo
+    // CUBO de ejemplo
     int32 num_vertices = 24;
     int32 num_indices = 36;
 
     // Rellenamos info de vertices e indices.
-    vertex_position_.resize(num_vertices);
+    vertex_data_.resize(num_vertices);
     vertex_index_.resize(num_indices);
 
-    vertex_position_[0] = { -0.5f, 0.5f, -0.5f };
-    vertex_position_[1] = { 0.5f, 0.5f, -0.5f };
-    vertex_position_[2] = { -0.5f, -0.5f, -0.5f };
-    vertex_position_[3] = { 0.5f, -0.5f, -0.5f };
+                        // Position,             Normal                 UV              COLOR
+    vertex_data_[0] = { { -0.5f, 0.5f, -0.5f }, { 1.0f, 0.0f, 0.0f }, { 0.0f, 0.0f }, { 1.0f, 1.0f, 1.0f, 1.0f } };
+    vertex_data_[1] = { { 0.5f, 0.5f, -0.5f }, { 1.0f, 0.0f, 0.0f }, { 1.0f, 0.0f }, { 1.0f, 1.0f, 1.0f, 1.0f } };
+    vertex_data_[2] = { { -0.5f, -0.5f, -0.5f }, { 1.0f, 0.0f, 0.0f }, { 0.0f, 1.0f }, { 1.0f, 1.0f, 1.0f, 1.0f } };
+    vertex_data_[3] = { { 0.5f, -0.5f, -0.5f }, { 1.0f, 0.0f, 0.0f }, { 1.0f, 1.0f }, { 1.0f, 1.0f, 1.0f, 1.0f } };
 
-    vertex_position_[4] = { -0.5f, 0.5f, 0.5f };
-    vertex_position_[5] = { 0.5f, 0.5f, 0.5f };
-    vertex_position_[6] = { -0.5f, -0.5f, 0.5f };
-    vertex_position_[7] = { 0.5f, -0.5f, 0.5f };
+    vertex_data_[4] = { { -0.5f, 0.5f, 0.5f }, { 1.0f, 0.0f, 0.0f }, { 1.0f, 0.0f }, { 1.0f, 1.0f, 1.0f, 1.0f } };
+    vertex_data_[5] = { { 0.5f, 0.5f, 0.5f }, { 1.0f, 0.0f, 0.0f }, { 0.0f, 0.0f }, { 1.0f, 1.0f, 1.0f, 1.0f } };
+    vertex_data_[6] = { { -0.5f, -0.5f, 0.5f }, { 1.0f, 0.0f, 0.0f }, { 1.0f, 1.0f }, { 1.0f, 1.0f, 1.0f, 1.0f } };
+    vertex_data_[7] = { { 0.5f, -0.5f, 0.5f }, { 1.0f, 0.0f, 0.0f }, { 0.0f, 1.0f }, { 1.0f, 1.0f, 1.0f, 1.0f } };
 
-    vertex_position_[8] = { -0.5f, 0.5f, -0.5f };
-    vertex_position_[9] = { -0.5f, -0.5f, -0.5f };
-    vertex_position_[10] = { -0.5f, 0.5f, 0.5f };
-    vertex_position_[11] = { -0.5f, -0.5f, 0.5f };
+    vertex_data_[8] = { { -0.5f, 0.5f, -0.5f }, { 1.0f, 0.0f, 0.0f }, { 1.0f, 0.0f }, { 1.0f, 1.0f, 1.0f, 1.0f } };
+    vertex_data_[9] = { { -0.5f, -0.5f, -0.5f }, { 1.0f, 0.0f, 0.0f }, { 1.0f, 1.0f }, { 1.0f, 1.0f, 1.0f, 1.0f } };
+    vertex_data_[10] = { { -0.5f, 0.5f, 0.5f }, { 1.0f, 0.0f, 0.0f }, { 0.0f, 0.0f }, { 1.0f, 1.0f, 1.0f, 1.0f } };
+    vertex_data_[11] = { { -0.5f, -0.5f, 0.5f }, { 1.0f, 0.0f, 0.0f }, { 0.0f, 1.0f }, { 1.0f, 1.0f, 1.0f, 1.0f } };
 
-    vertex_position_[12] = { 0.5f, 0.5f, -0.5f };
-    vertex_position_[13] = { 0.5f, -0.5f, -0.5f };
-    vertex_position_[14] = { 0.5f, 0.5f, 0.5f };
-    vertex_position_[15] = { 0.5f, -0.5f, 0.5f };
+    vertex_data_[12] = { { 0.5f, 0.5f, -0.5f }, { 1.0f, 0.0f, 0.0f }, { 0.0f, 0.0f }, { 1.0f, 1.0f, 1.0f, 1.0f } };
+    vertex_data_[13] = { { 0.5f, -0.5f, -0.5f }, { 1.0f, 0.0f, 0.0f }, { 0.0f, 1.0f }, { 1.0f, 1.0f, 1.0f, 1.0f } };
+    vertex_data_[14] = { { 0.5f, 0.5f, 0.5f }, { 1.0f, 0.0f, 0.0f }, { 1.0f, 0.0f }, { 1.0f, 1.0f, 1.0f, 1.0f } };
+    vertex_data_[15] = { { 0.5f, -0.5f, 0.5f }, { 1.0f, 0.0f, 0.0f }, { 1.0f, 1.0f }, { 1.0f, 1.0f, 1.0f, 1.0f } };
 
-    vertex_position_[16] = { -0.5f, -0.5f, -0.5f };
-    vertex_position_[17] = { -0.5f, -0.5f, 0.5f };
-    vertex_position_[18] = { 0.5f, -0.5f, -0.5f };
-    vertex_position_[19] = { 0.5f, -0.5f, 0.5f };
+    vertex_data_[16] = { { -0.5f, -0.5f, -0.5f }, { 1.0f, 0.0f, 0.0f }, { 0.0f, 0.0f }, { 1.0f, 1.0f, 1.0f, 1.0f } };
+    vertex_data_[17] = { { -0.5f, -0.5f, 0.5f }, { 1.0f, 0.0f, 0.0f }, { 0.0f, 1.0f }, { 1.0f, 1.0f, 1.0f, 1.0f } };
+    vertex_data_[18] = { { 0.5f, -0.5f, -0.5f }, { 1.0f, 0.0f, 0.0f }, { 1.0f, 0.0f }, { 1.0f, 1.0f, 1.0f, 1.0f } };
+    vertex_data_[19] = { { 0.5f, -0.5f, 0.5f }, { 1.0f, 0.0f, 0.0f }, { 1.0f, 1.0f }, { 1.0f, 1.0f, 1.0f, 1.0f } };
 
-    vertex_position_[20] = { -0.5f, 0.5f, 0.5f };
-    vertex_position_[21] = { -0.5f, 0.5f, -0.5f };
-    vertex_position_[22] = { 0.5f, 0.5f, 0.5f };
-    vertex_position_[23] = { 0.5f, 0.5f, -0.5f };
+    vertex_data_[20] = { { -0.5f, 0.5f, 0.5f }, { 1.0f, 0.0f, 0.0f }, { 0.0f, 0.0f }, { 1.0f, 1.0f, 1.0f, 1.0f } };
+    vertex_data_[21] = { { -0.5f, 0.5f, -0.5f }, { 1.0f, 0.0f, 0.0f }, { 0.0f, 1.0f }, { 1.0f, 1.0f, 1.0f, 1.0f } };
+    vertex_data_[22] = { { 0.5f, 0.5f, 0.5f }, { 1.0f, 0.0f, 0.0f }, { 1.0f, 0.0f }, { 1.0f, 1.0f, 1.0f, 1.0f } };
+    vertex_data_[23] = { { 0.5f, 0.5f, -0.5f }, { 1.0f, 0.0f, 0.0f }, { 1.0f, 1.0f }, { 1.0f, 1.0f, 1.0f, 1.0f } };
 
     vertex_index_[0] = 0;
     vertex_index_[1] = 2;
@@ -120,11 +120,11 @@ namespace SLX {
 
     vertex_description.Usage = D3D11_USAGE_DEFAULT;
     vertex_description.BindFlags = D3D11_BIND_VERTEX_BUFFER;
-    vertex_description.ByteWidth = sizeof(DirectX::XMFLOAT3) * num_vertices;
+    vertex_description.ByteWidth = sizeof(VertexData) * num_vertices;
 
     D3D11_SUBRESOURCE_DATA vertex_data;
     ZeroMemory(&vertex_data, sizeof(D3D11_SUBRESOURCE_DATA));
-    vertex_data.pSysMem = vertex_position_.data();
+    vertex_data.pSysMem = vertex_data_.data();
 
     HRESULT result = Core::instance().d3d_.device()->CreateBuffer(&vertex_description, &vertex_data, &vertex_buffer_);
 
@@ -182,7 +182,7 @@ namespace SLX {
 
     float sin_value = DirectX::XMScalarSin((float)Time() * 0.001f);
     scale = DirectX::XMMatrixScaling(sin_value, sin_value, sin_value);
-    rotation = DirectX::XMMatrixRotationRollPitchYaw(0.0f, (float)Time() * 0.01f, 0.0f);
+    rotation = DirectX::XMMatrixRotationRollPitchYaw(0.0f, (float)Time() * 0.001f, 0.0f);
     if (test == 1) {
       translation = DirectX::XMMatrixTranslation(0.0f, sin_value, 0.0f);
     }
@@ -205,7 +205,7 @@ namespace SLX {
     memcpy(new_matrices.pData, mvp, sizeof(DirectX::XMFLOAT4X4) * 3);
     device_context->Unmap(matrix_buffer_, 0);
 
-    uint32 stride = sizeof(DirectX::XMFLOAT3);
+    uint32 stride = sizeof(VertexData);
     uint32 offset = 0;
 
     device_context->IASetVertexBuffers(0, 1, &vertex_buffer_, &stride, &offset);
