@@ -12,6 +12,7 @@
 #include "core/geometry.h"
 #include "core/material.h"
 #include "core/core.h"
+#include "core/texture.h"
 
 namespace SLX {
 int32 main() {
@@ -20,10 +21,12 @@ int32 main() {
 
   CoreGeometry geo, geo2;
   CoreMaterial mat;
+  CoreTexture texture;
 
   geo.init();
   geo2.init();
   mat.init();
+  texture.load("./../data/texture.png");
 
   char textico[256];
   sprintf_s(textico, "Iniciando ventana con dimensiones %d x %d", Window::Width(), Window::Height());
@@ -32,6 +35,7 @@ int32 main() {
   // enter the main loop:
   while (Window::StartFrame() && Window::IsOpened()) {
 
+    texture.use();
     geo.render(&mat, 0);
     geo.render(&mat, 1);
 
