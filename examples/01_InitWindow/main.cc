@@ -12,26 +12,60 @@
 #include "core/geometry.h"
 #include "core/material.h"
 #include "core/core.h"
+#include "core/object.h"
+#include "core/texture.h"
 
 namespace SLX {
 int32 main() {
   
   Window::Init(1024, 978);
 
-  CoreGeometry geo;
+  CoreGeometry geo, geo2;
   CoreMaterial mat;
+  CoreTexture texture;
 
   geo.init();
+  geo2.init();
   mat.init();
+  texture.load("./../data/texture.png");
+
+  Object a, b;
+  a.addComponent(ComponentType::Transform);
+  a.addComponent(ComponentType::Render3D);
+  a.render3D_->setup(&mat, &geo);
+  a.render3D_->init();
+  a.init();
+
+  b.addComponent(ComponentType::Transform);
+  b.addComponent(ComponentType::Render3D);
+  b.render3D_->setup(&mat, &geo);
+  b.render3D_->init();
+  b.init();
 
   char textico[256];
   sprintf_s(textico, "Iniciando ventana con dimensiones %d x %d", Window::Width(), Window::Height());
+  auto& cam = Core::instance().cam_;
 
+  float sin_value;
 
   // enter the main loop:
   while (Window::StartFrame() && Window::IsOpened()) {
 
-    geo.render(&mat);
+    a.update();
+    b.update();
+
+    sin_value = DirectX::XMScalarSin((float)Time() * 0.001f);
+    a.transform_->set_position(0.0f, sin_value, 0.0f);
+    a.transform_->set_scale(sin_value, sin_value, sin_value);
+    a.transform_->set_rotation(0.0f, (float)Time() * 0.001f, 0.0f);
+
+    b.transform_->set_position(sin_value, 0.0f, 0.0f);
+    b.transform_->set_scale(sin_value, sin_value, sin_value);
+    b.transform_->set_rotation(0.0f, (float)Time() * 0.001f, 0.0f);
+
+    texture.use();
+    cam.render(&a);
+    cam.render(&b);
 
     Window::EndFrame();
   }
@@ -46,4 +80,3 @@ int32 main() {
 }
 
 }; /* SLX */
- 

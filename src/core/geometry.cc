@@ -9,7 +9,6 @@
 #include "SilverLynx/globals.h"
 #include "core/geometry.h"
 #include "core/core.h"
-#include "core/window.h"
 
 namespace SLX {
 
@@ -24,9 +23,10 @@ namespace SLX {
 
   CoreGeometry::~CoreGeometry() {
     vertex_index_.clear();
-    vertex_position_.clear();
+    vertex_data_.clear();
     if (vertex_buffer_) { vertex_buffer_->Release(); }
     if (vertex_index_buffer_) { vertex_index_buffer_->Release(); }
+    if (matrix_buffer_) { matrix_buffer_->Release(); }
   }
 
   /*******************************************************************************
@@ -35,45 +35,44 @@ namespace SLX {
 
   bool CoreGeometry::init() {
 
-
-
-    // QUAD de ejemplo
+    // CUBO de ejemplo
     int32 num_vertices = 24;
     int32 num_indices = 36;
 
     // Rellenamos info de vertices e indices.
-    vertex_position_.resize(num_vertices);
+    vertex_data_.resize(num_vertices);
     vertex_index_.resize(num_indices);
 
-    vertex_position_[0] = { -0.5f, 0.5f, -0.5f };
-    vertex_position_[1] = { 0.5f, 0.5f, -0.5f };
-    vertex_position_[2] = { -0.5f, -0.5f, -0.5f };
-    vertex_position_[3] = { 0.5f, -0.5f, -0.5f };
+                        // Position,             Normal                 UV              COLOR
+    vertex_data_[0] = { { -0.5f, 0.5f, -0.5f }, { 1.0f, 0.0f, 0.0f }, { 0.0f, 0.0f }, { 1.0f, 1.0f, 1.0f, 1.0f } };
+    vertex_data_[1] = { { 0.5f, 0.5f, -0.5f }, { 1.0f, 0.0f, 0.0f }, { 1.0f, 0.0f }, { 1.0f, 1.0f, 1.0f, 1.0f } };
+    vertex_data_[2] = { { -0.5f, -0.5f, -0.5f }, { 1.0f, 0.0f, 0.0f }, { 0.0f, 1.0f }, { 1.0f, 1.0f, 1.0f, 1.0f } };
+    vertex_data_[3] = { { 0.5f, -0.5f, -0.5f }, { 1.0f, 0.0f, 0.0f }, { 1.0f, 1.0f }, { 1.0f, 1.0f, 1.0f, 1.0f } };
 
-    vertex_position_[4] = { -0.5f, 0.5f, 0.5f };
-    vertex_position_[5] = { 0.5f, 0.5f, 0.5f };
-    vertex_position_[6] = { -0.5f, -0.5f, 0.5f };
-    vertex_position_[7] = { 0.5f, -0.5f, 0.5f };
+    vertex_data_[4] = { { -0.5f, 0.5f, 0.5f }, { 1.0f, 0.0f, 0.0f }, { 1.0f, 0.0f }, { 1.0f, 1.0f, 1.0f, 1.0f } };
+    vertex_data_[5] = { { 0.5f, 0.5f, 0.5f }, { 1.0f, 0.0f, 0.0f }, { 0.0f, 0.0f }, { 1.0f, 1.0f, 1.0f, 1.0f } };
+    vertex_data_[6] = { { -0.5f, -0.5f, 0.5f }, { 1.0f, 0.0f, 0.0f }, { 1.0f, 1.0f }, { 1.0f, 1.0f, 1.0f, 1.0f } };
+    vertex_data_[7] = { { 0.5f, -0.5f, 0.5f }, { 1.0f, 0.0f, 0.0f }, { 0.0f, 1.0f }, { 1.0f, 1.0f, 1.0f, 1.0f } };
 
-    vertex_position_[8] = { -0.5f, 0.5f, -0.5f };
-    vertex_position_[9] = { -0.5f, -0.5f, -0.5f };
-    vertex_position_[10] = { -0.5f, 0.5f, 0.5f };
-    vertex_position_[11] = { -0.5f, -0.5f, 0.5f };
+    vertex_data_[8] = { { -0.5f, 0.5f, -0.5f }, { 1.0f, 0.0f, 0.0f }, { 1.0f, 0.0f }, { 1.0f, 1.0f, 1.0f, 1.0f } };
+    vertex_data_[9] = { { -0.5f, -0.5f, -0.5f }, { 1.0f, 0.0f, 0.0f }, { 1.0f, 1.0f }, { 1.0f, 1.0f, 1.0f, 1.0f } };
+    vertex_data_[10] = { { -0.5f, 0.5f, 0.5f }, { 1.0f, 0.0f, 0.0f }, { 0.0f, 0.0f }, { 1.0f, 1.0f, 1.0f, 1.0f } };
+    vertex_data_[11] = { { -0.5f, -0.5f, 0.5f }, { 1.0f, 0.0f, 0.0f }, { 0.0f, 1.0f }, { 1.0f, 1.0f, 1.0f, 1.0f } };
 
-    vertex_position_[12] = { 0.5f, 0.5f, -0.5f };
-    vertex_position_[13] = { 0.5f, -0.5f, -0.5f };
-    vertex_position_[14] = { 0.5f, 0.5f, 0.5f };
-    vertex_position_[15] = { 0.5f, -0.5f, 0.5f };
+    vertex_data_[12] = { { 0.5f, 0.5f, -0.5f }, { 1.0f, 0.0f, 0.0f }, { 0.0f, 0.0f }, { 1.0f, 1.0f, 1.0f, 1.0f } };
+    vertex_data_[13] = { { 0.5f, -0.5f, -0.5f }, { 1.0f, 0.0f, 0.0f }, { 0.0f, 1.0f }, { 1.0f, 1.0f, 1.0f, 1.0f } };
+    vertex_data_[14] = { { 0.5f, 0.5f, 0.5f }, { 1.0f, 0.0f, 0.0f }, { 1.0f, 0.0f }, { 1.0f, 1.0f, 1.0f, 1.0f } };
+    vertex_data_[15] = { { 0.5f, -0.5f, 0.5f }, { 1.0f, 0.0f, 0.0f }, { 1.0f, 1.0f }, { 1.0f, 1.0f, 1.0f, 1.0f } };
 
-    vertex_position_[16] = { -0.5f, -0.5f, -0.5f };
-    vertex_position_[17] = { -0.5f, -0.5f, 0.5f };
-    vertex_position_[18] = { 0.5f, -0.5f, -0.5f };
-    vertex_position_[19] = { 0.5f, -0.5f, 0.5f };
+    vertex_data_[16] = { { -0.5f, -0.5f, -0.5f }, { 1.0f, 0.0f, 0.0f }, { 0.0f, 0.0f }, { 1.0f, 1.0f, 1.0f, 1.0f } };
+    vertex_data_[17] = { { -0.5f, -0.5f, 0.5f }, { 1.0f, 0.0f, 0.0f }, { 0.0f, 1.0f }, { 1.0f, 1.0f, 1.0f, 1.0f } };
+    vertex_data_[18] = { { 0.5f, -0.5f, -0.5f }, { 1.0f, 0.0f, 0.0f }, { 1.0f, 0.0f }, { 1.0f, 1.0f, 1.0f, 1.0f } };
+    vertex_data_[19] = { { 0.5f, -0.5f, 0.5f }, { 1.0f, 0.0f, 0.0f }, { 1.0f, 1.0f }, { 1.0f, 1.0f, 1.0f, 1.0f } };
 
-    vertex_position_[20] = { -0.5f, 0.5f, 0.5f };
-    vertex_position_[21] = { -0.5f, 0.5f, -0.5f };
-    vertex_position_[22] = { 0.5f, 0.5f, 0.5f };
-    vertex_position_[23] = { 0.5f, 0.5f, -0.5f };
+    vertex_data_[20] = { { -0.5f, 0.5f, 0.5f }, { 1.0f, 0.0f, 0.0f }, { 0.0f, 0.0f }, { 1.0f, 1.0f, 1.0f, 1.0f } };
+    vertex_data_[21] = { { -0.5f, 0.5f, -0.5f }, { 1.0f, 0.0f, 0.0f }, { 0.0f, 1.0f }, { 1.0f, 1.0f, 1.0f, 1.0f } };
+    vertex_data_[22] = { { 0.5f, 0.5f, 0.5f }, { 1.0f, 0.0f, 0.0f }, { 1.0f, 0.0f }, { 1.0f, 1.0f, 1.0f, 1.0f } };
+    vertex_data_[23] = { { 0.5f, 0.5f, -0.5f }, { 1.0f, 0.0f, 0.0f }, { 1.0f, 1.0f }, { 1.0f, 1.0f, 1.0f, 1.0f } };
 
     vertex_index_[0] = 0;
     vertex_index_[1] = 2;
@@ -118,11 +117,11 @@ namespace SLX {
 
     vertex_description.Usage = D3D11_USAGE_DEFAULT;
     vertex_description.BindFlags = D3D11_BIND_VERTEX_BUFFER;
-    vertex_description.ByteWidth = sizeof(DirectX::XMFLOAT3) * num_vertices;
+    vertex_description.ByteWidth = sizeof(VertexData) * num_vertices;
 
     D3D11_SUBRESOURCE_DATA vertex_data;
     ZeroMemory(&vertex_data, sizeof(D3D11_SUBRESOURCE_DATA));
-    vertex_data.pSysMem = vertex_position_.data();
+    vertex_data.pSysMem = vertex_data_.data();
 
     HRESULT result = Core::instance().d3d_.device()->CreateBuffer(&vertex_description, &vertex_data, &vertex_buffer_);
 
@@ -168,65 +167,6 @@ namespace SLX {
 
     return true;
   }
-
-  void CoreGeometry::render(const CoreMaterial* material) {
-
-    auto& window = Core::instance().window_;
-    auto* device_context = Core::instance().d3d_.deviceContext();
-
-    DirectX::XMFLOAT3 camera_position(0.0, 5.0, -10.0);
-    DirectX::XMFLOAT3 camera_look_at(0.0f, 0.0f, 0.0f);
-    DirectX::XMFLOAT3 camera_up(0.0f, 1.0f, 0.0f);
-
-    
-    DirectX::XMMATRIX model, view, projection;
-
-    DirectX::XMMATRIX scale, rotation, translation, result;
-
-    scale = DirectX::XMMatrixScaling(5.0f, 5.0f, 5.0f);
-    rotation = DirectX::XMMatrixRotationRollPitchYaw(0.0f, 0.2f, 0.0f);
-    translation = DirectX::XMMatrixTranslation(1.0f, 0.0f, 0.0f);
-    result = scale * rotation * translation;
-    model = DirectX::XMMatrixTranspose(result);
-
-    result = DirectX::XMMatrixLookAtLH(DirectX::XMLoadFloat3(&camera_position),
-                                       DirectX::XMLoadFloat3(&camera_look_at),
-                                       DirectX::XMLoadFloat3(&camera_up));
-
-    view = DirectX::XMMatrixTranspose(result);
-
-    result = DirectX::XMMatrixPerspectiveFovLH(DirectX::XMConvertToRadians(45.0f), 
-                                               window.width_ / window.height_, 
-                                               0.01f, 
-                                               100.0f);
-
-    projection = DirectX::XMMatrixTranspose(result);
-
-    DirectX::XMFLOAT4X4 mvp[3];
-    DirectX::XMStoreFloat4x4(mvp, DirectX::XMMatrixIdentity());
-    DirectX::XMStoreFloat4x4(&mvp[1], view);
-    DirectX::XMStoreFloat4x4(&mvp[2], projection);
-
-    D3D11_MAPPED_SUBRESOURCE new_matrices;
-    ZeroMemory(&new_matrices, sizeof(D3D11_MAPPED_SUBRESOURCE));
-    device_context->Map(matrix_buffer_, 0, D3D11_MAP_WRITE_DISCARD, 0, &new_matrices);
-    memcpy(new_matrices.pData, mvp, sizeof(DirectX::XMFLOAT4X4) * 3);
-    device_context->Unmap(matrix_buffer_, 0);
-
-    uint32 stride = sizeof(DirectX::XMFLOAT3);
-    uint32 offset = 0;
-
-    device_context->IASetVertexBuffers(0, 1, &vertex_buffer_, &stride, &offset);
-    device_context->IASetIndexBuffer(vertex_index_buffer_, DXGI_FORMAT_R32_UINT, 0);
-    device_context->IASetPrimitiveTopology(D3D10_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
-    device_context->VSSetShader(material->vertex_shader_, 0, 0);
-    device_context->PSSetShader(material->pixel_shader_, 0, 0);
-    device_context->VSSetConstantBuffers(0, 1, &matrix_buffer_);
-    device_context->IASetInputLayout(material->input_layout_);
-    device_context->DrawIndexed(vertex_index_.size(), 0, 0);
-  }
-
-
 
 
 }; /* SLX */

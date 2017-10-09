@@ -9,15 +9,12 @@
 #ifndef __TRANSFORM_H__
 #define __TRANSFORM_H__ 1
 
-#include "silverlynx.h"
-#include "D3DX11.h"
 #include <DirectXMath.h>
-#include <vector>
+#include "core/components/component.h"
 
 namespace SLX {
 
-
-  struct TransformComponent {
+class TransformComponent : Component {
 
   public:
 
@@ -36,12 +33,37 @@ namespace SLX {
     *******************************************************************************/
 
     ///--------------------------------------------------------------------------
-    /// @fn   DirectX::XMFLOAT3& position() const;
+    /// @fn   void init();
+    ///
+    /// @brief  Initializes the component.
+    ///--------------------------------------------------------------------------
+    void init();
+
+    ///--------------------------------------------------------------------------
+    /// @fn   void update();
+    ///
+    /// @brief  Updates the component.
+    ///--------------------------------------------------------------------------
+    void update();
+
+    ///--------------------------------------------------------------------------
+    /// @fn   void shutdown();
+    ///
+    /// @brief  Deallocates any memory and setup from this component.
+    ///--------------------------------------------------------------------------
+    void shutdown();
+
+    /*******************************************************************************
+    ***                          Setters and Getters                             ***
+    *******************************************************************************/
+
+    ///--------------------------------------------------------------------------
+    /// @fn   DirectX::XMVECTOR position() const;
     ///
     /// @brief  Transform position getter.
-    /// @return vec3 containing X,Y,Z Position.
+    /// @return XMVECTOR containing X,Y,Z Position.
     ///--------------------------------------------------------------------------
-    DirectX::XMFLOAT3 position() const;
+    DirectX::XMVECTOR position() const;
 
     ///--------------------------------------------------------------------------
     /// @fn   void set_position(float x, float y, float z);
@@ -51,12 +73,12 @@ namespace SLX {
     void set_position(const float32 x, const float32 y, const float32 z);
 
     ///--------------------------------------------------------------------------
-    /// @fn   DirectX::XMFLOAT3& rotation() const;
+    /// @fn   DirectX::XMVECTOR rotation() const;
     ///
     /// @brief  Transform rotation getter.
-    /// @return XMFLOAT3 containing X,Y,Z Rotation.
+    /// @return XMVECTOR containing X,Y,Z Rotation.
     ///--------------------------------------------------------------------------
-    DirectX::XMFLOAT3 rotation() const;
+    DirectX::XMVECTOR rotation() const;
 
     ///--------------------------------------------------------------------------
     /// @fn   void set_rotation(float x, float y, float z);
@@ -66,12 +88,12 @@ namespace SLX {
     void set_rotation(const float32 x, const float32 y, const float32 z);
 
     ///--------------------------------------------------------------------------
-    /// @fn   DirectX::XMFLOAT3 scale() const;
+    /// @fn   DirectX::XMVECTOR scale() const;
     ///
     /// @brief  Transform scale getter.
     /// @return XMFLOAT3 containing X,Y,Z Scale.
     ///--------------------------------------------------------------------------
-    DirectX::XMFLOAT3 scale() const;
+    DirectX::XMVECTOR scale() const;
 
     ///--------------------------------------------------------------------------
     /// @fn   void set_scale(float x, float y, float z);
@@ -81,44 +103,44 @@ namespace SLX {
     void set_scale(const float32 x, const float32 y, const float32 z);
 
     ///--------------------------------------------------------------------------
-    /// @fn   DirectX::XMFLOAT4X4 local_matrix().
+    /// @fn   DirectX::XMMATRIX local_matrix().
     ///
     /// @brief  Recalculates the local matrix and returns it.
-    /// @return XMFLOAT4X4 containing Local Transformation Matrix.
+    /// @return XMMATRIX containing Local Transformation Matrix.
     ///--------------------------------------------------------------------------
-    DirectX::XMFLOAT4X4 local_matrix();
+    DirectX::XMMATRIX local_matrix();
 
     ///--------------------------------------------------------------------------
-    /// @fn   DirectX::XMFLOAT4X4 global_matrix() const.
+    /// @fn   DirectX::XMMATRIX global_matrix() const.
     ///
     /// @brief  Transform GlobalMatrix getter.
-    /// @return XMFLOAT4X4 containing Global Transformation Matrix.
+    /// @return XMMATRIX containing Global Transformation Matrix.
     ///--------------------------------------------------------------------------
-    DirectX::XMFLOAT4X4 global_matrix() const;
+    DirectX::XMMATRIX global_matrix() const;
 
     ///--------------------------------------------------------------------------
-    /// @fn   DirectX::XMFLOAT4X4 local_model_matrix() const.
+    /// @fn   DirectX::XMMATRIX local_model_matrix() const.
     ///
     /// @brief Transform LocalModelMatrix getter.
-    /// @return XMFLOAT4X4 containing LocalModel Transformation Matrix.
+    /// @return XMMATRIX containing LocalModel Transformation Matrix.
     ///--------------------------------------------------------------------------
-    DirectX::XMFLOAT4X4 local_model_matrix() const;
+    DirectX::XMMATRIX local_model_matrix() const;
 
     ///--------------------------------------------------------------------------
-    /// @fn   DirectX::XMFLOAT4X4 model_matrix() const.
+    /// @fn   DirectX::XMMATRIX model_matrix() const.
     ///
     /// @brief Transform ModelMatrix getter.
-    /// @return XMFLOAT4X4 containing Model Transformation Matrix.
+    /// @return XMMATRIX containing Model Transformation Matrix.
     ///--------------------------------------------------------------------------
-    DirectX::XMFLOAT4X4 model_matrix() const;
+    DirectX::XMMATRIX model_matrix();
 
     ///--------------------------------------------------------------------------
-    /// @fn   DirectX::XMFLOAT4X4 model_matrix() const.
+    /// @fn   DirectX::XMMATRIX model_matrix() const.
     ///
     /// @brief Transform NormalModelMatrix getter.
     /// @return XMFLOAT4X4 containing Normal Model Transformation Matrix.
     ///--------------------------------------------------------------------------
-    DirectX::XMFLOAT4X4 normal_model_matrix() const;
+    DirectX::XMMATRIX normal_model_matrix() const;
 
     /*******************************************************************************
     ***                           Private                                        ***

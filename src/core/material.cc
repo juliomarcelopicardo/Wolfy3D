@@ -89,14 +89,17 @@ bool CoreMaterial::init() {
 
   // Layout
   D3D11_INPUT_ELEMENT_DESC layout_info[]{
-    { "POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0 }
+    { "POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0 },
+    { "NORMAL", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 12, D3D11_INPUT_PER_VERTEX_DATA, 0 },
+    { "TEXCOORD", 0, DXGI_FORMAT_R32G32_FLOAT, 0, 24, D3D11_INPUT_PER_VERTEX_DATA, 0 },
+    { "COLOR", 0, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, 32, D3D11_INPUT_PER_VERTEX_DATA, 0 }
   };
 
   // Graphic Card Shader Creation.
   auto* device = Core::instance().d3d_.device();
   device->CreateVertexShader(vertex_shader->GetBufferPointer(), vertex_shader->GetBufferSize(), 0, &vertex_shader_);
   device->CreatePixelShader(pixel_shader->GetBufferPointer(), pixel_shader->GetBufferSize(), 0, &pixel_shader_);
-  device->CreateInputLayout(layout_info, 1, vertex_shader->GetBufferPointer(), vertex_shader->GetBufferSize(), &input_layout_);
+  device->CreateInputLayout(layout_info, 4, vertex_shader->GetBufferPointer(), vertex_shader->GetBufferSize(), &input_layout_);
 
   if (error) { error->Release(); }
 

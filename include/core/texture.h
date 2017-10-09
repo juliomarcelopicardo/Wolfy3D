@@ -6,29 +6,16 @@
 *
 */
 
-#ifndef __GEOMETRY_H__
-#define __GEOMETRY_H__ 1
+#ifndef __TEXTURE_H__
+#define __TEXTURE_H__ 1
 
 #include "silverlynx.h"
-#include "DirectXMath.h"
-#include "D3D11.h"
-#include <vector>
-#include "core/object.h"
+#include "D3DX11.h"
 
 namespace SLX {
 
-class CoreMaterial; // Forward declaration, DELETE AFTER MAT PARAM IS REMOVED
+class CoreTexture {
 
-/// Struct to save all the info of the vertices.
-struct VertexData {
-  DirectX::XMFLOAT3 position;
-  DirectX::XMFLOAT3 normal;
-  DirectX::XMFLOAT2 uv;
-  DirectX::XMFLOAT4 color;
-};
-
-class CoreGeometry {
-  
  public:
 
 /*******************************************************************************
@@ -36,40 +23,36 @@ class CoreGeometry {
 *******************************************************************************/
 
   /// Default class constructor.
-  CoreGeometry();
+  CoreTexture();
 
   /// Default class destructor.
-  ~CoreGeometry();
+  ~CoreTexture();
 
 /*******************************************************************************
 ***                               Public methods                             ***
 *******************************************************************************/
 
   ///--------------------------------------------------------------------------
-  /// @fn   bool init();
+  /// @fn   bool load(const char* texture_path);
   ///
-  /// @brief  Initializes the Geometry.
+  /// @brief  Loads a texture froma a file.
   /// @return true if successfully initialized, false otherwise.
   ///--------------------------------------------------------------------------
-  bool init();
+  bool load(const char* texture_path);
+
+  ///--------------------------------------------------------------------------
+  /// @fn   use(const uint32 texture_channel);
+  ///
+  /// @brief  Use the existing texture.
+  /// @param texture_channel sets the channel number of the texture in the shader.
+  ///--------------------------------------------------------------------------
+  void use(const uint32 texture_channel = 1);
 
 /*******************************************************************************
 ***                               Attributes                                 ***
 *******************************************************************************/
-
-  /// Verices info.
-  std::vector<VertexData> vertex_data_;
-  /// Vertices buffer.
-  ID3D11Buffer* vertex_buffer_;
-
-  /// Vertices indices.
-  std::vector<uint32> vertex_index_;
-  /// Indices buffer.
-  ID3D11Buffer* vertex_index_buffer_;
-
-  /// Matrices buffer
-  ID3D11Buffer* matrix_buffer_;
-
+  /// Texture handle.
+  ID3D11ShaderResourceView* texture_handle_;
 
 /*******************************************************************************
 ***                           Private                                        ***
@@ -88,7 +71,7 @@ class CoreGeometry {
 
 
 
-}; /* CoreGeometry */
+}; /* CoreTexture */
 
 }; /* SLX */
 
