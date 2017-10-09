@@ -7,11 +7,8 @@
 */
 
 #include "SilverLynx/globals.h"
-#include "SilverLynx/time.h"
 #include "core/geometry.h"
 #include "core/core.h"
-#include "core/camera.h"
-#include "core/window.h"
 
 namespace SLX {
 
@@ -170,55 +167,6 @@ namespace SLX {
 
     return true;
   }
-
-  void CoreGeometry::render(const CoreMaterial* material, int32 test) {
-
-    auto* device_context = Core::instance().d3d_.deviceContext();
-    auto& cam = Core::instance().cam_;
-    
-    // --------------------- TEMPORAL HASTA QUE HAYA NODOS U OBJECTS.
-    DirectX::XMMATRIX model, view, projection;
-    DirectX::XMMATRIX scale, rotation, translation, result;
-
-    float sin_value = DirectX::XMScalarSin((float)Time() * 0.001f);
-    scale = DirectX::XMMatrixScaling(sin_value, sin_value, sin_value);
-    rotation = DirectX::XMMatrixRotationRollPitchYaw(0.0f, (float)Time() * 0.001f, 0.0f);
-    if (test == 1) {
-      translation = DirectX::XMMatrixTranslation(0.0f, sin_value, 0.0f);
-    }
-    else {
-
-    translation = DirectX::XMMatrixTranslation(sin_value, 0.0f, 0.0f);
-    }
-    result = scale * rotation * translation;
-    model = DirectX::XMMatrixTranspose(result);
-    // ------------------------
-
-    DirectX::XMFLOAT4X4 mvp[3];
-    DirectX::XMStoreFloat4x4(mvp, model); 
-    DirectX::XMStoreFloat4x4(&mvp[1], DirectX::XMMatrixTranspose(Core::instance().cam_.viewMatrix()));
-    DirectX::XMStoreFloat4x4(&mvp[2], DirectX::XMMatrixTranspose(Core::instance().cam_.projectionMatrix()));
-
-    D3D11_MAPPED_SUBRESOURCE new_matrices;
-    ZeroMemory(&new_matrices, sizeof(D3D11_MAPPED_SUBRESOURCE));
-    device_context->Map(matrix_buffer_, 0, D3D11_MAP_WRITE_DISCARD, 0, &new_matrices);
-    memcpy(new_matrices.pData, mvp, sizeof(DirectX::XMFLOAT4X4) * 3);
-    device_context->Unmap(matrix_buffer_, 0);
-
-    uint32 stride = sizeof(VertexData);
-    uint32 offset = 0;
-
-    device_context->IASetVertexBuffers(0, 1, &vertex_buffer_, &stride, &offset);
-    device_context->IASetIndexBuffer(vertex_index_buffer_, DXGI_FORMAT_R32_UINT, 0);
-    device_context->IASetPrimitiveTopology(D3D10_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
-    device_context->VSSetShader(material->vertex_shader_, 0, 0);
-    device_context->PSSetShader(material->pixel_shader_, 0, 0);
-    device_context->VSSetConstantBuffers(0, 1, &matrix_buffer_);
-    device_context->IASetInputLayout(material->input_layout_);
-    device_context->DrawIndexed(vertex_index_.size(), 0, 0);
-  }
-
-
 
 
 }; /* SLX */
