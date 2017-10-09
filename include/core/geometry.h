@@ -16,7 +16,15 @@
 
 namespace SLX {
 
-  class CoreMaterial;
+class CoreMaterial; // Forward declaration, DELETE AFTER MAT PARAM IS REMOVED
+
+/// Struct to save all the info of the vertices.
+struct VertexData {
+  DirectX::XMFLOAT3 position;
+  DirectX::XMFLOAT3 normal;
+  DirectX::XMFLOAT2 uv;
+  DirectX::XMFLOAT4 color;
+};
 
 class CoreGeometry {
   
@@ -56,7 +64,7 @@ class CoreGeometry {
 *******************************************************************************/
 
   /// Verices info.
-  std::vector<DirectX::XMFLOAT3> vertex_position_;
+  std::vector<VertexData> vertex_data_;
   /// Vertices buffer.
   ID3D11Buffer* vertex_buffer_;
 
