@@ -10,6 +10,8 @@
 #include "core/object.h"
 #include "core/core.h"
 #include "core/window.h"
+#include "core/geometry.h"
+
 
 namespace SLX {
 
@@ -19,15 +21,60 @@ namespace SLX {
   *******************************************************************************/
 
   Object::Object() {
-    
+    initialized_ = false;
+    render3D_ = nullptr;
+    transform_ = nullptr;
   }
 
   Object::~Object() {
+    if (transform_) {
+      delete transform_;
+    }
 
+    if (render3D_) {
+      delete render3D_;
+    }
   }
 
   /*******************************************************************************
   ***                               Public methods                             ***
   *******************************************************************************/
+
+  void Object::init() {
+    if (!initialized_) {
+      if (!transform_) {
+        transform_ = new TransformComponent;
+        transform_->init();
+        initialized_ = true;
+      }
+    }
+  }
+
+  void Object::update() {
+
+    if (!initialized_) {
+      init();
+    }
+
+    if (transform_) {
+      transform_->update();
+    }
+
+    if (render3D_) {
+      render3D_->update();
+    }
+  }
+
+  void Object::addComponent(ComponentType component) {
+    switch (component) {
+      case SLX::ComponentType::Render3D: {
+        if (!render3D_) {
+          render3D_ = new Render3DComponent;
+          render3D_->init();
+        }
+        break;
+      }
+    }
+  }
 
 }; /* SLX */
