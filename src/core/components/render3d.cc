@@ -25,13 +25,8 @@ namespace SLX {
   }
 
   Render3DComponent::~Render3DComponent() {
-    if (material_) {
-      delete material_;
-    }
-
-    if (geometry_) {
-      delete geometry_;
-    }
+	  material_ = nullptr;
+	  geometry_ = nullptr;
   }
 
   /*******************************************************************************
