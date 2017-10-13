@@ -14,6 +14,7 @@
 #include "core/core.h"
 #include "core/object.h"
 #include "core/texture.h"
+#include "imgui/imgui.h"
 
 namespace SLX {
 int32 main() {
@@ -66,6 +67,8 @@ int32 main() {
     cam.render(&a);
     cam.render(&b);
 
+	ImGui::SetNextWindowPos(ImVec2(650, 20), ImGuiCond_FirstUseEver);
+	ImGui::ShowTestWindow(0);
     Window::EndFrame();
   }
 

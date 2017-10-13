@@ -26,8 +26,8 @@ namespace SLX {
   }
 
   Render3DComponent::~Render3DComponent() {
-    material_ = nullptr;
-    geometry_ = nullptr;
+	  material_ = nullptr;
+	  geometry_ = nullptr;
   }
 
   /*******************************************************************************

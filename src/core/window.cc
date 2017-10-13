@@ -9,6 +9,8 @@
 #include "SilverLynx/globals.h"
 #include "core/window.h"
 #include "core/core.h"
+#include "imgui/imgui.h"
+#include "imgui/imgui_impl_dx11.h"
 
 namespace SLX {
 
@@ -52,6 +54,10 @@ namespace SLX {
       return false;
 
     return true;
+  }
+
+  void CoreWindow::shutdown() {
+	  ImGui_ImplDX11_Shutdown();
   }
 
   /*******************************************************************************
@@ -123,21 +129,63 @@ namespace SLX {
   LRESULT CALLBACK CoreWindow::WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam) {
     PAINTSTRUCT ps;
     HDC hdc;
-  
-    switch (message) {
-    
-    case WM_PAINT:
-      hdc = BeginPaint(hWnd, &ps);
-      EndPaint(hWnd, &ps);
-      break;
 
-    case WM_DESTROY:
-      PostQuitMessage(0);
-      SLX::Core::instance().window_.is_opened_ = false;
-      break;
+	ImGuiIO& io = ImGui::GetIO();
+	switch (message) {
+	
+		/////////////////////////////////
+		// Window
 
+		case WM_PAINT: {
+			hdc = BeginPaint(hWnd, &ps);
+			EndPaint(hWnd, &ps);
+			break;
+		}
+		case WM_DESTROY: {
+			PostQuitMessage(0);
+			SLX::Core::instance().window_.is_opened_ = false;
+			break;
+		}
+		/* @TODO case WM_SIZE
+		* reescale rendertargets for Imgui to prevent
+		* distortion of the widgets when resizing the window.
+		*/
 
-    }
+		/////////////////////////////////
+		// ImGui Input
+		case WM_LBUTTONDOWN: io.MouseDown[0] = true; return true;
+		case WM_LBUTTONUP: io.MouseDown[0] = false; return true;
+		case WM_RBUTTONDOWN: io.MouseDown[1] = true; return true;
+		case WM_RBUTTONUP: io.MouseDown[1] = false; return true;
+		case WM_MBUTTONDOWN: io.MouseDown[2] = true; return true;
+		case WM_MBUTTONUP: io.MouseDown[2] = false; return true;
+		case WM_MOUSEWHEEL: {
+			io.MouseWheel += GET_WHEEL_DELTA_WPARAM(wParam) > 0 ? +1.0f : -1.0f;
+			return true;
+		}
+		case WM_MOUSEMOVE: {
+			io.MousePos.x = (signed short)(lParam);
+			io.MousePos.y = (signed short)(lParam >> 16);
+			return true;
+		}
+		case WM_KEYDOWN: {
+			if (wParam < 256)
+				io.KeysDown[wParam] = 1;
+			return true;
+		}
+		case WM_KEYUP: {
+			if (wParam < 256)
+				io.KeysDown[wParam] = 0;
+			return true;
+		}
+		case WM_CHAR: {
+			// You can also use ToAscii()+GetKeyboardState() to retrieve characters.
+			if (wParam > 0 && wParam < 0x10000)
+				io.AddInputCharacter((unsigned short)wParam);
+			return true;
+		}
+    } // switch (message)
+
     return DefWindowProc(hWnd, message, wParam, lParam);
   }
 
