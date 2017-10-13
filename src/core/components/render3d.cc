@@ -22,16 +22,12 @@ namespace SLX {
 
   Render3DComponent::Render3DComponent() : Component() {
     type_ = ComponentType::Render3D;
+
   }
 
   Render3DComponent::~Render3DComponent() {
-    if (material_) {
-      delete material_;
-    }
-
-    if (geometry_) {
-      delete geometry_;
-    }
+    material_ = nullptr;
+    geometry_ = nullptr;
   }
 
   /*******************************************************************************
@@ -74,13 +70,8 @@ namespace SLX {
   }
 
   void Render3DComponent::shutdown() {
-    if (material_) {
-      delete material_;
-    }
-
-    if (geometry_) {
-      delete geometry_;
-    }
+    geometry_ = nullptr;
+    material_ = nullptr;
   }
 
   void Render3DComponent::render(TransformComponent* transform) {
@@ -104,7 +95,7 @@ namespace SLX {
 
       device_context->IASetVertexBuffers(0, 1, &geometry_->vertex_buffer_, &stride, &offset);
       device_context->IASetIndexBuffer(geometry_->vertex_index_buffer_, DXGI_FORMAT_R32_UINT, 0);
-      device_context->IASetPrimitiveTopology(D3D10_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+      device_context->IASetPrimitiveTopology(geometry_->topology_);
       device_context->VSSetShader(material_->vertex_shader_, 0, 0);
       device_context->PSSetShader(material_->pixel_shader_, 0, 0);
       device_context->VSSetConstantBuffers(0, 1, &geometry_->matrix_buffer_);
