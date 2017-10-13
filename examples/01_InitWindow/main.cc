@@ -14,6 +14,7 @@
 #include "core/core.h"
 #include "core/object.h"
 #include "core/texture.h"
+#include "imgui/imgui.h"
 
 namespace SLX {
 int32 main() {
@@ -25,7 +26,7 @@ int32 main() {
   CoreTexture texture;
 
   geo.init();
-  geo2.init();
+  geo2.init("./../data/Heightmap.bmp", 10);
   mat.init();
   texture.load("./../data/texture.png");
 
@@ -38,7 +39,7 @@ int32 main() {
 
   b.addComponent(ComponentType::Transform);
   b.addComponent(ComponentType::Render3D);
-  b.render3D_->setup(&mat, &geo);
+  b.render3D_->setup(&mat, &geo2);
   b.render3D_->init();
   b.init();
 
@@ -57,16 +58,17 @@ int32 main() {
     sin_value = DirectX::XMScalarSin((float)Time() * 0.001f);
     a.transform_->set_position(0.0f, sin_value, 0.0f);
     a.transform_->set_scale(sin_value, sin_value, sin_value);
-    a.transform_->set_rotation(0.0f, (float)Time() * 0.001f, 0.0f);
+    a.transform_->set_rotation(0.0f, (float)Time() * 0.01f, 0.0f);
 
-    b.transform_->set_position(sin_value, 0.0f, 0.0f);
-    b.transform_->set_scale(sin_value, sin_value, sin_value);
-    b.transform_->set_rotation(0.0f, (float)Time() * 0.001f, 0.0f);
+    b.transform_->set_position(-5.0f, 0.0f, 0.0f);
+    b.transform_->set_rotation(0.0f, (float)Time() * 0.01f, 0.0f);
 
     texture.use();
     cam.render(&a);
     cam.render(&b);
 
+	ImGui::SetNextWindowPos(ImVec2(650, 20), ImGuiCond_FirstUseEver);
+	ImGui::ShowTestWindow(0);
     Window::EndFrame();
   }
 

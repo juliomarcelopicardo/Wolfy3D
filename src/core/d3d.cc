@@ -11,6 +11,9 @@
 #include "core/core.h"
 #include <string>
 
+#include "imgui/imgui.h"
+#include "imgui/imgui_impl_dx11.h"
+
 namespace SLX {
 
   
@@ -114,6 +117,11 @@ namespace SLX {
     D3DXMatrixOrthoLH(&ortho_matrix_, (float)SLX::Core::instance().window_.width_,
       (float)SLX::Core::instance().window_.height_, SCREEN_NEAR, SCREEN_DEPTH);
 
+	
+	//////////////////////////////////////////////
+	// Setup the ImGui binding
+	ImGui_ImplDX11_Init(SLX::Core::instance().window_.window_handle_, device_, device_context_);
+
     return true;
 
   }
@@ -122,9 +130,13 @@ namespace SLX {
     // clear the back buffer to a deep blue
     device_context_->ClearRenderTargetView(render_target_view_, D3DXCOLOR(r, g, b, a));
     device_context_->ClearDepthStencilView(depth_stencil_view_, D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0);
+	ImGui_ImplDX11_NewFrame();
   }
 
   void DirectXFramework::endRenderFrame() {
+	
+	ImGui::Render();
+
     // Present the back buffer to the screen since rendering is complete.
     if (VSYNC_ENABLED) {
       // Lock to screen refresh rate.
@@ -133,7 +145,6 @@ namespace SLX {
       // Present as fast as possible.
       swap_chain_->Present(0, 0);
     }
-
 
   }
 

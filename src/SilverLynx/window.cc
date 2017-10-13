@@ -22,6 +22,7 @@ void Init(const int32 width,
 }
 
 void Close() {
+	Core::instance().window_.shutdown();
   Core::instance().d3d_.shutdown();
 }
 

@@ -1,2 +1,2 @@
 genie.exe vs2015
-PAUSE
+SilverLynx_Solution.sln
