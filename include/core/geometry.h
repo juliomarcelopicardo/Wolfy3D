@@ -53,6 +53,17 @@ class CoreGeometry {
   ///--------------------------------------------------------------------------
   bool init();
 
+  ///--------------------------------------------------------------------------
+  /// @fn   bool init(const char* height_map_filename, const float max_height);
+  ///
+  /// @brief  Initializes the Geometry. Terrain.
+  ///
+  /// @param heigh_map_filename File which contains the height map for the terrain.
+  /// @param grid_size Size of each cell of the grid.
+  /// @return true if successfully initialized, false otherwise.
+  ///--------------------------------------------------------------------------
+  bool init(const char* height_map_filename, const float grid_size);
+
 /*******************************************************************************
 ***                               Attributes                                 ***
 *******************************************************************************/
@@ -69,6 +80,8 @@ class CoreGeometry {
 
   /// Matrices buffer
   ID3D11Buffer* matrix_buffer_;
+  /// Topology = the way vertex are rendered (TriangleStrip, TriangleList, Point)
+  D3D_PRIMITIVE_TOPOLOGY topology_;
 
 
 /*******************************************************************************
