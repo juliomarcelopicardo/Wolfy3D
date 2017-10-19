@@ -103,16 +103,7 @@ namespace SLX {
     DirectX::XMVECTOR y_axis = DirectX::XMLoadFloat3(&yf_axis);;
     DirectX::XMVECTOR z_axis = DirectX::XMLoadFloat3(&zf_axis);;
 
-    mRotation = DirectX::XMMatrixRotationAxis(x_axis,
-                                              DirectX::XMConvertToRadians(rotation_.x));
-
-    mRotation = DirectX::XMMatrixRotationAxis(y_axis,
-                                              DirectX::XMConvertToRadians(rotation_.y));
-
-    mRotation = DirectX::XMMatrixRotationAxis(z_axis,
-                                              DirectX::XMConvertToRadians(rotation_.z));
-
-
+	mRotation = DirectX::XMMatrixRotationRollPitchYaw(rotation_.x, rotation_.y, rotation_.z);
     mTranslation = DirectX::XMMatrixTranslation(position_.x, position_.y, position_.z);;
     mScalation = DirectX::XMMatrixScaling(scale_.x, scale_.y, scale_.z);
 
