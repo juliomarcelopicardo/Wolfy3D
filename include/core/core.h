@@ -16,6 +16,7 @@
 #include "core/camera.h"
 #include "core/material.h"
 #include "core/geometry.h"
+#include "core/input.h"
 
 
 namespace SLX {
@@ -79,6 +80,7 @@ class Core {
   uint64 start_time_;
 
   CoreCamera cam_;
+  CoreInput input_;
 
 
 /*******************************************************************************
