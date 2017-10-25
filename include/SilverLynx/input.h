@@ -28,7 +28,7 @@ enum KeyboardButton {
   kKeyboardButton_D = 68,
   kKeyboardButton_Q = 81,
   kKeyboardButton_E = 69,
-  kKeyboardButton_Tab = 258,
+  kKeyboardButton_Tab = 9,
 };
 
 //--------------------------------------------------------------------------
