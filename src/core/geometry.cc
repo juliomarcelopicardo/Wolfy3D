@@ -308,11 +308,11 @@ bool CoreGeometry::init(const char * height_map_filename,
 
 
 		  // Calculating the normals for both vertex. Doing the average between its 4 normals from its 4 neighbors.
-		  DirectX::XMVECTOR norm, temp1, temp2, temp3;
-		  norm = DirectX::XMVectorAdd(DirectX::XMVector3Normalize(DirectX::XMVector3Normalize(DirectX::XMVector3Cross(right, up))), DirectX::XMVector3Normalize(DirectX::XMVector3Cross(up, left)));
-		  norm = DirectX::XMVectorAdd(norm, DirectX::XMVector3Normalize(DirectX::XMVector3Cross(left, down)));
-		  norm = DirectX::XMVectorAdd(norm, DirectX::XMVector3Normalize(DirectX::XMVector3Cross(down, right)));
-		  XMStoreFloat3(&normal, norm);
+		  DirectX::XMVECTOR tmp_normal;
+		  tmp_normal = DirectX::XMVectorAdd(DirectX::XMVector3Normalize(DirectX::XMVector3Normalize(DirectX::XMVector3Cross(right, up))), DirectX::XMVector3Normalize(DirectX::XMVector3Cross(up, left)));
+		  tmp_normal = DirectX::XMVectorAdd(tmp_normal, DirectX::XMVector3Normalize(DirectX::XMVector3Cross(left, down)));
+		  tmp_normal = DirectX::XMVectorAdd(tmp_normal, DirectX::XMVector3Normalize(DirectX::XMVector3Cross(down, right)));
+		  XMStoreFloat3(&normal, tmp_normal);
 
 		  vertex_data_[idx].position = height_map_data[idx];
 		  vertex_data_[idx].normal = normal;
