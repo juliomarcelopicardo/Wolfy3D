@@ -227,11 +227,26 @@ namespace SLX {
 			return true;
 		}
 		case WM_KEYDOWN: {
+      /* Para probar y añadir nuevas teclas 
+      char prueba[128] = "";
+      sprintf(prueba, "Tecla: %d\n", wParam);
+      OutputDebugString(prueba);
+      */
+      if (ButtonStatus* button = input.getButton(wParam)) {
+        button->is_down = true;
+        button->is_pressed = true;
+        button->is_up = false;
+      }
 			if (wParam < 256)
 				io.KeysDown[wParam] = 1;
 			return true;
 		}
 		case WM_KEYUP: {
+      if (ButtonStatus* button = input.getButton(wParam)) {
+        button->is_down = false;
+        button->is_pressed = false;
+        button->is_up = false;
+      }
 			if (wParam < 256)
 				io.KeysDown[wParam] = 0;
 			return true;

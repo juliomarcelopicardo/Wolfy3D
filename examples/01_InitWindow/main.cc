@@ -56,7 +56,8 @@ int32 main() {
     b.update();
 
     sin_value = DirectX::XMScalarSin((float)Time() * 0.001f);
-    if (Input::IsMouseButtonDown(Input::kMouseButton_Left)) {
+    if (Input::IsKeyboardButtonDown(Input::kKeyboardButton_Tab) || 
+        Input::IsKeyboardButtonDown(Input::kKeyboardButton_W)) {
       OutputDebugString("MouseButton");
     }
 
