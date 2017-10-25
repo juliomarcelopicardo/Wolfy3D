@@ -109,6 +109,27 @@ class CoreCamera {
   ///--------------------------------------------------------------------------
   void render(Object* obj);
 
+  ///--------------------------------------------------------------------------
+  /// @fn   void update();
+  ///
+  /// @brief Update the camera data when movement is active
+  ///--------------------------------------------------------------------------
+  void update();
+
+  ///--------------------------------------------------------------------------
+  /// @fn   void translate();
+  ///
+  /// @brief Update the camera position when movement is active
+  ///--------------------------------------------------------------------------
+  bool translate();
+
+  ///--------------------------------------------------------------------------
+  /// @fn   void rotate();
+  ///
+  /// @brief Update the camera rotation when movement is active
+  ///--------------------------------------------------------------------------
+  bool rotate();
+
   /*******************************************************************************
   ***                            Setters & Getters                             ***
   *******************************************************************************/
@@ -210,6 +231,13 @@ class CoreCamera {
   float z_near_;
   /// ZFar
   float z_far_;
+  
+  /// Camera movement speed.
+  float movement_speed_;
+  /// Camera rotation speed.
+  float rotation_speed_;
+  /// Sets if the navigation is enabled (translation and rotation).
+  bool is_navigation_enabled_;
 
   /*******************************************************************************
   ***                           Private                                        ***
@@ -229,6 +257,8 @@ class CoreCamera {
   DirectX::XMFLOAT4X4 projection_matrix_;
   /// View Matrix
   DirectX::XMFLOAT4X4 view_matrix_;
+  /// Mouse position in the previous frame.
+  DirectX::XMFLOAT2 last_mouse_position_;
 
 
 /*******************************************************************************

@@ -50,6 +50,7 @@ namespace SLX {
     if (!updateMessages()) {
       return false;
     }
+    Core::instance().cam_.update();
     Core::instance().d3d_.startRenderFrame();
     return true;
   }

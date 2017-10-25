@@ -54,7 +54,7 @@ int32 main() {
 
     a.update();
     b.update();
-
+    /*
     sin_value = DirectX::XMScalarSin((float)Time() * 0.001f);
     if (Input::IsKeyboardButtonDown(Input::kKeyboardButton_Tab) || 
         Input::IsKeyboardButtonDown(Input::kKeyboardButton_W)) {
@@ -68,6 +68,7 @@ int32 main() {
     b.transform_->set_position(-5.0f, 0.0f, 0.0f);
     b.transform_->set_rotation(0.0f, (float)Time() * 0.01f, 0.0f);
 
+    */
     texture.use();
     cam.render(&a);
     cam.render(&b);
