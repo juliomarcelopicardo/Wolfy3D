@@ -56,6 +56,10 @@ int32 main() {
     b.update();
 
     sin_value = DirectX::XMScalarSin((float)Time() * 0.001f);
+    if (Input::IsMouseButtonDown(Input::kMouseButton_Left)) {
+      OutputDebugString("MouseButton");
+    }
+
     a.transform_->set_position(0.0f, sin_value, 0.0f);
     a.transform_->set_scale(sin_value, sin_value, sin_value);
     a.transform_->set_rotation(0.0f, (float)Time() * 0.01f, 0.0f);
