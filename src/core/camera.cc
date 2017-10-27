@@ -74,8 +74,13 @@ void CoreCamera::setupView() {
 *******************************************************************************/
 
 void CoreCamera::render(Object* obj) {
+  obj->updateLocalModelAndChildrenMatrices();
   if (obj->render3D_) {
     obj->render3D_->render(obj->transform_);
+  }
+  uint32 num_children = obj->children_.size();
+  for (uint32 i = 0; i < num_children; i++) {
+    render(obj->children_[i]);
   }
 }
 
