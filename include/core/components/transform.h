@@ -102,45 +102,30 @@ class TransformComponent : Component {
     ///--------------------------------------------------------------------------
     void set_scale(const float32 x, const float32 y, const float32 z);
 
-    ///--------------------------------------------------------------------------
-    /// @fn   DirectX::XMMATRIX local_matrix().
-    ///
-    /// @brief  Recalculates the local matrix and returns it.
-    /// @return XMMATRIX containing Local Transformation Matrix.
-    ///--------------------------------------------------------------------------
-    DirectX::XMMATRIX local_matrix();
-
-    ///--------------------------------------------------------------------------
-    /// @fn   DirectX::XMMATRIX global_matrix() const.
-    ///
-    /// @brief  Transform GlobalMatrix getter.
-    /// @return XMMATRIX containing Global Transformation Matrix.
-    ///--------------------------------------------------------------------------
-    DirectX::XMMATRIX global_matrix() const;
 
     ///--------------------------------------------------------------------------
     /// @fn   DirectX::XMMATRIX local_model_matrix() const.
     ///
-    /// @brief Transform LocalModelMatrix getter.
+    /// @brief Transform LocalModelMatrix getter. (TRANSPOSED)
     /// @return XMMATRIX containing LocalModel Transformation Matrix.
     ///--------------------------------------------------------------------------
-    DirectX::XMMATRIX local_model_matrix() const;
+    DirectX::XMMATRIX local_model_matrix();
 
     ///--------------------------------------------------------------------------
-    /// @fn   DirectX::XMMATRIX model_matrix() const.
+    /// @fn   DirectX::XMMATRIX global_model_matrix() const.
     ///
-    /// @brief Transform ModelMatrix getter.
-    /// @return XMMATRIX containing Model Transformation Matrix.
+    /// @brief Transform GlobalModelMatrix getter. (TRANSPOSED)
+    /// @return XMMATRIX containing GlobalModel Transformation Matrix.
     ///--------------------------------------------------------------------------
-    DirectX::XMMATRIX model_matrix();
+    DirectX::XMMATRIX global_model_matrix();
 
-    ///--------------------------------------------------------------------------
-    /// @fn   DirectX::XMMATRIX model_matrix() const.
-    ///
-    /// @brief Transform NormalModelMatrix getter.
-    /// @return XMFLOAT4X4 containing Normal Model Transformation Matrix.
-    ///--------------------------------------------------------------------------
-    DirectX::XMMATRIX normal_model_matrix() const;
+    /// Recalculates the local matrix.
+    void calculateLocalModelMatrix();
+
+    /// Local Model Transformation Matrix.
+    DirectX::XMFLOAT4X4 local_model_matrix_;
+    /// Parent Model Transformation Matrix.
+    DirectX::XMFLOAT4X4 parent_model_matrix_;
 
     /*******************************************************************************
     ***                           Private                                        ***
@@ -157,23 +142,11 @@ class TransformComponent : Component {
     DirectX::XMFLOAT3 rotation_;
     /// Transform Scale.
     DirectX::XMFLOAT3 scale_;
-    /// Local Transfomation Matrix.
-    DirectX::XMFLOAT4X4 local_matrix_;
-    /// Global Transformation Matrix.
-    DirectX::XMFLOAT4X4 global_matrix_;
-    /// Local Model Transformation Matrix.
-    DirectX::XMFLOAT4X4 local_model_matrix_;
-    /// Global Model Transformation Matrix.
-    DirectX::XMFLOAT4X4 model_matrix_;
-    /// Normal Model Transformation Matrix.
-    DirectX::XMFLOAT4X4 normal_model_matrix_;
 
     /*******************************************************************************
     ***                              Private methods                             ***
     *******************************************************************************/
 
-    /// Recalculates the local matrix.
-    void calculateLocalMatrix();
 
   };
 

@@ -19,6 +19,8 @@ namespace SLX {
     position_ = DirectX::XMFLOAT3(0.0f, 0.0f, 0.0f);
     rotation_ = DirectX::XMFLOAT3(0.0f, 0.0f, 0.0f);
     scale_ = DirectX::XMFLOAT3(1.0f, 1.0f, 1.0f);
+    DirectX::XMStoreFloat4x4(&local_model_matrix_, DirectX::XMMatrixIdentity());
+    parent_model_matrix_ = local_model_matrix_;
   }
 
   TransformComponent::~TransformComponent() {
@@ -66,33 +68,22 @@ namespace SLX {
     scale_ = DirectX::XMFLOAT3(x, y, z);
   }
 
-  DirectX::XMMATRIX TransformComponent::local_matrix() {
-    calculateLocalMatrix();
-    return DirectX::XMLoadFloat4x4(&local_matrix_);
-  }
-
-  DirectX::XMMATRIX TransformComponent::global_matrix() const {
-    return DirectX::XMLoadFloat4x4(&global_matrix_);
-  }
-
-  DirectX::XMMATRIX TransformComponent::local_model_matrix() const {
+  DirectX::XMMATRIX TransformComponent::local_model_matrix() {
+    calculateLocalModelMatrix();
     return DirectX::XMLoadFloat4x4(&local_model_matrix_);
   }
 
-  DirectX::XMMATRIX TransformComponent::model_matrix() {
-    calculateLocalMatrix();
-    return DirectX::XMLoadFloat4x4(&model_matrix_);
-  }
-
-  DirectX::XMMATRIX TransformComponent::normal_model_matrix() const {
-    return DirectX::XMLoadFloat4x4(&normal_model_matrix_);
+  DirectX::XMMATRIX TransformComponent::global_model_matrix() {
+    
+    return DirectX::XMMatrixMultiply(DirectX::XMLoadFloat4x4(&parent_model_matrix_),
+                                     local_model_matrix());
   }
 
   /*******************************************************************************
   ***                              Private methods                             ***
   *******************************************************************************/
 
-  void TransformComponent::calculateLocalMatrix() {
+  void TransformComponent::calculateLocalModelMatrix() {
     DirectX::XMMATRIX mRotation, mTranslation, mScalation, mPitchYawRoll;
 
     DirectX::XMFLOAT3 xf_axis = DirectX::XMFLOAT3(1.0f, 0.0f, 0.0f);
@@ -103,15 +94,14 @@ namespace SLX {
     DirectX::XMVECTOR y_axis = DirectX::XMLoadFloat3(&yf_axis);;
     DirectX::XMVECTOR z_axis = DirectX::XMLoadFloat3(&zf_axis);;
 
-	mRotation = DirectX::XMMatrixRotationRollPitchYaw(rotation_.x, rotation_.y, rotation_.z);
+	  mRotation = DirectX::XMMatrixRotationRollPitchYaw(rotation_.x, rotation_.y, rotation_.z);
     mTranslation = DirectX::XMMatrixTranslation(position_.x, position_.y, position_.z);;
     mScalation = DirectX::XMMatrixScaling(scale_.x, scale_.y, scale_.z);
 
     DirectX::XMMATRIX result = (mScalation * mRotation * mTranslation);
-    DirectX::XMStoreFloat4x4(&local_matrix_, result);
 
     DirectX::XMMATRIX transposed = DirectX::XMMatrixTranspose(result);
-    DirectX::XMStoreFloat4x4(&model_matrix_, transposed);
+    DirectX::XMStoreFloat4x4(&local_model_matrix_, transposed);
   }
 
 }; /* SLX */
