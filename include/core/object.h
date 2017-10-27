@@ -11,6 +11,7 @@
 
 #include "core/components/transform.h"
 #include "core/components/render3d.h"
+#include <vector>
 
 namespace SLX {
 
@@ -58,14 +59,35 @@ class Object {
   ///--------------------------------------------------------------------------
   /// @fn     void addComponent(ComponentType component);
   ///
-  /// @brief  
+  /// @brief Adds a component to the current obj
   /// @param component type of component to be initialized on this object.
   ///--------------------------------------------------------------------------
   void addComponent(ComponentType component);
 
+  ///--------------------------------------------------------------------------
+  /// @fn     void addChildren(Object* obj);
+  ///
+  /// @brief Adds or attaches another object as a children
+  /// @param obj Object that will be attached as a children.
+  ///--------------------------------------------------------------------------
+  void addChildren(Object* obj);
+
+  /*******************************************************************************
+  ***                           Transform methods                              ***
+  *******************************************************************************/
+  void updateLocalModelAndChildrenMatrices();
+
+  /*******************************************************************************
+  ***                            Setters & Getters                             ***
+  *******************************************************************************/
+
+
   /*******************************************************************************
   ***                           Private                                        ***
   *******************************************************************************/
+
+  Object* parent_;
+  std::vector<Object*> children_;
 
  private:
 
@@ -76,6 +98,7 @@ class Object {
 
   /// Whether this object is initialized or not.
   bool initialized_;
+
 
   /*******************************************************************************
   ***                              Private methods                             ***

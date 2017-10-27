@@ -24,6 +24,7 @@ namespace SLX {
     initialized_ = false;
     render3D_ = nullptr;
     transform_ = nullptr;
+    parent_ = nullptr;
   }
 
   Object::~Object() {
@@ -34,6 +35,8 @@ namespace SLX {
     if (render3D_) {
       delete render3D_;
     }
+    children_.clear();
+    parent_ = nullptr;
   }
 
   /*******************************************************************************
@@ -74,6 +77,26 @@ namespace SLX {
         }
         break;
       }
+    }
+  }
+
+  void Object::addChildren(Object* obj) {
+    uint32 num_children = children_.size();
+    for (uint32 i = 0; i < num_children; ++i) {
+      if (children_[i] == obj) {
+        OutputDebugString(" ERROR: children already attached to this object.\n");
+        return;
+      }
+    }
+    children_.push_back(obj);
+    obj->parent_ = this;
+  }
+
+  void Object::updateLocalModelAndChildrenMatrices() {
+    transform_->calculateLocalModelMatrix();
+    uint32 num_children = children_.size();
+    for (uint32 i = 0; i < num_children; i++) {
+      DirectX::XMStoreFloat4x4(&children_[i]->transform_->parent_model_matrix_, transform_->global_model_matrix());
     }
   }
 
