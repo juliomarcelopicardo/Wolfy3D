@@ -41,5 +41,5 @@ float4 PShader(PixelInput pixel_input) : SV_TARGET
 {
 	float4 texture_color;
 	texture_color = texture_shader.Sample(sampler_type, pixel_input.TexCoord);
-	return pixel_input.Normal;
+	return texture_color;
 }
