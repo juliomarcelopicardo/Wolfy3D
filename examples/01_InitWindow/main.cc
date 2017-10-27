@@ -63,17 +63,14 @@ int32 main() {
   float sin_value;
 
   // enter the main loop:
-  while (Window::StartFrame() && Window::IsOpened()) {
+  while (Window::StartFrame() && Window::IsOpened() && 
+         !Input::IsKeyboardButtonDown(Input::kKeyboardButton_Escape)) {
 
     a.update();
     b.update();
     /*
     */
     sin_value = DirectX::XMScalarSin((float)Time() * 0.0001f);
-    if (Input::IsKeyboardButtonDown(Input::kKeyboardButton_Tab) || 
-        Input::IsKeyboardButtonDown(Input::kKeyboardButton_W)) {
-      OutputDebugString("MouseButton");
-    }
 
     //a.transform_->set_position(0.0f, sin_value, 0.0f);
     //a.transform_->set_scale(1.0f + sin_value * 0.5f, 1.0f + sin_value * 0.5f, 1.0f + sin_value * 0.5f);
