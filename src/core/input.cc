@@ -51,6 +51,12 @@ ButtonStatus* CoreInput::getButton(const int32 key_id) {
     case SLX::Input::kKeyboardButton_Q: return &keyboard_Q_button_; break;
     case SLX::Input::kKeyboardButton_E: return &keyboard_E_button_; break;
     case SLX::Input::kKeyboardButton_Tab: return &keyboard_Tab_button_; break;
+    case SLX::Input::kKeyboardButton_Escape: return &keyboard_Escape_button_; break;
+    case SLX::Input::kKeyboardButton_SpaceBar: return &keyboard_SpaceBar_button_; break;
+    case SLX::Input::kKeyboardButton_Up: return &keyboard_Up_button_; break;
+    case SLX::Input::kKeyboardButton_Down: return &keyboard_Down_button_; break;
+    case SLX::Input::kKeyboardButton_Left: return &keyboard_Left_button_; break;
+    case SLX::Input::kKeyboardButton_Right: return &keyboard_Right_button_; break;
   }
   return nullptr;
 }
@@ -66,6 +72,12 @@ void CoreInput::resetInputButtonsStatus() {
   keyboard_Q_button_.resetStatus();
   keyboard_E_button_.resetStatus();
   keyboard_Tab_button_.resetStatus();
+  keyboard_Up_button_.resetStatus();
+  keyboard_Down_button_.resetStatus();
+  keyboard_Left_button_.resetStatus();
+  keyboard_Right_button_.resetStatus();
+  keyboard_Escape_button_.resetStatus();
+  keyboard_SpaceBar_button_.resetStatus();
 }
 
 
@@ -81,6 +93,12 @@ void CoreInput::refreshButtonsUp() {
   keyboard_Q_button_.is_up = false;
   keyboard_E_button_.is_up = false;
   keyboard_Tab_button_.is_up = false;
+  keyboard_Up_button_.is_up = false;
+  keyboard_Down_button_.is_up = false;
+  keyboard_Left_button_.is_up = false;
+  keyboard_Right_button_.is_up = false;
+  keyboard_Escape_button_.is_up = false;
+  keyboard_SpaceBar_button_.is_up = false;
 }
 
 bool CoreInput::isMouseButtonDown(Input::MouseButton button) {
@@ -101,47 +119,83 @@ bool CoreInput::isMouseButtonPressed(Input::MouseButton button) {
 
 bool CoreInput::isKeyboardButtonDown(Input::KeyboardButton button) {
   switch (button) {
-  case Input::kKeyboardButton_W:
-    if (keyboard_W_button_.is_down) {
-      keyboard_W_button_.is_down = false;
-      return true;
-    }
+    case Input::kKeyboardButton_W:
+      if (keyboard_W_button_.is_down) {
+        keyboard_W_button_.is_down = false;
+        return true;
+      }
     break;
-  case Input::kKeyboardButton_A:
-    if (keyboard_A_button_.is_down) {
-      keyboard_A_button_.is_down = false;
-      return true;
-    }
+    case Input::kKeyboardButton_A:
+      if (keyboard_A_button_.is_down) {
+        keyboard_A_button_.is_down = false;
+        return true;
+      }
     break;
-  case Input::kKeyboardButton_S:
-    if (keyboard_S_button_.is_down) {
-      keyboard_S_button_.is_down = false;
-      return true;
-    }
+    case Input::kKeyboardButton_S:
+      if (keyboard_S_button_.is_down) {
+        keyboard_S_button_.is_down = false;
+        return true;
+      }
     break;
-  case Input::kKeyboardButton_D:
-    if (keyboard_D_button_.is_down) {
-      keyboard_D_button_.is_down = false;
-      return true;
-    }
+    case Input::kKeyboardButton_D:
+      if (keyboard_D_button_.is_down) {
+        keyboard_D_button_.is_down = false;
+        return true;
+      }
     break;
-  case Input::kKeyboardButton_E:
-    if (keyboard_E_button_.is_down) {
-      keyboard_E_button_.is_down = false;
-      return true;
-    }
+    case Input::kKeyboardButton_E:
+      if (keyboard_E_button_.is_down) {
+        keyboard_E_button_.is_down = false;
+        return true;
+      }
     break;
-  case Input::kKeyboardButton_Q:
-    if (keyboard_Q_button_.is_down) {
-      keyboard_Q_button_.is_down = false;
-      return true;
-    }
+    case Input::kKeyboardButton_Q:
+      if (keyboard_Q_button_.is_down) {
+        keyboard_Q_button_.is_down = false;
+        return true;
+      }
     break;
-  case Input::kKeyboardButton_Tab:
-    if (keyboard_Tab_button_.is_down) {
-      keyboard_Tab_button_.is_down = false;
-      return true;
-    }
+    case Input::kKeyboardButton_Tab:
+      if (keyboard_Tab_button_.is_down) {
+        keyboard_Tab_button_.is_down = false;
+        return true;
+      }
+    break;
+    case Input::kKeyboardButton_Up:
+      if (keyboard_Up_button_.is_down) {
+        keyboard_Up_button_.is_down = false;
+        return true;
+      }
+    break;
+    case Input::kKeyboardButton_Down:
+      if (keyboard_Down_button_.is_down) {
+        keyboard_Down_button_.is_down = false;
+        return true;
+      }
+    break;
+    case Input::kKeyboardButton_Left:
+      if (keyboard_Left_button_.is_down) {
+        keyboard_Left_button_.is_down = false;
+        return true;
+      }
+    break;
+    case Input::kKeyboardButton_Right:
+      if (keyboard_Right_button_.is_down) {
+        keyboard_Right_button_.is_down = false;
+        return true;
+      }
+    break;
+    case Input::kKeyboardButton_Escape:
+      if (keyboard_Escape_button_.is_down) {
+        keyboard_Escape_button_.is_down = false;
+        return true;
+      }
+    break;
+    case Input::kKeyboardButton_SpaceBar:
+      if (keyboard_SpaceBar_button_.is_down) {
+        keyboard_SpaceBar_button_.is_down = false;
+        return true;
+      }
     break;
   }
   return false;
@@ -156,6 +210,12 @@ bool CoreInput::isKeyboardButtonUp(Input::KeyboardButton button) {
   case Input::kKeyboardButton_Q: return keyboard_Q_button_.is_up; break;
   case Input::kKeyboardButton_E: return keyboard_E_button_.is_up; break;
   case Input::kKeyboardButton_Tab: return keyboard_Tab_button_.is_up; break;
+  case Input::kKeyboardButton_Escape: return keyboard_Escape_button_.is_up; break;
+  case Input::kKeyboardButton_SpaceBar: return keyboard_SpaceBar_button_.is_up; break;
+  case Input::kKeyboardButton_Up: return keyboard_Up_button_.is_up; break;
+  case Input::kKeyboardButton_Down: return keyboard_Down_button_.is_up; break;
+  case Input::kKeyboardButton_Left: return keyboard_Left_button_.is_up; break;
+  case Input::kKeyboardButton_Right: return keyboard_Right_button_.is_up; break;
   }
   return false;
 }
@@ -169,6 +229,12 @@ bool CoreInput::isKeyboardButtonPressed(Input::KeyboardButton button) {
   case Input::kKeyboardButton_Q: return keyboard_Q_button_.is_pressed; break;
   case Input::kKeyboardButton_E: return keyboard_E_button_.is_pressed; break;
   case Input::kKeyboardButton_Tab: return keyboard_Tab_button_.is_pressed; break;
+  case Input::kKeyboardButton_Escape: return keyboard_Escape_button_.is_pressed; break;
+  case Input::kKeyboardButton_SpaceBar: return keyboard_SpaceBar_button_.is_pressed; break;
+  case Input::kKeyboardButton_Up: return keyboard_Up_button_.is_pressed; break;
+  case Input::kKeyboardButton_Down: return keyboard_Down_button_.is_pressed; break;
+  case Input::kKeyboardButton_Left: return keyboard_Left_button_.is_pressed; break;
+  case Input::kKeyboardButton_Right: return keyboard_Right_button_.is_pressed; break;
   }
   return false;
 }

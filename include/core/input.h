@@ -164,6 +164,18 @@ class CoreInput {
   ButtonStatus keyboard_E_button_;
   /// Keyboard Tab button status.
   ButtonStatus keyboard_Tab_button_;
+  /// Keyboard SpaceBar button status.
+  ButtonStatus keyboard_SpaceBar_button_;
+  /// Keyboard Up button status.
+  ButtonStatus keyboard_Up_button_;
+  /// Keyboard Down button status.
+  ButtonStatus keyboard_Down_button_;
+  /// Keyboard Left button status.
+  ButtonStatus keyboard_Left_button_;
+  /// Keyboard Right button status.
+  ButtonStatus keyboard_Right_button_;
+  /// Keyboard Escape button status.
+  ButtonStatus keyboard_Escape_button_;
   /// Mouse wheel status
   float mouse_wheel_;
   /// Mouse cursor position.

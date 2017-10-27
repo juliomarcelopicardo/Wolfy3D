@@ -228,11 +228,13 @@ namespace SLX {
 			return true;
 		}
 		case WM_KEYDOWN: {
-      /* Para probar y añadir nuevas teclas 
+      // Para probar y añadir nuevas teclas 
+      /*
       char prueba[128] = "";
       sprintf(prueba, "Tecla: %d\n", wParam);
       OutputDebugString(prueba);
       */
+      
       if (ButtonStatus* button = input.getButton(wParam)) {
         button->is_down = true;
         button->is_pressed = true;
