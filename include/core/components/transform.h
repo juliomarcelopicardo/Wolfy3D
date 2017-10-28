@@ -14,7 +14,7 @@
 
 namespace SLX {
 
-class TransformComponent : Component {
+class TransformComponent : public Component {
 
   public:
 
@@ -143,6 +143,7 @@ class TransformComponent : Component {
     /// Transform Scale.
     DirectX::XMFLOAT3 scale_;
 
+ 
     /*******************************************************************************
     ***                              Private methods                             ***
     *******************************************************************************/
