@@ -82,7 +82,7 @@ namespace SLX {
     }
   }
 
-  void Object::addChildren(Object* obj) {
+  void Object::addChild(Object* obj) {
     uint32 num_children = children_.size();
     for (uint32 i = 0; i < num_children; ++i) {
       if (children_[i] == obj) {

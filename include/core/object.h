@@ -65,12 +65,12 @@ class Object {
   void addComponent(ComponentType component);
 
   ///--------------------------------------------------------------------------
-  /// @fn     void addChildren(Object* obj);
+  /// @fn     void addChild(Object* obj);
   ///
   /// @brief Adds or attaches another object as a children
   /// @param obj Object that will be attached as a children.
   ///--------------------------------------------------------------------------
-  void addChildren(Object* obj);
+  void addChild(Object* obj);
 
   /*******************************************************************************
   ***                           Transform methods                              ***

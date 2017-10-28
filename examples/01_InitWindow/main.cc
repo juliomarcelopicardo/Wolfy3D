@@ -53,8 +53,8 @@ int32 main() {
   c.transform_->set_scale(0.3f, 0.3f, 0.3f);
   c.transform_->set_position(0.0f, 1.0f, 1.0f);
 
-  a.addChildren(&b);
-  b.addChildren(&c);
+  a.addChild(&b);
+  b.addChild(&c);
 
   char textico[256];
   sprintf_s(textico, "Iniciando ventana con dimensiones %d x %d", Window::Width(), Window::Height());
