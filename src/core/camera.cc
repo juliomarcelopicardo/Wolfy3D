@@ -74,7 +74,7 @@ void CoreCamera::setupView() {
 *******************************************************************************/
 
 void CoreCamera::render(Object* obj) {
-  obj->updateLocalModelAndChildrenMatrices();
+
   if (obj->render3D_) {
     obj->render3D_->render(obj->transform_);
   }
