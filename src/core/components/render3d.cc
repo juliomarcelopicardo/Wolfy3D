@@ -80,7 +80,7 @@ namespace SLX {
       auto& cam = Core::instance().cam_;
 
       DirectX::XMFLOAT4X4 mvp[3];
-      DirectX::XMStoreFloat4x4(mvp, transform->model_matrix());
+      DirectX::XMStoreFloat4x4(mvp, transform->global_model_matrix());
       DirectX::XMStoreFloat4x4(&mvp[1], DirectX::XMMatrixTranspose(Core::instance().cam_.viewMatrix()));
       DirectX::XMStoreFloat4x4(&mvp[2], DirectX::XMMatrixTranspose(Core::instance().cam_.projectionMatrix()));
 
