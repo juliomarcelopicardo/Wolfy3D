@@ -64,6 +64,16 @@ class CoreGeometry {
   ///--------------------------------------------------------------------------
   bool init(const char* height_map_filename, const float grid_size);
 
+  ///--------------------------------------------------------------------------
+  /// @fn   bool initTriangle(const float32 width, const float32 height)
+  ///
+  /// @brief  Initializes the Geometry.
+  /// @param  width Width in pixels.
+  /// @param  height Height in pixels.
+  /// @return true if successfully initialized, false otherwise.
+  ///--------------------------------------------------------------------------
+  bool initTriangle(const float32 width = 0.5f, const float32 height = 0.5f);
+
 /*******************************************************************************
 ***                               Attributes                                 ***
 *******************************************************************************/
