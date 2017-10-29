@@ -25,8 +25,8 @@ int32 main() {
   CoreMaterial mat;
   CoreTexture texture;
 
-  geo.initTriangle();
-  //geo2.init("./../data/Heightmap.bmp", 10);
+  geo.initCube({ 3.0f, 4.0f, 2.0f });
+  //geo.init("./../data/Heightmap.bmp", 10);
   geo2.initTriangle(3.0f, 3.0f);
   mat.init();
   texture.load("./../data/texture.png");

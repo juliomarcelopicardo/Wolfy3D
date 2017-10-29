@@ -74,7 +74,8 @@ bool CoreGeometry::initTriangle(const float32 width, const float32 height,
 
 
 
-bool CoreGeometry::init() {
+bool CoreGeometry::initCube(const DirectX::XMFLOAT3 size, 
+                            const DirectX::XMFLOAT4 color) {
 
   // CUBO de ejemplo
   num_vertices_ = 24;
@@ -83,37 +84,38 @@ bool CoreGeometry::init() {
   // Rellenamos info de vertices e indices.
   vertex_data_.resize(num_vertices_);
   vertex_index_.resize(num_indices_);
+  DirectX::XMFLOAT3 half_size = { size.x * 0.5f, size.y * 0.5f, size.z * 0.5f };
 
-                      // Position,             Normal                 UV              COLOR
-  vertex_data_[0] = { { -0.5f, 0.5f, -0.5f }, { 1.0f, 0.0f, 0.0f }, { 0.0f, 0.0f }, { 1.0f, 1.0f, 1.0f, 1.0f } };
-  vertex_data_[1] = { { 0.5f, 0.5f, -0.5f }, { 1.0f, 0.0f, 0.0f }, { 1.0f, 0.0f }, { 1.0f, 1.0f, 1.0f, 1.0f } };
-  vertex_data_[2] = { { -0.5f, -0.5f, -0.5f }, { 1.0f, 0.0f, 0.0f }, { 0.0f, 1.0f }, { 1.0f, 1.0f, 1.0f, 1.0f } };
-  vertex_data_[3] = { { 0.5f, -0.5f, -0.5f }, { 1.0f, 0.0f, 0.0f }, { 1.0f, 1.0f }, { 1.0f, 1.0f, 1.0f, 1.0f } };
+                          // Position,                              Normal                 UV              COLOR
+  vertex_data_[0] = { { -half_size.x, half_size.y, -half_size.z }, { 1.0f, 0.0f, 0.0f }, { 0.0f, 0.0f }, color };
+  vertex_data_[1] = { { half_size.x, half_size.y, -half_size.z }, { 1.0f, 0.0f, 0.0f }, { 1.0f, 0.0f }, color };
+  vertex_data_[2] = { { -half_size.x, -half_size.y, -half_size.z }, { 1.0f, 0.0f, 0.0f }, { 0.0f, 1.0f }, color };
+  vertex_data_[3] = { { half_size.x, -half_size.y, -half_size.z }, { 1.0f, 0.0f, 0.0f }, { 1.0f, 1.0f }, color };
 
-  vertex_data_[4] = { { -0.5f, 0.5f, 0.5f }, { 0.0f, 1.0f, 0.0f }, { 1.0f, 0.0f }, { 1.0f, 1.0f, 1.0f, 1.0f } };
-  vertex_data_[5] = { { 0.5f, 0.5f, 0.5f }, { 0.0f, 1.0f, 0.0f }, { 0.0f, 0.0f }, { 1.0f, 1.0f, 1.0f, 1.0f } };
-  vertex_data_[6] = { { -0.5f, -0.5f, 0.5f }, { 0.0f, 1.0f, 0.0f }, { 1.0f, 1.0f }, { 1.0f, 1.0f, 1.0f, 1.0f } };
-  vertex_data_[7] = { { 0.5f, -0.5f, 0.5f }, { 0.0f, 1.0f, 0.0f }, { 0.0f, 1.0f }, { 1.0f, 1.0f, 1.0f, 1.0f } };
+  vertex_data_[4] = { { -half_size.x, half_size.y, half_size.z }, { 0.0f, 1.0f, 0.0f }, { 1.0f, 0.0f }, color };
+  vertex_data_[5] = { { half_size.x, half_size.y, half_size.z }, { 0.0f, 1.0f, 0.0f }, { 0.0f, 0.0f }, color };
+  vertex_data_[6] = { { -half_size.x, -half_size.y, half_size.z }, { 0.0f, 1.0f, 0.0f }, { 1.0f, 1.0f }, color };
+  vertex_data_[7] = { { half_size.x, -half_size.y, half_size.z }, { 0.0f, 1.0f, 0.0f }, { 0.0f, 1.0f }, color };
 
-  vertex_data_[8] = { { -0.5f, 0.5f, -0.5f }, { 1.0f, 0.0f, 0.0f }, { 1.0f, 0.0f }, { 1.0f, 1.0f, 1.0f, 1.0f } };
-  vertex_data_[9] = { { -0.5f, -0.5f, -0.5f }, { 1.0f, 0.0f, 0.0f }, { 1.0f, 1.0f }, { 1.0f, 1.0f, 1.0f, 1.0f } };
-  vertex_data_[10] = { { -0.5f, 0.5f, 0.5f }, { 1.0f, 0.0f, 0.0f }, { 0.0f, 0.0f }, { 1.0f, 1.0f, 1.0f, 1.0f } };
-  vertex_data_[11] = { { -0.5f, -0.5f, 0.5f }, { 1.0f, 0.0f, 0.0f }, { 0.0f, 1.0f }, { 1.0f, 1.0f, 1.0f, 1.0f } };
+  vertex_data_[8] = { { -half_size.x, half_size.y, -half_size.z }, { 1.0f, 0.0f, 0.0f }, { 1.0f, 0.0f }, color };
+  vertex_data_[9] = { { -half_size.x, -half_size.y, -half_size.z }, { 1.0f, 0.0f, 0.0f }, { 1.0f, 1.0f }, color };
+  vertex_data_[10] = { { -half_size.x, half_size.y, half_size.z }, { 1.0f, 0.0f, 0.0f }, { 0.0f, 0.0f }, color };
+  vertex_data_[11] = { { -half_size.x, -half_size.y, half_size.z }, { 1.0f, 0.0f, 0.0f }, { 0.0f, 1.0f }, color };
 
-  vertex_data_[12] = { { 0.5f, 0.5f, -0.5f }, { 1.0f, 0.0f, 0.0f }, { 0.0f, 0.0f }, { 1.0f, 1.0f, 1.0f, 1.0f } };
-  vertex_data_[13] = { { 0.5f, -0.5f, -0.5f }, { 1.0f, 0.0f, 0.0f }, { 0.0f, 1.0f }, { 1.0f, 1.0f, 1.0f, 1.0f } };
-  vertex_data_[14] = { { 0.5f, 0.5f, 0.5f }, { 1.0f, 0.0f, 0.0f }, { 1.0f, 0.0f }, { 1.0f, 1.0f, 1.0f, 1.0f } };
-  vertex_data_[15] = { { 0.5f, -0.5f, 0.5f }, { 1.0f, 0.0f, 0.0f }, { 1.0f, 1.0f }, { 1.0f, 1.0f, 1.0f, 1.0f } };
+  vertex_data_[12] = { { half_size.x, half_size.y, -half_size.z }, { 1.0f, 0.0f, 0.0f }, { 0.0f, 0.0f }, color };
+  vertex_data_[13] = { { half_size.x, -half_size.y, -half_size.z }, { 1.0f, 0.0f, 0.0f }, { 0.0f, 1.0f }, color };
+  vertex_data_[14] = { { half_size.x, half_size.y, half_size.z }, { 1.0f, 0.0f, 0.0f }, { 1.0f, 0.0f }, color };
+  vertex_data_[15] = { { half_size.x, -half_size.y, half_size.z }, { 1.0f, 0.0f, 0.0f }, { 1.0f, 1.0f }, color };
 
-  vertex_data_[16] = { { -0.5f, -0.5f, -0.5f }, { 1.0f, 0.0f, 0.0f }, { 0.0f, 0.0f }, { 1.0f, 1.0f, 1.0f, 1.0f } };
-  vertex_data_[17] = { { -0.5f, -0.5f, 0.5f }, { 1.0f, 0.0f, 0.0f }, { 0.0f, 1.0f }, { 1.0f, 1.0f, 1.0f, 1.0f } };
-  vertex_data_[18] = { { 0.5f, -0.5f, -0.5f }, { 1.0f, 0.0f, 0.0f }, { 1.0f, 0.0f }, { 1.0f, 1.0f, 1.0f, 1.0f } };
-  vertex_data_[19] = { { 0.5f, -0.5f, 0.5f }, { 1.0f, 0.0f, 0.0f }, { 1.0f, 1.0f }, { 1.0f, 1.0f, 1.0f, 1.0f } };
+  vertex_data_[16] = { { -half_size.x, -half_size.y, -half_size.z }, { 1.0f, 0.0f, 0.0f }, { 0.0f, 0.0f }, color };
+  vertex_data_[17] = { { -half_size.x, -half_size.y, half_size.z }, { 1.0f, 0.0f, 0.0f }, { 0.0f, 1.0f }, color };
+  vertex_data_[18] = { { half_size.x, -half_size.y, -half_size.z }, { 1.0f, 0.0f, 0.0f }, { 1.0f, 0.0f }, color };
+  vertex_data_[19] = { { half_size.x, -half_size.y, half_size.z }, { 1.0f, 0.0f, 0.0f }, { 1.0f, 1.0f }, color };
 
-  vertex_data_[20] = { { -0.5f, 0.5f, 0.5f }, { 1.0f, 0.0f, 0.0f }, { 0.0f, 0.0f }, { 1.0f, 1.0f, 1.0f, 1.0f } };
-  vertex_data_[21] = { { -0.5f, 0.5f, -0.5f }, { 1.0f, 0.0f, 0.0f }, { 0.0f, 1.0f }, { 1.0f, 1.0f, 1.0f, 1.0f } };
-  vertex_data_[22] = { { 0.5f, 0.5f, 0.5f }, { 1.0f, 0.0f, 0.0f }, { 1.0f, 0.0f }, { 1.0f, 1.0f, 1.0f, 1.0f } };
-  vertex_data_[23] = { { 0.5f, 0.5f, -0.5f }, { 1.0f, 0.0f, 0.0f }, { 1.0f, 1.0f }, { 1.0f, 1.0f, 1.0f, 1.0f } };
+  vertex_data_[20] = { { -half_size.x, half_size.y, half_size.z }, { 1.0f, 0.0f, 0.0f }, { 0.0f, 0.0f }, color };
+  vertex_data_[21] = { { -half_size.x, half_size.y, -half_size.z }, { 1.0f, 0.0f, 0.0f }, { 0.0f, 1.0f }, color };
+  vertex_data_[22] = { { half_size.x, half_size.y, half_size.z }, { 1.0f, 0.0f, 0.0f }, { 1.0f, 0.0f }, color };
+  vertex_data_[23] = { { half_size.x, half_size.y, -half_size.z }, { 1.0f, 0.0f, 0.0f }, { 1.0f, 1.0f }, color };
 
   vertex_index_[0] = 0;
   vertex_index_[1] = 2;

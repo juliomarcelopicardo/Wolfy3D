@@ -46,12 +46,15 @@ class CoreGeometry {
 *******************************************************************************/
 
   ///--------------------------------------------------------------------------
-  /// @fn   bool init();
+  /// @fn   bool initCube();
   ///
   /// @brief  Initializes the Geometry.
+  /// @param  size Size of the cube.
+  /// @param  color Color of the geometry.
   /// @return true if successfully initialized, false otherwise.
   ///--------------------------------------------------------------------------
-  bool init();
+  bool initCube(const DirectX::XMFLOAT3 size = { 1.0f, 1.0f, 1.0f },
+                const DirectX::XMFLOAT4 color = { 1.0f, 1.0f, 1.0f, 1.0f });
 
   ///--------------------------------------------------------------------------
   /// @fn   bool init(const char* height_map_filename, const float max_height);
@@ -70,6 +73,7 @@ class CoreGeometry {
   /// @brief  Initializes the Geometry.
   /// @param  width Width in pixels.
   /// @param  height Height in pixels.
+  /// @param  color Color RGBA of the geometry.
   /// @return true if successfully initialized, false otherwise.
   ///--------------------------------------------------------------------------
   bool initTriangle(const float32 width = 0.5f, const float32 height = 0.5f, 

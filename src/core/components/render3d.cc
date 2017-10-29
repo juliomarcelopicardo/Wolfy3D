@@ -41,7 +41,7 @@ namespace SLX {
     }
     
     if (!geometry_) {
-      geometry_->init();
+      geometry_->initTriangle();
     }
 
     if (material_ && geometry_) {
