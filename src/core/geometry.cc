@@ -33,29 +33,29 @@ CoreGeometry::~CoreGeometry() {
 ***                               Public methods                             ***
 *******************************************************************************/
 
-bool CoreGeometry::initTriangle(const float32 width, const float32 height,
+bool CoreGeometry::initTriangle(const DirectX::XMFLOAT2 size,
                                 const DirectX::XMFLOAT4 color) {
 
   // CUBO de ejemplo
   num_vertices_ = 3;
   num_indices_ = 3;
-  float32 half_width = width * 0.5f;
-  float32 half_height = height * 0.5f;
+  float32 half_width = size.x * 0.5f;
+  float32 half_height = size.y * 0.5f;
 
   // Rellenamos info de vertices e indices.
   vertex_data_.resize(num_vertices_);
   vertex_index_.resize(num_indices_);
 
-  vertex_data_[0] = { { 0.0f, half_width, 0.0f },       // Position
+  vertex_data_[0] = { { 0.0f, half_height, 0.0f },      // Position
                       { 0.0f, 0.0f, 1.0f },             // Normal
-                      { 0.0f, 1.0f },                   // UV / TexCoord
+                      { 0.5f, 0.0f },                   // UV / TexCoord
                       color };                          // Color
   vertex_data_[1] = { { half_width, -half_height, 0.0f },
-                      { 0.0f, 1.0f, 0.0f },
-                      { 1.0f, 0.0f },
+                      { 0.0f, 0.0f, 1.0f },
+                      { 1.0f, 1.0f },
                       color };
   vertex_data_[2] = { { -half_width, -half_height, 0.0f },
-                      { 1.0f, 0.0f, .0f },
+                      { 0.0f, 0.0f, 1.0f },
                       { 0.0f, 1.0f },
                       color };
   
@@ -72,7 +72,61 @@ bool CoreGeometry::initTriangle(const float32 width, const float32 height,
   return true;
 }
 
+bool CoreGeometry::initQuad(const DirectX::XMFLOAT2 size,
+                            const DirectX::XMFLOAT4 color) {
 
+  // CUBO de ejemplo
+  num_vertices_ = 4;
+  num_indices_ = 6;
+  float32 half_width = size.x * 0.5f;
+  float32 half_height = size.y * 0.5f;
+
+  // Rellenamos info de vertices e indices.
+  vertex_data_.resize(num_vertices_);
+  vertex_index_.resize(num_indices_);
+
+  /*
+        0         1
+          *******
+          |     |
+          |     |
+          *******
+        3         2
+  */
+
+
+  vertex_data_[0] = { { -half_width, half_height, 0.0f },       // Position
+                      { 0.0f, 0.0f, 1.0f },                     // Normal
+                      { 0.0f, 0.0f },                           // UV / TexCoord
+                        color };                                // Color
+  vertex_data_[1] = { { half_width, half_height, 0.0f },
+                      { 0.0f, 0.0f, 1.0f },
+                      { 1.0f, 0.0f },
+                        color };
+  vertex_data_[2] = { { half_width, -half_height, 0.0f },
+                      { 0.0f, 0.0f, 1.0f },
+                      { 1.0f, 1.0f },
+                        color };
+  vertex_data_[3] = { { -half_width, -half_height, 0.0f },
+                      { 0.0f, 0.0f, 1.0f },
+                      { 0.0f, 1.0f },
+                        color };
+
+  vertex_index_[0] = 0;
+  vertex_index_[1] = 1;
+  vertex_index_[2] = 2;
+  vertex_index_[3] = 2;
+  vertex_index_[4] = 3;
+  vertex_index_[5] = 0;
+
+  topology_ = D3D10_PRIMITIVE_TOPOLOGY_TRIANGLELIST;
+
+  if (!createVertexBuffer()) { return false; }
+  if (!createIndexBuffer()) { return false; }
+  if (!createMatrixBuffer()) { return false; }
+
+  return true;
+}
 
 bool CoreGeometry::initCube(const DirectX::XMFLOAT3 size, 
                             const DirectX::XMFLOAT4 color) {
