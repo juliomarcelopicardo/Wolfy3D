@@ -72,7 +72,8 @@ class CoreGeometry {
   /// @param  height Height in pixels.
   /// @return true if successfully initialized, false otherwise.
   ///--------------------------------------------------------------------------
-  bool initTriangle(const float32 width = 0.5f, const float32 height = 0.5f);
+  bool initTriangle(const float32 width = 0.5f, const float32 height = 0.5f, 
+                    const DirectX::XMFLOAT4 color = { 1.0f, 1.0f, 1.0f, 1.0f });
 
 /*******************************************************************************
 ***                               Attributes                                 ***
@@ -103,12 +104,34 @@ class CoreGeometry {
 /*******************************************************************************
 ***                               Attributes                                 ***
 *******************************************************************************/
-
+   int32 num_vertices_;
+   int32 num_indices_;
 
 /*******************************************************************************
 ***                              Private methods                             ***
 *******************************************************************************/
-
+   
+  ///--------------------------------------------------------------------------
+  /// @fn   bool createVertexBuffer();
+  ///
+  /// @brief  Creates the vertex buffer.
+  /// @return true if successfully initialized, false otherwise.
+  ///--------------------------------------------------------------------------
+   bool createVertexBuffer();
+   ///--------------------------------------------------------------------------
+   /// @fn   bool createIndexBuffer();
+   ///
+   /// @brief  Creates the index buffer.
+   /// @return true if successfully initialized, false otherwise.
+   ///--------------------------------------------------------------------------
+   bool createIndexBuffer();
+   ///--------------------------------------------------------------------------
+   /// @fn   bool createMatrixBuffer();
+   ///
+   /// @brief  Creates the matrix buffer.
+   /// @return true if successfully initialized, false otherwise.
+   ///--------------------------------------------------------------------------
+   bool createMatrixBuffer();
 
 
 }; /* CoreGeometry */
