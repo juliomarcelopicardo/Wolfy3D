@@ -25,9 +25,9 @@ int32 main() {
   CoreMaterial mat;
   CoreTexture texture;
 
-  geo.init();
+  geo.initTriangle();
   //geo2.init("./../data/Heightmap.bmp", 10);
-  geo2.init();
+  geo2.initTriangle(3.0f, 3.0f);
   mat.init();
   texture.load("./../data/texture.png");
 
@@ -43,7 +43,7 @@ int32 main() {
   b.render3D_->setup(&mat, &geo2);
   b.render3D_->init();
   b.init();
-  b.transform_->set_position(-3.0f, 0.0f, 0.0f);
+  b.transform_->set_position(-2.0f, 0.0f, 0.0f);
 
   c.addComponent(ComponentType::Transform);
   c.addComponent(ComponentType::Render3D);
@@ -53,8 +53,8 @@ int32 main() {
   c.transform_->set_scale(0.3f, 0.3f, 0.3f);
   c.transform_->set_position(0.0f, 1.0f, 1.0f);
 
-  a.addChild(&b);
-  b.addChild(&c);
+  //a.addChild(&b);
+  //b.addChild(&c);
 
   char textico[256];
   sprintf_s(textico, "Iniciando ventana con dimensiones %d x %d", Window::Width(), Window::Height());
@@ -74,14 +74,23 @@ int32 main() {
 
     //a.transform_->set_position(0.0f, sin_value, 0.0f);
     //a.transform_->set_scale(1.0f + sin_value * 0.5f, 1.0f + sin_value * 0.5f, 1.0f + sin_value * 0.5f);
-    a.transform_->set_rotation(0.0f, 0.0f, (float)Time() * 0.001f);
-    b.transform_->set_rotation(0.0f, (float)Time() * 0.0051f, 0.0f);
+   // a.transform_->set_rotation(0.0f, 0.0f, (float)Time() * 0.0001f);
+    
+    //b.transform_->set_rotation(0.0f, (float)Time() * 0.0021f, 0.0f);
+    if(Input::IsKeyboardButtonPressed(Input::kKeyboardButton_Down)) {
+      b.transform_->set_position(0.0f, 0.0f, -1.0f);
+      a.transform_->set_position(0.0f, 0.0f, 1.0f);
+    }
+    if (Input::IsKeyboardButtonPressed(Input::kKeyboardButton_Up)) {
+      b.transform_->set_position(0.0f, 0.0f, 1.0f);
+      a.transform_->set_position(0.0f, 0.0f, -1.0f);
+    }
     c.transform_->set_rotation(0.0f, (float)Time() * 0.01f, 0.0f);
     
 
     texture.use();
     cam.render(&a);
-    //cam.render(&b);
+    cam.render(&b);
 
 	ImGui::SetNextWindowPos(ImVec2(650, 20), ImGuiCond_FirstUseEver);
 	ImGui::ShowTestWindow(0);
