@@ -364,7 +364,7 @@ namespace SLX {
     swap_chain_description.BufferDesc.Height = Core::instance().window_.height_;
     swap_chain_description.BufferUsage = DXGI_USAGE_RENDER_TARGET_OUTPUT;                        // how swap chain is to be used
     swap_chain_description.OutputWindow = Core::instance().window_.window_handle_;               // the window to be used
-    swap_chain_description.SampleDesc.Count = 4;                                                 // how many multisamples                                              // quality of the multisampling
+    swap_chain_description.SampleDesc.Count = 1;                                                 // how many multisamples 
     swap_chain_description.Windowed = TRUE;                                                      // windowed/full-screen mode
     swap_chain_description.Flags = DXGI_SWAP_CHAIN_FLAG_ALLOW_MODE_SWITCH;                       // allows swithing between fullscreen and windowed.        
     swap_chain_description.BufferDesc.ScanlineOrdering = DXGI_MODE_SCANLINE_ORDER_UNSPECIFIED;   // Set the scan line ordering to unspecified.
