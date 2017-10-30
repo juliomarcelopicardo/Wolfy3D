@@ -41,9 +41,12 @@ float4 PShader(PixelInput pixel_input) : SV_TARGET
 {
 	float4 texture_color;
 	texture_color = texture_shader.Sample(sampler_type, pixel_input.TexCoord);
-  float4 grey_color = pixel_input.Normal;
-  grey_color.y *= 0.1f;
-  grey_color.x = grey_color.y;
-  grey_color.z = grey_color.y;
-	return grey_color;
+  /*
+    float4 grey_color = pixel_input.Normal;
+    grey_color.y *= 0.1f;
+    grey_color.x = grey_color.y;
+    grey_color.z = grey_color.y;
+	  return grey_color;
+  */
+  return pixel_input.Normal;
 }

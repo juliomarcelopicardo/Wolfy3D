@@ -99,7 +99,7 @@ class CoreGeometry {
   ///
   /// @brief  Initializes the Geometry.
   /// @param  num_polygon_vertex num vertices of the base polygon.
-  /// @param  base_radius Radius of the polygon base.
+  /// @param  base_radius Radius of the polygon base. (CANT BE 0, to have good normals)
   /// @param  top_radius Radius of the top polygon.
   /// @param  height Height or extrusion.
   /// @param  color Color RGBA of the geometry.

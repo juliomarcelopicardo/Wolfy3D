@@ -350,12 +350,12 @@ bool CoreGeometry::initTerrain(const char * height_map_filename,
 }
 
 bool CoreGeometry::initExtruded(const uint32 num_polygon_vertex,
-                                const float32 base_radius, 
-                                const float32 top_radius,
-                                const float32 height,
-                                const DirectX::XMFLOAT4 color) {
+  const float32 base_radius,
+  const float32 top_radius,
+  const float32 height,
+  const DirectX::XMFLOAT4 color) {
 
-  
+
   float32 angle = DirectX::XM_2PI / (float32)num_polygon_vertex;
   float half_height = height * 0.5f;
   uint32 index = 0, i = 0;
@@ -365,7 +365,7 @@ bool CoreGeometry::initExtruded(const uint32 num_polygon_vertex,
   std::vector <DirectX::XMFLOAT3> base(num_polygon_vertex);
   std::vector <DirectX::XMFLOAT3> top(num_polygon_vertex);
 
-  // Generamos los poligonos regulares.
+  // Generate the regular poligons.
   for (i = 0; i < num_polygon_vertex; i++) {
     top[i] = { top_radius * DirectX::XMScalarCos(i * angle), half_height,
                top_radius * DirectX::XMScalarSin(i * angle) };
@@ -374,8 +374,8 @@ bool CoreGeometry::initExtruded(const uint32 num_polygon_vertex,
                 base_radius * DirectX::XMScalarSin(i * angle) };
   }
 
-  num_vertices_ = num_polygon_vertex * 2 + 2;
-  num_indices_ = num_polygon_vertex * 3 * 2;
+  num_vertices_ = num_polygon_vertex * 2 + 2 + (num_polygon_vertex - 1) * 4;
+  num_indices_ = num_polygon_vertex * 12;
   vertex_data_.resize(num_vertices_);
   vertex_index_.resize(num_indices_);
 
@@ -394,38 +394,86 @@ bool CoreGeometry::initExtruded(const uint32 num_polygon_vertex,
     vertex_data_[index] = { top[i] ,{ 0.0f, 1.0f, 0.0f },{ 1.0f, 1.0f }, color };
     index++;
   }
+  // Fill the sides.
+  DirectX::XMFLOAT3 normal1, normal2;
+  DirectX::XMVECTOR temp;
+  for (i = 0; i < num_polygon_vertex - 1; i++) {
+    temp = DirectX::XMVectorSubtract(DirectX::XMLoadFloat3(&base[i]), DirectX::XMLoadFloat3(&base_center));
+    DirectX::XMStoreFloat3(&normal1, DirectX::XMVector3Normalize(temp));
+    vertex_data_[index] = { top[i] , normal1 ,{ 0.0f, 0.0f }, color };
+    index++;
+    vertex_data_[index] = { base[i] , normal1 ,{ 0.0f, 1.0f }, color };
+    index++;
+    temp = DirectX::XMVectorSubtract(DirectX::XMLoadFloat3(&base[i + 1]), DirectX::XMLoadFloat3(&base_center));
+    DirectX::XMStoreFloat3(&normal2, DirectX::XMVector3Normalize(temp));
+    vertex_data_[index] = { top[i + 1] , normal2 ,{ 1.0f, 0.0f }, color };
+    index++;
+    vertex_data_[index] = { base[i + 1] , normal2 ,{ 1.0f, 1.0f }, color };
+    index++;
+  }
 
   // Base elements
   index = 0;
   for (i = 0; i < num_polygon_vertex - 1; i++) {
     vertex_index_[index] = 0; // base center
     index++;
-    vertex_index_[index] = i + 1; 
+    vertex_index_[index] = i + 1;
     index++;
-    vertex_index_[index] = i + 2; // base center
+    vertex_index_[index] = i + 2;
     index++;
   }
   // To connect the last one with the first one
-  vertex_index_[index] = 0; 
+  vertex_index_[index] = 0; // base center
   index++;
   vertex_index_[index] = num_polygon_vertex;
   index++;
-  vertex_index_[index] = 1; // base center
+  vertex_index_[index] = 1;
   index++;
+
   // Top elements
   for (i = 0; i < num_polygon_vertex - 1; i++) {
-    vertex_index_[index] = num_polygon_vertex + 1; // base center
+    vertex_index_[index] = num_polygon_vertex + 1; // top center
     index++;
     vertex_index_[index] = i + num_polygon_vertex + 3;
     index++;
-    vertex_index_[index] = i + num_polygon_vertex + 2; 
+    vertex_index_[index] = i + num_polygon_vertex + 2;
     index++;
   }
+  // To connect the last one with the first one
   vertex_index_[index] = num_polygon_vertex + 1; // top center
   index++;
   vertex_index_[index] = num_polygon_vertex + 2;
   index++;
   vertex_index_[index] = i + num_polygon_vertex + 2;
+  index++;
+
+  // Sides elements
+  uint32 first_element_number = num_polygon_vertex * 2 + 2;
+  for (i = 0; i < num_polygon_vertex - 1; i++) {
+    vertex_index_[index] = i * 4 + first_element_number;
+    index++;
+    vertex_index_[index] = i * 4 + first_element_number + 2;
+    index++;
+    vertex_index_[index] = i * 4 + first_element_number + 1;
+    index++;
+    vertex_index_[index] = i * 4 + first_element_number + 1; 
+    index++;
+    vertex_index_[index] = i * 4 + first_element_number + 2;
+    index++;
+    vertex_index_[index] = i * 4 + first_element_number + 3;
+    index++;
+  }
+  vertex_index_[index] = i * 4 + first_element_number - 2;
+  index++;
+  vertex_index_[index] = first_element_number;
+  index++;
+  vertex_index_[index] = i * 4 + first_element_number - 1;
+  index++;
+  vertex_index_[index] = i * 4 + first_element_number - 1;
+  index++;
+  vertex_index_[index] = first_element_number;
+  index++;
+  vertex_index_[index] = first_element_number + 1;
   index++;
 
   topology_ = D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST;
