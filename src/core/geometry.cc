@@ -395,20 +395,68 @@ bool CoreGeometry::initExtruded(const uint32 num_polygon_vertex,
     index++;
   }
   // Fill the sides.
-  DirectX::XMFLOAT3 normal1, normal2;
-  DirectX::XMVECTOR temp;
+  DirectX::XMFLOAT3 normal;
+  DirectX::XMVECTOR n1, n2, vertical, horizontal; 
   for (i = 0; i < num_polygon_vertex - 1; i++) {
-    temp = DirectX::XMVectorSubtract(DirectX::XMLoadFloat3(&base[i]), DirectX::XMLoadFloat3(&base_center));
-    DirectX::XMStoreFloat3(&normal1, DirectX::XMVector3Normalize(temp));
-    vertex_data_[index] = { top[i] , normal1 ,{ 0.0f, 0.0f }, color };
+
+    // 1
+    if (i == 0) { 
+      horizontal = DirectX::XMVectorSubtract(DirectX::XMLoadFloat3(&top[num_polygon_vertex - 1]), DirectX::XMLoadFloat3(&top[i]));
+    }
+    else {
+      horizontal = DirectX::XMVectorSubtract(DirectX::XMLoadFloat3(&top[i - 1]), DirectX::XMLoadFloat3(&top[i]));
+    }
+    vertical = DirectX::XMVectorSubtract(DirectX::XMLoadFloat3(&top[i]), DirectX::XMLoadFloat3(&base[i]));
+    n1 = DirectX::XMVector3Normalize(DirectX::XMVector3Cross(DirectX::XMVector3Normalize(horizontal), DirectX::XMVector3Normalize(vertical)));
+    horizontal = DirectX::XMVectorSubtract(DirectX::XMLoadFloat3(&top[i]), DirectX::XMLoadFloat3(&top[i + 1]));
+    n2 = DirectX::XMVector3Normalize(DirectX::XMVector3Cross(DirectX::XMVector3Normalize(horizontal), DirectX::XMVector3Normalize(vertical)));
+    DirectX::XMStoreFloat3(&normal, DirectX::XMVector3Normalize(DirectX::XMVectorAdd(n1, n2)));
+    vertex_data_[index] = { top[i] , normal ,{ 0.0f, 0.0f }, color };
     index++;
-    vertex_data_[index] = { base[i] , normal1 ,{ 0.0f, 1.0f }, color };
+
+    // 2
+    if (i == 0) {
+      horizontal = DirectX::XMVectorSubtract(DirectX::XMLoadFloat3(&base[num_polygon_vertex - 1]), DirectX::XMLoadFloat3(&base[i]));
+    }
+    else {
+      horizontal = DirectX::XMVectorSubtract(DirectX::XMLoadFloat3(&base[i - 1]), DirectX::XMLoadFloat3(&base[i]));
+    }
+    vertical = DirectX::XMVectorSubtract(DirectX::XMLoadFloat3(&top[i]), DirectX::XMLoadFloat3(&base[i]));
+    n1 = DirectX::XMVector3Normalize(DirectX::XMVector3Cross(DirectX::XMVector3Normalize(horizontal), DirectX::XMVector3Normalize(vertical)));
+    horizontal = DirectX::XMVectorSubtract(DirectX::XMLoadFloat3(&base[i]), DirectX::XMLoadFloat3(&base[i + 1]));
+    n2 = DirectX::XMVector3Normalize(DirectX::XMVector3Cross(DirectX::XMVector3Normalize(horizontal), DirectX::XMVector3Normalize(vertical)));
+    DirectX::XMStoreFloat3(&normal, DirectX::XMVector3Normalize(DirectX::XMVectorAdd(n1, n2)));
+    vertex_data_[index] = { base[i] , normal ,{ 0.0f, 1.0f }, color };
     index++;
-    temp = DirectX::XMVectorSubtract(DirectX::XMLoadFloat3(&base[i + 1]), DirectX::XMLoadFloat3(&base_center));
-    DirectX::XMStoreFloat3(&normal2, DirectX::XMVector3Normalize(temp));
-    vertex_data_[index] = { top[i + 1] , normal2 ,{ 1.0f, 0.0f }, color };
+
+    // 3 
+    horizontal = DirectX::XMVectorSubtract(DirectX::XMLoadFloat3(&top[i]), DirectX::XMLoadFloat3(&top[i + 1]));
+    vertical = DirectX::XMVectorSubtract(DirectX::XMLoadFloat3(&top[i + 1]), DirectX::XMLoadFloat3(&base[i + 1]));
+    n1 = DirectX::XMVector3Normalize(DirectX::XMVector3Cross(DirectX::XMVector3Normalize(horizontal), DirectX::XMVector3Normalize(vertical)));
+    if (i + 2 == num_polygon_vertex) {
+      horizontal = DirectX::XMVectorSubtract(DirectX::XMLoadFloat3(&top[i + 1]), DirectX::XMLoadFloat3(&top[0]));
+    }
+    else {
+      horizontal = DirectX::XMVectorSubtract(DirectX::XMLoadFloat3(&top[i + 1]), DirectX::XMLoadFloat3(&top[i + 2]));
+    }
+    n2 = DirectX::XMVector3Normalize(DirectX::XMVector3Cross(DirectX::XMVector3Normalize(horizontal), DirectX::XMVector3Normalize(vertical)));
+    DirectX::XMStoreFloat3(&normal, DirectX::XMVector3Normalize(DirectX::XMVectorAdd(n1, n2)));
+    vertex_data_[index] = { top[i + 1] , normal ,{ 1.0f, 0.0f }, color };
     index++;
-    vertex_data_[index] = { base[i + 1] , normal2 ,{ 1.0f, 1.0f }, color };
+
+    // 4
+    horizontal = DirectX::XMVectorSubtract(DirectX::XMLoadFloat3(&base[i]), DirectX::XMLoadFloat3(&base[i + 1]));
+    vertical = DirectX::XMVectorSubtract(DirectX::XMLoadFloat3(&top[i + 1]), DirectX::XMLoadFloat3(&base[i + 1]));
+    n1 = DirectX::XMVector3Normalize(DirectX::XMVector3Cross(DirectX::XMVector3Normalize(horizontal), DirectX::XMVector3Normalize(vertical)));
+    if (i + 2 == num_polygon_vertex) {
+      horizontal = DirectX::XMVectorSubtract(DirectX::XMLoadFloat3(&base[i + 1]), DirectX::XMLoadFloat3(&base[0]));
+    }
+    else {
+      horizontal = DirectX::XMVectorSubtract(DirectX::XMLoadFloat3(&base[i + 1]), DirectX::XMLoadFloat3(&base[i + 2]));
+    }
+    n2 = DirectX::XMVector3Normalize(DirectX::XMVector3Cross(DirectX::XMVector3Normalize(horizontal), DirectX::XMVector3Normalize(vertical)));
+    DirectX::XMStoreFloat3(&normal, DirectX::XMVector3Normalize(DirectX::XMVectorAdd(n1, n2)));
+    vertex_data_[index] = { base[i + 1] , normal ,{ 1.0f, 1.0f }, color };
     index++;
   }
 

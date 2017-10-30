@@ -27,7 +27,7 @@ int32 main() {
 
   //geo.initQuad();
   //geo.initCube();
-  geo.initExtruded(100, 2.0f, 0.0f, 4.0f);
+  geo.initExtruded(100, 2.0f, 1.0f, 4.0f);
   //geo.initTerrain("./../data/Heightmap.bmp", { 10, 2, 10 });
   geo2.initTriangle({ 3.0f, 3.0f });
   mat.init();
