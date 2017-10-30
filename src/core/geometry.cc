@@ -238,98 +238,16 @@ bool CoreGeometry::initCube(const DirectX::XMFLOAT3 size,
   return true;
 }
 
-bool CoreGeometry::init(const char * height_map_filename, 
-                        const float grid_size) {
+bool CoreGeometry::initTerrain(const char * height_map_filename, 
+                               const DirectX::XMFLOAT3 grid_size, 
+                               const DirectX::XMFLOAT4 color) {
 
-  FILE* filePtr;
-  int32 error;
-  uint32 count;
-  BITMAPFILEHEADER bitmapFileHeader;
-  BITMAPINFOHEADER bitmapInfoHeader;
-  int32 imageSize, i, j, k, index;
-  unsigned char* bitmapImage;
-  unsigned char height;
   DirectX::XMINT2 heightmap_size;
-
-  // Open the height map file in binary.
-  if (fopen_s(&filePtr, height_map_filename, "rb")) {
-    MessageBox(NULL, "ERROR - Heightmap filename incorrect.", "ERROR", MB_OK);
-    return false;
-  }
-
-  // Read in the file header.
-  count = fread(&bitmapFileHeader, sizeof(BITMAPFILEHEADER), 1, filePtr);
-  if (count != 1) {
-    MessageBox(NULL, "ERROR - Heightmap file is empty.", "ERROR", MB_OK);
-    return false;
-  }
-
-  // Read in the bitmap info header.
-  count = fread(&bitmapInfoHeader, sizeof(BITMAPINFOHEADER), 1, filePtr);
-  if (count != 1) {
-    MessageBox(NULL, "ERROR - Heightmap info header incorrect.", "ERROR", MB_OK);
-    return false;
-  }
-
-  // Save the dimensions of the terrain.
-  heightmap_size = { bitmapInfoHeader.biWidth, bitmapInfoHeader.biHeight };
-
-  // Calculate the size of the bitmap image data.
-  imageSize = heightmap_size.x * heightmap_size.y * 3;
-
-  // Allocate memory for the bitmap image data.
-  bitmapImage = new unsigned char[imageSize];
-  if (!bitmapImage) {
-    MessageBox(NULL, "ERROR - Allocating memory for the bitmap image data.", "ERROR", MB_OK);
-    return false;
-  }
-
-  // Move to the beginning of the bitmap data.
-  fseek(filePtr, bitmapFileHeader.bfOffBits, SEEK_SET);
-
-  // Read in the bitmap image data.
-  count = fread(bitmapImage, 1, imageSize, filePtr);
-  if (count != imageSize) {
-    delete[] bitmapImage;
-    MessageBox(NULL, "ERROR - Allocating memory for the bitmap image data.", "ERROR", MB_OK);
-    return false;
-  }
-
-  // Close the file.
-  error = fclose(filePtr);
-  if (error != 0) {
-    delete[] bitmapImage;
-    MessageBox(NULL, "ERROR - File couldnt be closed.", "ERROR", MB_OK);
-    return false;
-  }
-
-  // Initialize the position in the image data buffer.
-  k = 0;
-
-  // Save the heightmap_data.
   std::vector<DirectX::XMFLOAT3> height_map_data;
-  height_map_data.resize(heightmap_size.x * heightmap_size.y);
 
-  // Read the image data into the height map.
-  for (j = 0; j< heightmap_size.y; j++)
-  {
-    for (i = 0; i<heightmap_size.x; i++)
-    {
-      height = bitmapImage[k];
-
-      index = (heightmap_size.y * j) + i;
-
-      height_map_data[index].x = (float)i / (float)heightmap_size.x * grid_size;
-      height_map_data[index].y = (float)height / 256.0f;
-      height_map_data[index].z = (float)j / (float)heightmap_size.y * grid_size;
-
-      k += 3;
-    }
+  if (!parseTerrainImage(grid_size, height_map_filename, height_map_data, heightmap_size)) {
+    return false;
   }
-
-  // Release the bitmap image data.
-  delete[] bitmapImage;
-  bitmapImage = nullptr;
 
   /* GEOMETRY CREATION */
   int32 num_points_per_row = heightmap_size.x;
@@ -383,13 +301,13 @@ bool CoreGeometry::init(const char * height_map_filename,
 		  vertex_data_[idx].position = height_map_data[idx];
 		  vertex_data_[idx].normal = normal;
 		  vertex_data_[idx].uv = { 1.0f, 1.0f };
-		  vertex_data_[idx].color = { 0.3f, 0.3f, 0.3f, 1.0f };
+		  vertex_data_[idx].color = color;
 	  }
   }
 
   // ELEMENTS
 
-  index = 0;
+  int32 index = 0;
   int32 map_index = 0;
   int32 direction = -1;
 
@@ -422,25 +340,6 @@ bool CoreGeometry::init(const char * height_map_filename,
 	  }
   }
   
-  // Creamos un buffer para subir la informacion de los vertices a la grafica.
-  D3D11_BUFFER_DESC vertex_description;
-  ZeroMemory(&vertex_description, sizeof(D3D11_BUFFER_DESC));
-
-  vertex_description.Usage = D3D11_USAGE_DEFAULT;
-  vertex_description.BindFlags = D3D11_BIND_VERTEX_BUFFER;
-  vertex_description.ByteWidth = sizeof(VertexData) * num_vertices_;
-
-  D3D11_SUBRESOURCE_DATA vertex_data;
-  ZeroMemory(&vertex_data, sizeof(D3D11_SUBRESOURCE_DATA));
-  vertex_data.pSysMem = vertex_data_.data();
-
-  HRESULT result = Core::instance().d3d_.device()->CreateBuffer(&vertex_description, &vertex_data, &vertex_buffer_);
-
-  if (FAILED(result)) {
-    MessageBox(NULL, "ERROR - Vertex buffer not created", "ERROR", MB_OK);
-    return false;
-  }
-
   topology_ = D3D10_PRIMITIVE_TOPOLOGY_TRIANGLESTRIP;
 
   if (!createVertexBuffer()) { return false; }
@@ -517,6 +416,102 @@ bool CoreGeometry::createMatrixBuffer() {
     MessageBox(NULL, "ERROR - Matrix buffer not created", "ERROR", MB_OK);
     return false;
   }
+  return true;
+}
+
+bool CoreGeometry::parseTerrainImage(const DirectX::XMFLOAT3 terrain_size, 
+                                     const char * filename, 
+                                     std::vector<DirectX::XMFLOAT3>& vertices_output, 
+                                     DirectX::XMINT2 & grid_rows_cols_output) {
+
+  FILE* filePtr;
+  int32 error;
+  uint32 count;
+  BITMAPFILEHEADER bitmapFileHeader;
+  BITMAPINFOHEADER bitmapInfoHeader;
+  int32 imageSize, i, j, k, index;
+  uchar8* bitmapImage;
+  uchar8 height;
+  
+
+  // Open the height map file in binary.
+  if (fopen_s(&filePtr, filename, "rb")) {
+    MessageBox(NULL, "ERROR - Heightmap filename incorrect.", "ERROR", MB_OK);
+    return false;
+  }
+
+  // Read in the file header.
+  count = fread(&bitmapFileHeader, sizeof(BITMAPFILEHEADER), 1, filePtr);
+  if (count != 1) {
+    MessageBox(NULL, "ERROR - Heightmap file is empty.", "ERROR", MB_OK);
+    return false;
+  }
+
+  // Read in the bitmap info header.
+  count = fread(&bitmapInfoHeader, sizeof(BITMAPINFOHEADER), 1, filePtr);
+  if (count != 1) {
+    MessageBox(NULL, "ERROR - Heightmap info header incorrect.", "ERROR", MB_OK);
+    return false;
+  }
+
+  // Save the dimensions of the terrain.
+  grid_rows_cols_output = { bitmapInfoHeader.biWidth, bitmapInfoHeader.biHeight };
+
+  // Calculate the size of the bitmap image data.
+  imageSize = grid_rows_cols_output.x * grid_rows_cols_output.y * 3;
+
+  // Allocate memory for the bitmap image data.
+  bitmapImage = new unsigned char[imageSize];
+  if (!bitmapImage) {
+    MessageBox(NULL, "ERROR - Allocating memory for the bitmap image data.", "ERROR", MB_OK);
+    return false;
+  }
+
+  // Move to the beginning of the bitmap data.
+  fseek(filePtr, bitmapFileHeader.bfOffBits, SEEK_SET);
+
+  // Read in the bitmap image data.
+  count = fread(bitmapImage, 1, imageSize, filePtr);
+  if (count != imageSize) {
+    delete[] bitmapImage;
+    MessageBox(NULL, "ERROR - Allocating memory for the bitmap image data.", "ERROR", MB_OK);
+    return false;
+  }
+
+  // Close the file.
+  error = fclose(filePtr);
+  if (error != 0) {
+    delete[] bitmapImage;
+    MessageBox(NULL, "ERROR - File couldnt be closed.", "ERROR", MB_OK);
+    return false;
+  }
+
+  // Initialize the position in the image data buffer.
+  k = 0;
+
+  // Save the heightmap_data.
+  vertices_output.resize(grid_rows_cols_output.x * grid_rows_cols_output.y);
+
+  // Read the image data into the height map.
+  for (j = 0; j< grid_rows_cols_output.y; j++)
+  {
+    for (i = 0; i<grid_rows_cols_output.x; i++)
+    {
+      height = bitmapImage[k];
+
+      index = (grid_rows_cols_output.y * j) + i;
+
+      vertices_output[index].x = (float32)i / (float32)grid_rows_cols_output.x * terrain_size.x;
+      vertices_output[index].y = terrain_size.y * (float32)height / 256.0f;
+      vertices_output[index].z = (float32)j / (float32)grid_rows_cols_output.y * terrain_size.z;
+
+      k += 3;
+    }
+  }
+
+  // Release the bitmap image data.
+  delete[] bitmapImage;
+  bitmapImage = nullptr;
   return true;
 }
 

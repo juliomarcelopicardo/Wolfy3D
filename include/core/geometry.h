@@ -57,15 +57,18 @@ class CoreGeometry {
                 const DirectX::XMFLOAT4 color = { 1.0f, 1.0f, 1.0f, 1.0f });
 
   ///--------------------------------------------------------------------------
-  /// @fn   bool init(const char* height_map_filename, const float max_height);
+  /// @fn   bool initTerrain(const char* height_map_filename, const float max_height);
   ///
   /// @brief  Initializes the Geometry. Terrain.
   ///
   /// @param heigh_map_filename File which contains the height map for the terrain.
-  /// @param grid_size Size of each cell of the grid.
+  /// @param grid_size Size of the whole terrain, Y will be the max height.
+  /// @param  color Color RGBA of the geometry.
   /// @return true if successfully initialized, false otherwise.
   ///--------------------------------------------------------------------------
-  bool init(const char* height_map_filename, const float grid_size);
+  bool initTerrain(const char* height_map_filename, 
+                   const DirectX::XMFLOAT3 grid_size = { 10.0f, 2.0f, 10.0f },
+                   const DirectX::XMFLOAT4 color = { 1.0f, 1.0f, 1.0f, 1.0f });
 
   ///--------------------------------------------------------------------------
   /// @fn   bool initQuad(const float32 width, const float32 height)
@@ -146,6 +149,20 @@ class CoreGeometry {
    /// @return true if successfully initialized, false otherwise.
    ///--------------------------------------------------------------------------
    bool createMatrixBuffer();
+   ///--------------------------------------------------------------------------
+   /// @fn   bool parseTerrainImage();
+   ///
+   /// @brief  Parses the terrain image and saves its info into a vector.
+   /// @param  terrain_size Size of the whole geometry. Y will be the max height.
+   /// @param  filename terrain heightmap file.
+   /// @param  vertices_output Vector where we will save the vertices.
+   /// @param  grid_rows_cols_output Info of the num of rows and cols.
+   /// @return true if successfully initialized, false otherwise.
+   ///--------------------------------------------------------------------------
+   bool parseTerrainImage(const DirectX::XMFLOAT3 terrain_size,
+                          const char* filename,
+                          std::vector<DirectX::XMFLOAT3>& vertices_output,
+                          DirectX::XMINT2& grid_rows_cols_output);
 
 
 }; /* CoreGeometry */
