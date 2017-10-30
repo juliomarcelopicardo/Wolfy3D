@@ -441,42 +441,11 @@ bool CoreGeometry::init(const char * height_map_filename,
     return false;
   }
 
-  // Creamos un buffer para subir la informacion de los indices a la grafica.
-  D3D11_BUFFER_DESC index_description;
-  ZeroMemory(&index_description, sizeof(D3D11_BUFFER_DESC));
-
-  index_description.Usage = D3D11_USAGE_DEFAULT;
-  index_description.BindFlags = D3D11_BIND_INDEX_BUFFER;
-  index_description.ByteWidth = sizeof(uint32) * num_indices_;
-
-  D3D11_SUBRESOURCE_DATA index_data;
-  ZeroMemory(&index_data, sizeof(D3D11_SUBRESOURCE_DATA));
-  index_data.pSysMem = vertex_index_.data();
-
-  result = Core::instance().d3d_.device()->CreateBuffer(&index_description, &index_data, &vertex_index_buffer_);
-
-  if (FAILED(result)) {
-    MessageBox(NULL, "ERROR - Vertex buffer not created", "ERROR", MB_OK);
-    return false;
-  }
-
-  // Creamos un buffer para almacenar las matrices.
-  D3D11_BUFFER_DESC matrix_description;
-  ZeroMemory(&matrix_description, sizeof(D3D11_BUFFER_DESC));
-
-  matrix_description.Usage = D3D11_USAGE_DYNAMIC;
-  matrix_description.ByteWidth = sizeof(DirectX::XMFLOAT4X4) * 3;
-  matrix_description.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
-  matrix_description.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
-
-  result = Core::instance().d3d_.device()->CreateBuffer(&matrix_description, NULL, &matrix_buffer_);
-
-  if (FAILED(result)) {
-    MessageBox(NULL, "ERROR - Matrix buffer not created", "ERROR", MB_OK);
-    return false;
-  }
-
   topology_ = D3D10_PRIMITIVE_TOPOLOGY_TRIANGLESTRIP;
+
+  if (!createVertexBuffer()) { return false; }
+  if (!createIndexBuffer()) { return false; }
+  if (!createMatrixBuffer()) { return false; }
 
   return true;
 }
