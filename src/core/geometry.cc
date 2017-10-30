@@ -349,10 +349,98 @@ bool CoreGeometry::initTerrain(const char * height_map_filename,
   return true;
 }
 
+bool CoreGeometry::initExtruded(const uint32 num_polygon_vertex,
+                                const float32 base_radius, 
+                                const float32 top_radius,
+                                const float32 height,
+                                const DirectX::XMFLOAT4 color) {
+
+  
+  float32 angle = DirectX::XM_2PI / (float32)num_polygon_vertex;
+  float half_height = height * 0.5f;
+  uint32 index = 0, i = 0;
+
+  DirectX::XMFLOAT3 base_center = { 0.0f, -half_height, 0.0f };
+  DirectX::XMFLOAT3 top_center = { 0.0f, half_height, 0.0f };
+  std::vector <DirectX::XMFLOAT3> base(num_polygon_vertex);
+  std::vector <DirectX::XMFLOAT3> top(num_polygon_vertex);
+
+  // Generamos los poligonos regulares.
+  for (i = 0; i < num_polygon_vertex; i++) {
+    top[i] = { top_radius * DirectX::XMScalarCos(i * angle), half_height,
+               top_radius * DirectX::XMScalarSin(i * angle) };
+
+    base[i] = { base_radius * DirectX::XMScalarCos(i * angle), -half_height,
+                base_radius * DirectX::XMScalarSin(i * angle) };
+  }
+
+  num_vertices_ = num_polygon_vertex * 2 + 2;
+  num_indices_ = num_polygon_vertex * 3 * 2;
+  vertex_data_.resize(num_vertices_);
+  vertex_index_.resize(num_indices_);
+
+  // Fill the base.
+  index = 0;
+  vertex_data_[index] = { base_center, { 0.0f, -1.0f, 0.0f }, { 1.0f, 1.0f }, color };
+  index++;
+  for (i = 0; i < num_polygon_vertex; i++) {
+    vertex_data_[index] = { base[i] ,{ 0.0f, -1.0f, 0.0f },{ 1.0f, 1.0f }, color };
+    index++;
+  }
+  // Fill the top.
+  vertex_data_[index] = { top_center,{ 0.0f, 1.0f, 0.0f },{ 1.0f, 1.0f }, color };
+  index++;
+  for (i = 0; i < num_polygon_vertex; i++) {
+    vertex_data_[index] = { top[i] ,{ 0.0f, 1.0f, 0.0f },{ 1.0f, 1.0f }, color };
+    index++;
+  }
+
+  // Base elements
+  index = 0;
+  for (i = 0; i < num_polygon_vertex - 1; i++) {
+    vertex_index_[index] = 0; // base center
+    index++;
+    vertex_index_[index] = i + 1; 
+    index++;
+    vertex_index_[index] = i + 2; // base center
+    index++;
+  }
+  // To connect the last one with the first one
+  vertex_index_[index] = 0; 
+  index++;
+  vertex_index_[index] = num_polygon_vertex;
+  index++;
+  vertex_index_[index] = 1; // base center
+  index++;
+  // Top elements
+  for (i = 0; i < num_polygon_vertex - 1; i++) {
+    vertex_index_[index] = num_polygon_vertex + 1; // base center
+    index++;
+    vertex_index_[index] = i + num_polygon_vertex + 3;
+    index++;
+    vertex_index_[index] = i + num_polygon_vertex + 2; 
+    index++;
+  }
+  vertex_index_[index] = num_polygon_vertex + 1; // top center
+  index++;
+  vertex_index_[index] = num_polygon_vertex + 2;
+  index++;
+  vertex_index_[index] = i + num_polygon_vertex + 2;
+  index++;
+
+  topology_ = D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST;
+
+  if (!createVertexBuffer()) { return false; }
+  if (!createIndexBuffer()) { return false; }
+  if (!createMatrixBuffer()) { return false; }
+
+  return true;
+}
+
 
 
 /*******************************************************************************
-***                               Public methods                             ***
+***                              Private methods                             ***
 *******************************************************************************/
 
 bool CoreGeometry::createVertexBuffer() {
