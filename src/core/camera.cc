@@ -19,7 +19,7 @@ namespace SLX {
 
   /// Default class constructor.
 CoreCamera::CoreCamera() {
-  position_ = { 0.0f, 0.0f, -10.0f };
+  position_ = { 0.0f, 0.0f, 10.0f };
   target_ = { 0.0f, 0.0f, 0.0f };
   movement_speed_ = 0.001f;
   rotation_speed_ = 0.001f;

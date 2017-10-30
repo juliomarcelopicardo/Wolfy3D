@@ -25,8 +25,8 @@ int32 main() {
   CoreMaterial mat;
   CoreTexture texture;
 
-  //geo.initCube({ 3.0f, 4.0f, 2.0f });
-  geo.initQuad();
+  //geo.initQuad();
+  geo.initCube();
   //geo.init("./../data/Heightmap.bmp", 10);
   geo2.initTriangle({ 3.0f, 3.0f });
   mat.init();
@@ -44,7 +44,7 @@ int32 main() {
   b.render3D_->setup(&mat, &geo2);
   b.render3D_->init();
   b.init();
-  b.transform_->set_position(-2.0f, 0.0f, 0.0f);
+  b.transform_->set_position(2.0f, 0.0f, 0.0f);
 
   c.addComponent(ComponentType::Transform);
   c.addComponent(ComponentType::Render3D);
@@ -75,7 +75,7 @@ int32 main() {
 
     //a.transform_->set_position(0.0f, sin_value, 0.0f);
     //a.transform_->set_scale(1.0f + sin_value * 0.5f, 1.0f + sin_value * 0.5f, 1.0f + sin_value * 0.5f);
-   // a.transform_->set_rotation(0.0f, 0.0f, (float)Time() * 0.0001f);
+    a.transform_->set_rotation(0.0f, (float)Time() * 0.0005f, 0.0f);
     
     //b.transform_->set_rotation(0.0f, (float)Time() * 0.0021f, 0.0f);
     if(Input::IsKeyboardButtonPressed(Input::kKeyboardButton_Down)) {

@@ -60,8 +60,8 @@ bool CoreGeometry::initTriangle(const DirectX::XMFLOAT2 size,
                       color };
   
   vertex_index_[0] = 0;
-  vertex_index_[1] = 1;
-  vertex_index_[2] = 2;
+  vertex_index_[1] = 2;
+  vertex_index_[2] = 1;
   
   topology_ = D3D10_PRIMITIVE_TOPOLOGY_TRIANGLELIST;
 
@@ -113,11 +113,11 @@ bool CoreGeometry::initQuad(const DirectX::XMFLOAT2 size,
                         color };
 
   vertex_index_[0] = 0;
-  vertex_index_[1] = 1;
-  vertex_index_[2] = 2;
-  vertex_index_[3] = 2;
+  vertex_index_[1] = 2;
+  vertex_index_[2] = 1;
+  vertex_index_[3] = 0;
   vertex_index_[4] = 3;
-  vertex_index_[5] = 0;
+  vertex_index_[5] = 2;
 
   topology_ = D3D10_PRIMITIVE_TOPOLOGY_TRIANGLELIST;
 
@@ -138,72 +138,93 @@ bool CoreGeometry::initCube(const DirectX::XMFLOAT3 size,
   // Rellenamos info de vertices e indices.
   vertex_data_.resize(num_vertices_);
   vertex_index_.resize(num_indices_);
-  DirectX::XMFLOAT3 half_size = { size.x * 0.5f, size.y * 0.5f, size.z * 0.5f };
 
-                          // Position,                              Normal                 UV              COLOR
-  vertex_data_[0] = { { -half_size.x, half_size.y, -half_size.z }, { 1.0f, 0.0f, 0.0f }, { 0.0f, 0.0f }, color };
-  vertex_data_[1] = { { half_size.x, half_size.y, -half_size.z }, { 1.0f, 0.0f, 0.0f }, { 1.0f, 0.0f }, color };
-  vertex_data_[2] = { { -half_size.x, -half_size.y, -half_size.z }, { 1.0f, 0.0f, 0.0f }, { 0.0f, 1.0f }, color };
-  vertex_data_[3] = { { half_size.x, -half_size.y, -half_size.z }, { 1.0f, 0.0f, 0.0f }, { 1.0f, 1.0f }, color };
+  DirectX::XMFLOAT3 h_size = { size.x * 0.5f, size.y * 0.5f, size.z * 0.5f };
+  DirectX::XMFLOAT3 normal_x = { 1.0f, 0.0f, 0.0f };
+  DirectX::XMFLOAT3 normal_y = { 0.0f, 1.0f, 0.0f };
+  DirectX::XMFLOAT3 normal_z = { 0.0f, 0.0f, 1.0f };
+  DirectX::XMFLOAT3 normal_x_neg = { -1.0f, 0.0f, 0.0f };
+  DirectX::XMFLOAT3 normal_y_neg = { 0.0f, -1.0f, 0.0f };
+  DirectX::XMFLOAT3 normal_z_neg = { 0.0f, 0.0f, -1.0f };
+  DirectX::XMFLOAT2 uv_top_l = { 0.0f, 0.0f };
+  DirectX::XMFLOAT2 uv_top_r = { 1.0f, 0.0f };
+  DirectX::XMFLOAT2 uv_bot_r = { 1.0f, 1.0f };
+  DirectX::XMFLOAT2 uv_bot_l = { 0.0f, 1.0f };
 
-  vertex_data_[4] = { { -half_size.x, half_size.y, half_size.z }, { 0.0f, 1.0f, 0.0f }, { 1.0f, 0.0f }, color };
-  vertex_data_[5] = { { half_size.x, half_size.y, half_size.z }, { 0.0f, 1.0f, 0.0f }, { 0.0f, 0.0f }, color };
-  vertex_data_[6] = { { -half_size.x, -half_size.y, half_size.z }, { 0.0f, 1.0f, 0.0f }, { 1.0f, 1.0f }, color };
-  vertex_data_[7] = { { half_size.x, -half_size.y, half_size.z }, { 0.0f, 1.0f, 0.0f }, { 0.0f, 1.0f }, color };
+  // FACE Z + 
+  vertex_data_[0] = { { -h_size.x, h_size.y, h_size.z }, normal_z, uv_top_l, color };
+  vertex_data_[1] = { { h_size.x, h_size.y, h_size.z }, normal_z, uv_top_r, color };
+  vertex_data_[2] = { { h_size.x, -h_size.y, h_size.z }, normal_z, uv_bot_r, color };
+  vertex_data_[3] = { { -h_size.x, -h_size.y, h_size.z }, normal_z, uv_bot_l, color };
 
-  vertex_data_[8] = { { -half_size.x, half_size.y, -half_size.z }, { 1.0f, 0.0f, 0.0f }, { 1.0f, 0.0f }, color };
-  vertex_data_[9] = { { -half_size.x, -half_size.y, -half_size.z }, { 1.0f, 0.0f, 0.0f }, { 1.0f, 1.0f }, color };
-  vertex_data_[10] = { { -half_size.x, half_size.y, half_size.z }, { 1.0f, 0.0f, 0.0f }, { 0.0f, 0.0f }, color };
-  vertex_data_[11] = { { -half_size.x, -half_size.y, half_size.z }, { 1.0f, 0.0f, 0.0f }, { 0.0f, 1.0f }, color };
+  // FACE X+
+  vertex_data_[4] = { { h_size.x, h_size.y, h_size.z }, normal_x, uv_top_l, color };
+  vertex_data_[5] = { { h_size.x, h_size.y, -h_size.z }, normal_x, uv_top_r, color };
+  vertex_data_[6] = { { h_size.x, -h_size.y, -h_size.z }, normal_x, uv_bot_r, color };
+  vertex_data_[7] = { { h_size.x, -h_size.y, h_size.z }, normal_x, uv_bot_l, color };
 
-  vertex_data_[12] = { { half_size.x, half_size.y, -half_size.z }, { 1.0f, 0.0f, 0.0f }, { 0.0f, 0.0f }, color };
-  vertex_data_[13] = { { half_size.x, -half_size.y, -half_size.z }, { 1.0f, 0.0f, 0.0f }, { 0.0f, 1.0f }, color };
-  vertex_data_[14] = { { half_size.x, half_size.y, half_size.z }, { 1.0f, 0.0f, 0.0f }, { 1.0f, 0.0f }, color };
-  vertex_data_[15] = { { half_size.x, -half_size.y, half_size.z }, { 1.0f, 0.0f, 0.0f }, { 1.0f, 1.0f }, color };
+  // FACE Z -
+  vertex_data_[8] = { { h_size.x, h_size.y, -h_size.z }, normal_z_neg, uv_top_l, color };
+  vertex_data_[9] = { { -h_size.x, h_size.y, -h_size.z }, normal_z_neg, uv_top_r, color };
+  vertex_data_[10] = { { -h_size.x, -h_size.y, -h_size.z }, normal_z_neg, uv_bot_r, color };
+  vertex_data_[11] = { { h_size.x, -h_size.y, -h_size.z }, normal_z_neg, uv_bot_l, color };
 
-  vertex_data_[16] = { { -half_size.x, -half_size.y, -half_size.z }, { 1.0f, 0.0f, 0.0f }, { 0.0f, 0.0f }, color };
-  vertex_data_[17] = { { -half_size.x, -half_size.y, half_size.z }, { 1.0f, 0.0f, 0.0f }, { 0.0f, 1.0f }, color };
-  vertex_data_[18] = { { half_size.x, -half_size.y, -half_size.z }, { 1.0f, 0.0f, 0.0f }, { 1.0f, 0.0f }, color };
-  vertex_data_[19] = { { half_size.x, -half_size.y, half_size.z }, { 1.0f, 0.0f, 0.0f }, { 1.0f, 1.0f }, color };
+  // FACE X- 
+  vertex_data_[12] = { { -h_size.x, h_size.y, -h_size.z }, normal_x_neg, uv_top_l, color };
+  vertex_data_[13] = { { -h_size.x, h_size.y, h_size.z }, normal_x_neg, uv_top_r, color };
+  vertex_data_[14] = { { -h_size.x, -h_size.y, h_size.z }, normal_x_neg, uv_bot_r, color };
+  vertex_data_[15] = { { -h_size.x, -h_size.y, -h_size.z }, normal_x_neg, uv_bot_l, color };
 
-  vertex_data_[20] = { { -half_size.x, half_size.y, half_size.z }, { 1.0f, 0.0f, 0.0f }, { 0.0f, 0.0f }, color };
-  vertex_data_[21] = { { -half_size.x, half_size.y, -half_size.z }, { 1.0f, 0.0f, 0.0f }, { 0.0f, 1.0f }, color };
-  vertex_data_[22] = { { half_size.x, half_size.y, half_size.z }, { 1.0f, 0.0f, 0.0f }, { 1.0f, 0.0f }, color };
-  vertex_data_[23] = { { half_size.x, half_size.y, -half_size.z }, { 1.0f, 0.0f, 0.0f }, { 1.0f, 1.0f }, color };
+  // FACE Y -
+  vertex_data_[16] = { { -h_size.x, -h_size.y, h_size.z }, normal_y_neg, uv_top_l, color };
+  vertex_data_[17] = { { h_size.x, -h_size.y, h_size.z }, normal_y_neg, uv_top_r, color };
+  vertex_data_[18] = { { h_size.x, -h_size.y, -h_size.z }, normal_y_neg, uv_bot_r, color };
+  vertex_data_[19] = { { -h_size.x, -h_size.y, -h_size.z }, normal_y_neg, uv_bot_l, color };
+
+  // FACE Y +
+  vertex_data_[20] = { { -h_size.x, h_size.y, -h_size.z }, normal_y, uv_top_l, color };
+  vertex_data_[21] = { { h_size.x, h_size.y, -h_size.z }, normal_y, uv_top_r, color };
+  vertex_data_[22] = { { h_size.x, h_size.y, h_size.z }, normal_y, uv_bot_r, color };
+  vertex_data_[23] = { { -h_size.x, h_size.y, h_size.z }, normal_y, uv_bot_l, color };
 
   vertex_index_[0] = 0;
   vertex_index_[1] = 2;
-  vertex_index_[2] = 3;
+  vertex_index_[2] = 1;
   vertex_index_[3] = 0;
   vertex_index_[4] = 3;
-  vertex_index_[5] = 1;
-  vertex_index_[6] = 5;
-  vertex_index_[7] = 7;
-  vertex_index_[8] = 6;
-  vertex_index_[9] = 5;
-  vertex_index_[10] = 6;
-  vertex_index_[11] = 4;
-  vertex_index_[12] = 10;
-  vertex_index_[13] = 11;
+  vertex_index_[5] = 2;
+
+  vertex_index_[6] = 4;
+  vertex_index_[7] = 6;
+  vertex_index_[8] = 5;
+  vertex_index_[9] = 4;
+  vertex_index_[10] = 7;
+  vertex_index_[11] = 6;
+
+  vertex_index_[12] = 8;
+  vertex_index_[13] = 10;
   vertex_index_[14] = 9;
-  vertex_index_[15] = 9;
-  vertex_index_[16] = 8;
+  vertex_index_[15] = 8;
+  vertex_index_[16] = 11;
   vertex_index_[17] = 10;
+
   vertex_index_[18] = 12;
-  vertex_index_[19] = 13;
-  vertex_index_[20] = 15;
+  vertex_index_[19] = 14;
+  vertex_index_[20] = 13;
   vertex_index_[21] = 12;
   vertex_index_[22] = 15;
   vertex_index_[23] = 14;
+  
   vertex_index_[24] = 16;
-  vertex_index_[25] = 17;
-  vertex_index_[26] = 19;
+  vertex_index_[25] = 18;
+  vertex_index_[26] = 17;
   vertex_index_[27] = 16;
   vertex_index_[28] = 19;
   vertex_index_[29] = 18;
+
   vertex_index_[30] = 20;
-  vertex_index_[31] = 21;
-  vertex_index_[32] = 23;
+  vertex_index_[31] = 22;
+  vertex_index_[32] = 21;
   vertex_index_[33] = 20;
   vertex_index_[34] = 23;
   vertex_index_[35] = 22;
