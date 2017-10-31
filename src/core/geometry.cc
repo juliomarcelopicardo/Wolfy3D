@@ -601,8 +601,7 @@ bool CoreGeometry::initFromFile(const char * filename, const DirectX::XMFLOAT4 c
       id++;
     }
     vertex_data_[i].position.z = std::stof(number);
-    vertex_data_[i].color = color;
-    vertex_data_[i].uv = { 0.0f, 0.0f };
+    vertex_data_[i].uv = { 1.0f, 1.0f };
     vertex_data_[i].color = color;
   }
 
@@ -749,6 +748,40 @@ bool CoreGeometry::initFromFile(const char * filename, const DirectX::XMFLOAT4 c
       id++;
     }
     vertex_data_[vertex_index_[i + 2]].normal = temp_normal[std::stoi(number)];
+  }
+
+  // Go to the uv section.
+  while (!file.eof()) {
+    std::getline(file, line);
+    if (line.find_first_of('{') != -1) {
+      std::getline(file, line);
+      break;
+    }
+  }
+
+  // Save the vertex uv.
+  for (uint32 i = 0; i < num_vertices_; ++i) {
+    std::getline(file, line);
+    line_length = line.length();
+    number = "";
+    id = 0;
+
+    while (id < line_length && line[id] != ';') {
+      if (line[id] != ' ' && line[id] != '\t') {
+        number.push_back(line[id]);
+      }
+      id++;
+    }
+    vertex_data_[i].uv.x = std::stof(number);
+    id++;
+    number = "";
+    while (id < line_length && line[id] != ';') {
+      if (line[id] != ' ' && line[id] != '\t') {
+        number.push_back(line[id]);
+      }
+      id++;
+    }
+    vertex_data_[i].uv.y = std::stof(number);
   }
 
 
