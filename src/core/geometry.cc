@@ -9,6 +9,8 @@
 #include "SilverLynx/globals.h"
 #include "core/geometry.h"
 #include "core/core.h"
+#include <string>
+#include <fstream>
 
 namespace SLX {
 
@@ -350,11 +352,10 @@ bool CoreGeometry::initTerrain(const char * height_map_filename,
 }
 
 bool CoreGeometry::initExtruded(const uint32 num_polygon_vertex,
-  const float32 base_radius,
-  const float32 top_radius,
-  const float32 height,
-  const DirectX::XMFLOAT4 color) {
-
+                                const float32 base_radius,
+                                const float32 top_radius,
+                                const float32 height,
+                                const DirectX::XMFLOAT4 color) {
 
   float32 angle = DirectX::XM_2PI / (float32)num_polygon_vertex;
   float half_height = height * 0.5f;
@@ -523,6 +524,233 @@ bool CoreGeometry::initExtruded(const uint32 num_polygon_vertex,
   index++;
   vertex_index_[index] = first_element_number + 1;
   index++;
+
+  topology_ = D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST;
+
+  if (!createVertexBuffer()) { return false; }
+  if (!createIndexBuffer()) { return false; }
+  if (!createMatrixBuffer()) { return false; }
+
+  return true;
+}
+
+bool CoreGeometry::initFromFile(const char * filename, const DirectX::XMFLOAT4 color) {
+
+  std::ifstream file;
+  file.open(filename);
+
+  if (!file) {
+    MessageBox(NULL, "ERROR - Geometry can't be initialized, error filename", "ERROR", MB_OK);
+    return false;
+  }
+  
+  // Looking for the mesh. Parsing the file line by line.
+  std::string line;
+  std::string number; // number extracted from a line.
+  uint32 line_length = 0;
+  uint32 id = 0; // position of the iterator of the line.
+
+  // Get the number of vertices.
+  while (!file.eof()) {
+    std::getline(file, line);
+    if (line.find_first_of('{') != -1) {
+      number = "";
+      std::getline(file, line);
+      line_length = line.length();
+      while (id < line_length && line[id] != ';') {
+        if (line[id] != ' ' && line[id] != '\t') {
+          number.push_back(line[id]);
+        }
+        id++;
+      }
+      num_vertices_ = std::stoi(number);
+      vertex_data_.resize(num_vertices_);
+      break;
+    }
+  }
+
+  // Save the vertex positions.
+  for (uint32 i = 0; i < num_vertices_; ++i) {
+    std::getline(file, line);
+    line_length = line.length();
+    number = "";
+    id = 0;
+    
+    while (id < line_length && line[id] != ';') {
+      if (line[id] != ' ' && line[id] != '\t') {
+        number.push_back(line[id]);
+      }
+      id++;
+    }
+    vertex_data_[i].position.x = std::stof(number);
+    id++;
+    number = "";
+    while (id < line_length && line[id] != ';') {
+      if (line[id] != ' ' && line[id] != '\t') {
+        number.push_back(line[id]);
+      }
+      id++;
+    }
+    vertex_data_[i].position.y = std::stof(number);
+    id++;
+    number = "";
+    while (id < line_length && line[id] != ';') {
+      if (line[id] != ' ' && line[id] != '\t') {
+        number.push_back(line[id]);
+      }
+      id++;
+    }
+    vertex_data_[i].position.z = std::stof(number);
+    vertex_data_[i].color = color;
+    vertex_data_[i].uv = { 0.0f, 0.0f };
+    vertex_data_[i].color = color;
+  }
+
+  // Get the number of elements.
+  std::getline(file, line);
+  line_length = line.length();
+  number = "";
+  id = 0;
+  while (id < line_length && line[id] != ';') {
+    if (line[id] != ' ' && line[id] != '\t') {
+      number.push_back(line[id]);
+    }
+    id++;
+  }
+  // We obtain the number of triangles.
+  num_indices_ = std::stoi(number) * 3;
+  vertex_index_.resize(num_indices_);
+
+  // Save the indices or elements.
+  for (uint32 i = 0; i < num_indices_; i += 3) {
+    std::getline(file, line);
+    line_length = line.length();
+
+    id = line.find_first_of(';');
+    id++;
+
+    number = "";
+    while (id < line_length && line[id] != ',') {
+      if (line[id] != ' ' && line[id] != '\t') {
+        number.push_back(line[id]);
+      }
+      id++;
+    }
+    vertex_index_[i] = std::stoi(number);
+    id++;
+    number = "";
+    while (id < line_length && line[id] != ',') {
+      if (line[id] != ' ' && line[id] != '\t') {
+        number.push_back(line[id]);
+      }
+      id++;
+    }
+    vertex_index_[i + 1] = std::stoi(number);
+    id++;
+    number = "";
+    while (id < line_length && line[id] != ';') {
+      if (line[id] != ' ' && line[id] != '\t') {
+        number.push_back(line[id]);
+      }
+      id++;
+    }
+    vertex_index_[i + 2] = std::stoi(number);
+  }
+
+
+  // Get the number of normals.
+  std::vector<DirectX::XMFLOAT3> temp_normal;
+  uint32 num_normals = 0;
+  id = 0;
+  while (!file.eof()) {
+    std::getline(file, line);
+    if (line.find_first_of('{') != -1) {
+      number = "";
+      std::getline(file, line);
+      line_length = line.length();
+      while (id < line_length && line[id] != ';') {
+        if (line[id] != ' ' && line[id] != '\t') {
+          number.push_back(line[id]);
+        }
+        id++;
+      }
+      num_normals = std::stoi(number);
+      temp_normal.resize(num_normals);
+      break;
+    }
+  }
+
+  // Save the temp normals.
+  for (uint32 i = 0; i < num_normals; ++i) {
+    std::getline(file, line);
+    line_length = line.length();
+    number = "";
+    id = 0;
+
+    while (id < line_length && line[id] != ';') {
+      if (line[id] != ' ' && line[id] != '\t') {
+        number.push_back(line[id]);
+      }
+      id++;
+    }
+    temp_normal[i].x = std::stof(number);
+    id++;
+    number = "";
+    while (id < line_length && line[id] != ';') {
+      if (line[id] != ' ' && line[id] != '\t') {
+        number.push_back(line[id]);
+      }
+      id++;
+    }
+    temp_normal[i].y = std::stof(number);
+    id++;
+    number = "";
+    while (id < line_length && line[id] != ';') {
+      if (line[id] != ' ' && line[id] != '\t') {
+        number.push_back(line[id]);
+      }
+      id++;
+    }
+    temp_normal[i].z = std::stof(number);
+  }
+
+  // Save the normals using the indices.
+  std::getline(file, line);
+  for (uint32 i = 0; i < num_indices_; i += 3) {
+    std::getline(file, line);
+    line_length = line.length();
+
+    id = line.find_first_of(';');
+    id++;
+
+    number = "";
+    while (id < line_length && line[id] != ',') {
+      if (line[id] != ' ' && line[id] != '\t') {
+        number.push_back(line[id]);
+      }
+      id++;
+    }
+    vertex_data_[vertex_index_[i]].normal = temp_normal[std::stoi(number)];
+    id++;
+    number = "";
+    while (id < line_length && line[id] != ',') {
+      if (line[id] != ' ' && line[id] != '\t') {
+        number.push_back(line[id]);
+      }
+      id++;
+    }
+    vertex_data_[vertex_index_[i + 1]].normal = temp_normal[std::stoi(number)];
+    id++;
+    number = "";
+    while (id < line_length && line[id] != ';') {
+      if (line[id] != ' ' && line[id] != '\t') {
+        number.push_back(line[id]);
+      }
+      id++;
+    }
+    vertex_data_[vertex_index_[i + 2]].normal = temp_normal[std::stoi(number)];
+  }
+
 
   topology_ = D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST;
 

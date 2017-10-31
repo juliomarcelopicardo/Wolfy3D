@@ -46,7 +46,8 @@ class CoreGeometry {
 *******************************************************************************/
 
   ///--------------------------------------------------------------------------
-  /// @fn   bool initCube();
+  /// @fn   bool initCube(const DirectX::XMFLOAT3 size = { 1.0f, 1.0f, 1.0f },
+  ///                     const DirectX::XMFLOAT4 color = { 1.0f, 1.0f, 1.0f, 1.0f });
   ///
   /// @brief  Initializes the Geometry.
   /// @param  size Size of the cube.
@@ -109,6 +110,18 @@ class CoreGeometry {
                     const float32 base_radius,
                     const float32 top_radius,
                     const float32 height,
+                    const DirectX::XMFLOAT4 color = { 1.0f, 1.0f, 1.0f, 1.0f });
+
+  ///--------------------------------------------------------------------------
+  /// @fn   bool initFromFile(const char* filename, 
+  ///                         const DirectX::XMFLOAT4 color = { 1.0f, 1.0f, 1.0f, 1.0f })
+  ///
+  /// @brief  Initializes the Geometry.
+  /// @param  filename Filename with the info of the geometry.
+  /// @param  color Color of the geometry.
+  /// @return true if successfully initialized, false otherwise.
+  ///--------------------------------------------------------------------------
+  bool initFromFile(const char* filename, 
                     const DirectX::XMFLOAT4 color = { 1.0f, 1.0f, 1.0f, 1.0f });
 
 /*******************************************************************************
