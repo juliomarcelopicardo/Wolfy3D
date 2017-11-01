@@ -529,6 +529,109 @@ bool CoreGeometry::initExtruded(const uint32 num_polygon_vertex,
   return true;
 }
 
+bool CoreGeometry::initPyramid(const uint32 num_base_vertex, 
+                               const float32 base_radius, 
+                               const float32 height, 
+                               const DirectX::XMFLOAT4 color) {
+
+  float32 angle = DirectX::XM_2PI / (float32)num_base_vertex;
+  float half_height = height * 0.5f;
+  uint32 index = 0, i = 0;
+
+  DirectX::XMFLOAT3 base_center = { 0.0f, -half_height, 0.0f };
+  DirectX::XMFLOAT3 top_center = { 0.0f, half_height, 0.0f };
+  std::vector <DirectX::XMFLOAT3> base(num_base_vertex);
+
+  // Generate the regular poligon.
+  for (i = 0; i < num_base_vertex; i++) {
+    base[i] = { base_radius * DirectX::XMScalarCos(i * angle), -half_height,
+                base_radius * DirectX::XMScalarSin(i * angle) };
+  }
+
+  num_vertices_ = num_base_vertex * 2 + 2;
+  num_indices_ = num_base_vertex * 6;
+  vertex_data_.resize(num_vertices_);
+  vertex_index_.resize(num_indices_);
+
+  // Fill the base.
+  index = 0;
+  vertex_data_[index] = { base_center, { 0.0f, -1.0f, 0.0f },{ 1.0f, 1.0f }, color };
+  index++;
+  for (i = 0; i < num_base_vertex; i++) {
+    vertex_data_[index] = { base[i] ,{ 0.0f, -1.0f, 0.0f },{ 1.0f, 1.0f }, color };
+    index++;
+  }
+
+  // Fill the sides.
+  vertex_data_[index] = { top_center,{ 0.0f, 1.0f, 0.0f },{ 1.0f, 1.0f }, color };
+  index++;
+  DirectX::XMFLOAT3 normal;
+  DirectX::XMVECTOR n1, n2, vertical, horizontal;
+  for (i = 0; i < num_base_vertex; i++) {
+    if (i == 0) {
+      horizontal = DirectX::XMVectorSubtract(DirectX::XMLoadFloat3(&base[num_base_vertex - 1]), DirectX::XMLoadFloat3(&base[i]));
+    }
+    else {
+      horizontal = DirectX::XMVectorSubtract(DirectX::XMLoadFloat3(&base[i - 1]), DirectX::XMLoadFloat3(&base[i]));
+    }
+    vertical = DirectX::XMVectorSubtract(DirectX::XMLoadFloat3(&top_center), DirectX::XMLoadFloat3(&base[i]));
+    n1 = DirectX::XMVector3Normalize(DirectX::XMVector3Cross(DirectX::XMVector3Normalize(horizontal), DirectX::XMVector3Normalize(vertical)));
+    if (i == num_base_vertex - 1) {
+      horizontal = DirectX::XMVectorSubtract(DirectX::XMLoadFloat3(&base[i]), DirectX::XMLoadFloat3(&base[0]));
+    }
+    else {
+      horizontal = DirectX::XMVectorSubtract(DirectX::XMLoadFloat3(&base[i]), DirectX::XMLoadFloat3(&base[i + 1]));
+    }
+    n2 = DirectX::XMVector3Normalize(DirectX::XMVector3Cross(DirectX::XMVector3Normalize(horizontal), DirectX::XMVector3Normalize(vertical)));
+    DirectX::XMStoreFloat3(&normal, DirectX::XMVector3Normalize(DirectX::XMVectorAdd(n2, n1)));
+    vertex_data_[index] = { base[i] , normal ,{ 1.0f, 1.0f }, color };
+    index++;
+  }
+
+  index = 0;
+  // Base elements
+  for (i = 0; i < num_base_vertex - 1; i++) {
+    vertex_index_[index] = 0; // base center
+    index++;
+    vertex_index_[index] = i + 1;
+    index++;
+    vertex_index_[index] = i + 2;
+    index++;
+  }
+  // To connect the last one with the first one
+  vertex_index_[index] = 0; // base center
+  index++;
+  vertex_index_[index] = num_base_vertex;
+  index++;
+  vertex_index_[index] = 1;
+  index++;
+
+  // Sides elements
+  for (i = 0; i < num_base_vertex - 1; i++) {
+    vertex_index_[index] = num_base_vertex + 1; // top center
+    index++;
+    vertex_index_[index] = i + 2 + num_base_vertex + 1;
+    index++;
+    vertex_index_[index] = i + 1 + num_base_vertex + 1;
+    index++;
+  }
+  // To connect the last one with the first one
+  vertex_index_[index] = num_base_vertex + 1; // top center
+  index++;
+  vertex_index_[index] = num_base_vertex + 2;
+  index++;
+  vertex_index_[index] = num_base_vertex + num_base_vertex + 1;
+  index++;
+  
+
+  topology_ = D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST;
+
+  if (!createVertexBuffer()) { return false; }
+  if (!createIndexBuffer()) { return false; }
+
+  return false;
+}
+
 bool CoreGeometry::initFromFile(const char * filename, const DirectX::XMFLOAT4 color) {
 
   std::ifstream file;

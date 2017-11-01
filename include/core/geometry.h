@@ -94,9 +94,11 @@ class CoreGeometry {
                     const DirectX::XMFLOAT4 color = { 1.0f, 1.0f, 1.0f, 1.0f });
 
   ///--------------------------------------------------------------------------
-  /// @fn   bool initExtruded(const uint32 num_polygon_vertex, 
-  ///                         const DirectX::XMFLOAT3 size,
-  ///                         const DirectX::XMFLOAT4 color);
+  /// @fn   bool initExtruded(const uint32 num_polygon_vertex,
+  ///                         const float32 base_radius,
+  ///                         const float32 top_radius,
+  ///                         const float32 height,
+  ///                         const DirectX::XMFLOAT4 color = { 1.0f, 1.0f, 1.0f, 1.0f });
   ///
   /// @brief  Initializes the Geometry.
   /// @param  num_polygon_vertex num vertices of the base polygon.
@@ -111,6 +113,24 @@ class CoreGeometry {
                     const float32 top_radius,
                     const float32 height,
                     const DirectX::XMFLOAT4 color = { 1.0f, 1.0f, 1.0f, 1.0f });
+
+  ///--------------------------------------------------------------------------
+  /// @fn   bool initPyramid(const uint32 num_base_vertex,
+  ///                        const float32 base_radius,
+  ///                        const float32 height,
+  ///                        const DirectX::XMFLOAT4 color = { 1.0f, 1.0f, 1.0f, 1.0f });
+  ///
+  /// @brief  Initializes the Geometry.
+  /// @param  num_base_vertex num vertices of the base polygon.
+  /// @param  base_radius Radius of the polygon base.
+  /// @param  height Height or Pyramid.
+  /// @param  color Color RGBA of the geometry.
+  /// @return true if successfully initialized, false otherwise.
+  ///--------------------------------------------------------------------------
+  bool initPyramid(const uint32 num_base_vertex,
+                   const float32 base_radius,
+                   const float32 height,
+                   const DirectX::XMFLOAT4 color = { 1.0f, 1.0f, 1.0f, 1.0f });
 
   ///--------------------------------------------------------------------------
   /// @fn   bool initFromFile(const char* filename, 
