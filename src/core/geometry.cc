@@ -28,7 +28,6 @@ CoreGeometry::~CoreGeometry() {
   vertex_data_.clear();
   if (vertex_buffer_) { vertex_buffer_->Release(); }
   if (vertex_index_buffer_) { vertex_index_buffer_->Release(); }
-  if (matrix_buffer_) { matrix_buffer_->Release(); }
 }
 
 /*******************************************************************************
@@ -69,7 +68,7 @@ bool CoreGeometry::initTriangle(const DirectX::XMFLOAT2 size,
 
   if (!createVertexBuffer()) { return false; }
   if (!createIndexBuffer()) { return false; }
-  if (!createMatrixBuffer()) { return false; }
+  
 
   return true;
 }
@@ -125,7 +124,6 @@ bool CoreGeometry::initQuad(const DirectX::XMFLOAT2 size,
 
   if (!createVertexBuffer()) { return false; }
   if (!createIndexBuffer()) { return false; }
-  if (!createMatrixBuffer()) { return false; }
 
   return true;
 }
@@ -235,7 +233,6 @@ bool CoreGeometry::initCube(const DirectX::XMFLOAT3 size,
 
   if (!createVertexBuffer()) { return false; }
   if (!createIndexBuffer()) { return false; }
-  if (!createMatrixBuffer()) { return false; }
 
   return true;
 }
@@ -346,7 +343,6 @@ bool CoreGeometry::initTerrain(const char * height_map_filename,
 
   if (!createVertexBuffer()) { return false; }
   if (!createIndexBuffer()) { return false; }
-  if (!createMatrixBuffer()) { return false; }
 
   return true;
 }
@@ -529,7 +525,6 @@ bool CoreGeometry::initExtruded(const uint32 num_polygon_vertex,
 
   if (!createVertexBuffer()) { return false; }
   if (!createIndexBuffer()) { return false; }
-  if (!createMatrixBuffer()) { return false; }
 
   return true;
 }
@@ -789,7 +784,6 @@ bool CoreGeometry::initFromFile(const char * filename, const DirectX::XMFLOAT4 c
 
   if (!createVertexBuffer()) { return false; }
   if (!createIndexBuffer()) { return false; }
-  if (!createMatrixBuffer()) { return false; }
 
   return true;
 }
@@ -845,24 +839,7 @@ bool CoreGeometry::createIndexBuffer() {
   return true;
 }
 
-bool CoreGeometry::createMatrixBuffer() {
-  // Creamos un buffer para almacenar las matrices.
-  D3D11_BUFFER_DESC matrix_description;
-  ZeroMemory(&matrix_description, sizeof(D3D11_BUFFER_DESC));
 
-  matrix_description.Usage = D3D11_USAGE_DYNAMIC;
-  matrix_description.ByteWidth = sizeof(DirectX::XMFLOAT4X4) * 3;
-  matrix_description.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
-  matrix_description.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
-
-  auto* device = Core::instance().d3d_.device();
-
-  if (FAILED(device->CreateBuffer(&matrix_description, NULL, &matrix_buffer_))) {
-    MessageBox(NULL, "ERROR - Matrix buffer not created", "ERROR", MB_OK);
-    return false;
-  }
-  return true;
-}
 
 bool CoreGeometry::parseTerrainImage(const DirectX::XMFLOAT3 terrain_size, 
                                      const char * filename, 

@@ -138,8 +138,7 @@ class CoreGeometry {
   /// Indices buffer.
   ID3D11Buffer* vertex_index_buffer_;
 
-  /// Matrices buffer
-  ID3D11Buffer* matrix_buffer_;
+
   /// Topology = the way vertex are rendered (TriangleStrip, TriangleList, Point)
   D3D_PRIMITIVE_TOPOLOGY topology_;
 
@@ -174,13 +173,7 @@ class CoreGeometry {
    /// @return true if successfully initialized, false otherwise.
    ///--------------------------------------------------------------------------
    bool createIndexBuffer();
-   ///--------------------------------------------------------------------------
-   /// @fn   bool createMatrixBuffer();
-   ///
-   /// @brief  Creates the matrix buffer.
-   /// @return true if successfully initialized, false otherwise.
-   ///--------------------------------------------------------------------------
-   bool createMatrixBuffer();
+
    ///--------------------------------------------------------------------------
    /// @fn   bool parseTerrainImage();
    ///
