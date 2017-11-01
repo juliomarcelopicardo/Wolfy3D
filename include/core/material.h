@@ -51,6 +51,8 @@ class CoreMaterial {
   ID3D11PixelShader* pixel_shader_;
   /// Input Layout
   ID3D11InputLayout* input_layout_;
+  /// Matrices buffer
+  ID3D11Buffer* matrix_buffer_;
 
 /*******************************************************************************
 ***                           Private                                        ***
@@ -66,7 +68,14 @@ class CoreMaterial {
 /*******************************************************************************
 ***                              Private methods                             ***
 *******************************************************************************/
-
+  
+  ///--------------------------------------------------------------------------
+  /// @fn   bool createMatrixBuffer();
+  ///
+  /// @brief  Creates the matrix buffer.
+  /// @return true if successfully initialized, false otherwise.
+  ///--------------------------------------------------------------------------
+  bool createMatrixBuffer();
 
 
 }; /* CoreMaterial */
