@@ -86,9 +86,9 @@ namespace SLX {
 
       D3D11_MAPPED_SUBRESOURCE new_matrices;
       ZeroMemory(&new_matrices, sizeof(D3D11_MAPPED_SUBRESOURCE));
-      device_context->Map(geometry_->matrix_buffer_, 0, D3D11_MAP_WRITE_DISCARD, 0, &new_matrices);
+      device_context->Map(material_->matrix_buffer_, 0, D3D11_MAP_WRITE_DISCARD, 0, &new_matrices);
       memcpy(new_matrices.pData, mvp, sizeof(DirectX::XMFLOAT4X4) * 3);
-      device_context->Unmap(geometry_->matrix_buffer_, 0);
+      device_context->Unmap(material_->matrix_buffer_, 0);
 
       uint32 stride = sizeof(VertexData);
       uint32 offset = 0;
@@ -98,7 +98,7 @@ namespace SLX {
       device_context->IASetPrimitiveTopology(geometry_->topology_);
       device_context->VSSetShader(material_->vertex_shader_, 0, 0);
       device_context->PSSetShader(material_->pixel_shader_, 0, 0);
-      device_context->VSSetConstantBuffers(0, 1, &geometry_->matrix_buffer_);
+      device_context->VSSetConstantBuffers(0, 1, &material_->matrix_buffer_);
       device_context->IASetInputLayout(material_->input_layout_);
       device_context->DrawIndexed(geometry_->vertex_index_.size(), 0, 0);
     }
