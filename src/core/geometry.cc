@@ -21,6 +21,8 @@ namespace SLX {
 
 CoreGeometry::CoreGeometry() {
   topology_ = D3D10_PRIMITIVE_TOPOLOGY_TRIANGLELIST;
+  vertex_buffer_ = nullptr;
+  vertex_index_buffer_ = nullptr;
 }
 
 CoreGeometry::~CoreGeometry() {
