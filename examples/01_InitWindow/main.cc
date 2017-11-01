@@ -46,7 +46,7 @@ int32 main() {
   b.render3D_->setup(&mat, &geo2);
   b.render3D_->init();
   b.init();
-  b.transform_->set_position(2.0f, 0.0f, 0.0f);
+  a.transform_->set_position(2.0f, 0.0f, 0.0f);
 
   c.addComponent(ComponentType::Transform);
   c.addComponent(ComponentType::Render3D);
