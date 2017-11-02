@@ -59,13 +59,13 @@ project "SilverLynx"
     path.join(PROJ_DIR, "src/*.cc"),
     path.join(PROJ_DIR, "src/core/*.cc"),
     path.join(PROJ_DIR, "src/SilverLynx/*.cc"),
-	  path.join(PROJ_DIR, "src/core/components/*.cc"),
+	path.join(PROJ_DIR, "src/core/components/*.cc"),
     path.join(PROJ_DIR, "include/*.h"),
     path.join(PROJ_DIR, "include/core/*.h"),
     path.join(PROJ_DIR, "include/SilverLynx/*.h"),
-	  path.join(PROJ_DIR, "include/core/components/*.h"),
-	  path.join(PROJ_DIR, "external/imgui/*.cpp"),
-	  path.join(PROJ_DIR, "external/imgui/*.h"),
+	path.join(PROJ_DIR, "include/core/components/*.h"),
+	path.join(PROJ_DIR, "external/imgui/*.cpp"),
+	path.join(PROJ_DIR, "external/imgui/*.h"),
     path.join(PROJ_DIR, "data/**.**"),
   }
 
@@ -98,14 +98,17 @@ function GenerateProject(name)
 
   includedirs {
     "$(DXSDK_DIR)Include",
-	  path.join(PROJ_DIR, "external/"),
+	path.join(PROJ_DIR, "external/"),
     path.join(PROJ_DIR, "include/"),
     path.join(PROJ_DIR, "src/"),
+	path.join(PROJ_DIR, "examples/"..name.."/include/")
   }
 
   files {
     path.join(PROJ_DIR, "data/"..name.."/*.*"),
     path.join(PROJ_DIR, "examples/"..name.."/*.*"),
+	path.join(PROJ_DIR, "examples/"..name.."/src/*.*"),
+	path.join(PROJ_DIR, "examples/"..name.."/include/*.*"),
   }
 
   configuration "Debug"
@@ -142,3 +145,4 @@ end
 
 -- PROJECTS
 GenerateProject("01_InitWindow")
+GenerateProject("02_Assignment_01")
