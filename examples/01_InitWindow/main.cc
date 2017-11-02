@@ -15,6 +15,7 @@
 #include "core/object.h"
 #include "core/texture.h"
 #include "imgui/imgui.h"
+#include "core/camera.h"
 
 namespace SLX {
 int32 main() {
@@ -22,75 +23,120 @@ int32 main() {
   Window::Init(1024, 978);
 
   CoreGeometry geo, geo2;
+  CoreGeometry geo_plane, geo_prop, geo_turret, geo_gun, geo_terrain;
   CoreMaterial mat;
   CoreTexture texture;
 
-  geo.initTriangle();
-  //geo2.init("./../data/Heightmap.bmp", 10);
-  geo2.initTriangle(3.0f, 3.0f);
+  //geo.initQuad();
+  //geo.initCube();
+  //geo.initPyramid(50 ,1, 3);
+  //geo.initFromFile("./../data/geometries/plane/plane.x");
+  //geo.initExtruded(100, 2.0f, 1.0f, 4.0f);
+  //geo.initTerrain("./../data/Heightmap.bmp", { 10, 2, 10 });
+  //geo2.initTriangle({ 3.0f, 3.0f });
+  geo_plane.initFromFile("./../data/geometries/plane/plane.x");
+  geo_prop.initFromFile("./../data/geometries/plane/prop.x");
+  geo_gun.initFromFile("./../data/geometries/plane/gun.x");
+  geo_turret.initFromFile("./../data/geometries/plane/turret.x");
+  geo_terrain.initTerrain("./../data/Heightmap.bmp", { 100.0f, 10.0f, 100.0f });
   mat.init();
   texture.load("./../data/texture.png");
 
-  Object a, b, c;
-  a.addComponent(ComponentType::Transform);
-  a.addComponent(ComponentType::Render3D);
-  a.render3D_->setup(&mat, &geo);
-  a.render3D_->init();
-  a.init();
+  Object plane_root, plane, prop, turret, gun, cam_node, terrain, root;
 
-  b.addComponent(ComponentType::Transform);
-  b.addComponent(ComponentType::Render3D);
-  b.render3D_->setup(&mat, &geo2);
-  b.render3D_->init();
-  b.init();
-  b.transform_->set_position(-2.0f, 0.0f, 0.0f);
+  root.addComponent(ComponentType::Transform);
+  root.init();
 
-  c.addComponent(ComponentType::Transform);
-  c.addComponent(ComponentType::Render3D);
-  c.render3D_->setup(&mat, &geo2);
-  c.render3D_->init();
-  c.init();
-  c.transform_->set_scale(0.3f, 0.3f, 0.3f);
-  c.transform_->set_position(0.0f, 1.0f, 1.0f);
+  terrain.addComponent(ComponentType::Transform);
+  terrain.addComponent(ComponentType::Render3D);
+  terrain.render3D_->setup(&mat, &geo_terrain);
+  terrain.render3D_->init();
+  terrain.init();
+  terrain.transform_->set_position(-50.0f, -10.0f, -30.0f);
+  root.addChild(&terrain);
 
+  plane_root.addComponent(ComponentType::Transform);
+  plane_root.init();
+  root.addChild(&plane_root);
+
+  cam_node.addComponent(ComponentType::Transform);
+  cam_node.init();
+  cam_node.transform_->set_position(0.0f, 4.5f, -15.0f);
+  plane_root.addChild(&cam_node);
+
+  plane.addComponent(ComponentType::Transform);
+  plane.addComponent(ComponentType::Render3D);
+  plane.render3D_->setup(&mat, &geo_plane);
+  plane.render3D_->init();
+  plane.init();
+  plane_root.addChild(&plane);
+
+  prop.addComponent(ComponentType::Transform);
+  prop.addComponent(ComponentType::Render3D);
+  prop.render3D_->setup(&mat, &geo_prop);
+  prop.render3D_->init();
+  prop.init();
+  prop.transform_->set_position(0.0f, 0.0f, 1.9f);
+  plane.addChild(&prop);
+
+  turret.addComponent(ComponentType::Transform);
+  turret.addComponent(ComponentType::Render3D);
+  turret.render3D_->setup(&mat, &geo_turret);
+  turret.render3D_->init();
+  turret.init();
+  turret.transform_->set_position(0.0f, 1.05f, -1.3f);
+  plane.addChild(&turret);
+
+  gun.addComponent(ComponentType::Transform);
+  gun.addComponent(ComponentType::Render3D);
+  gun.render3D_->setup(&mat, &geo_gun);
+  gun.render3D_->init();
+  gun.init();
+  gun.transform_->set_position(0.0f, 0.5f, 0.0f);
+  turret.addChild(&gun);
   //a.addChild(&b);
   //b.addChild(&c);
 
+  //plane_root.transform_->set_rotation(0.0f, DirectX::XM_PI, 0.0f);
   char textico[256];
   sprintf_s(textico, "Iniciando ventana con dimensiones %d x %d", Window::Width(), Window::Height());
   auto& cam = Core::instance().cam_;
+  cam.set_position(0.0f, 4.5f, -15.0f);
 
-  float sin_value;
+  float speed = 0.1f;
+  float rotation_speed = 0.0001f;
 
   // enter the main loop:
   while (Window::StartFrame() && Window::IsOpened() && 
          !Input::IsKeyboardButtonDown(Input::kKeyboardButton_Escape)) {
 
-    a.update();
-    b.update();
-    /*
-    */
-    sin_value = DirectX::XMScalarSin((float)Time() * 0.0001f);
-
-    //a.transform_->set_position(0.0f, sin_value, 0.0f);
-    //a.transform_->set_scale(1.0f + sin_value * 0.5f, 1.0f + sin_value * 0.5f, 1.0f + sin_value * 0.5f);
-   // a.transform_->set_rotation(0.0f, 0.0f, (float)Time() * 0.0001f);
-    
-    //b.transform_->set_rotation(0.0f, (float)Time() * 0.0021f, 0.0f);
-    if(Input::IsKeyboardButtonPressed(Input::kKeyboardButton_Down)) {
-      b.transform_->set_position(0.0f, 0.0f, -1.0f);
-      a.transform_->set_position(0.0f, 0.0f, 1.0f);
+    DirectX::XMFLOAT3 temp;
+    DirectX::XMStoreFloat3(&temp, cam_node.transform_->worldPosition());
+    cam.set_position(temp.x, temp.y, temp.z);
+    DirectX::XMStoreFloat3(&temp, plane_root.transform_->worldPosition());
+    cam.set_target(temp.x, temp.y, temp.z);
+    if (Input::IsKeyboardButtonPressed(Input::kKeyboardButton_W)) {
+      DirectX::XMFLOAT3 forward;
+      DirectX::XMStoreFloat3(&forward, DirectX::XMVectorScale(plane_root.transform_->forward(), speed));
+      plane_root.transform_->traslate(forward.x, forward.y, forward.z);
     }
-    if (Input::IsKeyboardButtonPressed(Input::kKeyboardButton_Up)) {
-      b.transform_->set_position(0.0f, 0.0f, 1.0f);
-      a.transform_->set_position(0.0f, 0.0f, -1.0f);
+    if (Input::IsKeyboardButtonPressed(Input::kKeyboardButton_S)) {
+      DirectX::XMFLOAT3 forward;
+      DirectX::XMStoreFloat3(&forward, DirectX::XMVectorScale(plane_root.transform_->forward(), speed));
+      plane_root.transform_->traslate(-forward.x, -forward.y, -forward.z);
     }
-    c.transform_->set_rotation(0.0f, (float)Time() * 0.01f, 0.0f);
+    if (Input::IsKeyboardButtonPressed(Input::kKeyboardButton_A)) {
+      plane_root.transform_->rotate(0.0f, -rotation_speed, 0.0f);
+    }
+    if (Input::IsKeyboardButtonPressed(Input::kKeyboardButton_D)) {
+      plane_root.transform_->rotate(0.0f, rotation_speed, 0.0f);
+    }
     
 
     texture.use();
-    cam.render(&a);
-    cam.render(&b);
+    cam.render(&root);
+    prop.transform_->set_rotation(0.0f, 0.0f, (float32)Time() * 0.01f);
+    turret.transform_->set_rotation(0.0f, (float32)Time() * 0.001f, 0.0f);
 
 	ImGui::SetNextWindowPos(ImVec2(650, 20), ImGuiCond_FirstUseEver);
 	ImGui::ShowTestWindow(0);

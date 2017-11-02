@@ -1,2 +1,1 @@
 genie.exe vs2015
-SilverLynx_Solution.sln
