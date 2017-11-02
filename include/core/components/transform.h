@@ -16,140 +16,167 @@ namespace SLX {
 
 class TransformComponent : public Component {
 
-  public:
+public:
 
-    /*******************************************************************************
-    ***                        Constructor and destructor                        ***
-    *******************************************************************************/
+/*******************************************************************************
+***                        Constructor and destructor                        ***
+*******************************************************************************/
 
-    /// Default class constructor.
-    TransformComponent();
+  /// Default class constructor.
+  TransformComponent();
 
-    /// Default class destructor.
-    ~TransformComponent();
+  /// Default class destructor.
+  ~TransformComponent();
 
-    /*******************************************************************************
-    ***                               Public methods                             ***
-    *******************************************************************************/
+/*******************************************************************************
+***                               Public methods                             ***
+*******************************************************************************/
 
-    ///--------------------------------------------------------------------------
-    /// @fn   void init();
-    ///
-    /// @brief  Initializes the component.
-    ///--------------------------------------------------------------------------
-    void init();
+  ///--------------------------------------------------------------------------
+  /// @fn   void init();
+  ///
+  /// @brief  Initializes the component.
+  ///--------------------------------------------------------------------------
+  void init();
 
-    ///--------------------------------------------------------------------------
-    /// @fn   void update();
-    ///
-    /// @brief  Updates the component.
-    ///--------------------------------------------------------------------------
-    void update();
+  ///--------------------------------------------------------------------------
+  /// @fn   void update();
+  ///
+  /// @brief  Updates the component.
+  ///--------------------------------------------------------------------------
+  void update();
 
-    ///--------------------------------------------------------------------------
-    /// @fn   void shutdown();
-    ///
-    /// @brief  Deallocates any memory and setup from this component.
-    ///--------------------------------------------------------------------------
-    void shutdown();
+  ///--------------------------------------------------------------------------
+  /// @fn   void shutdown();
+  ///
+  /// @brief  Deallocates any memory and setup from this component.
+  ///--------------------------------------------------------------------------
+  void shutdown();
 
-    /*******************************************************************************
-    ***                          Setters and Getters                             ***
-    *******************************************************************************/
+/*******************************************************************************
+***                          Setters and Getters                             ***
+*******************************************************************************/
 
-    ///--------------------------------------------------------------------------
-    /// @fn   DirectX::XMVECTOR position() const;
-    ///
-    /// @brief  Transform position getter.
-    /// @return XMVECTOR containing X,Y,Z Position.
-    ///--------------------------------------------------------------------------
-    DirectX::XMVECTOR position() const;
+  ///--------------------------------------------------------------------------
+  /// @fn   DirectX::XMVECTOR position() const;
+  ///
+  /// @brief  Transform position getter.
+  /// @return XMVECTOR containing X,Y,Z Position.
+  ///--------------------------------------------------------------------------
+  DirectX::XMVECTOR position() const;
 
-    ///--------------------------------------------------------------------------
-    /// @fn   void set_position(float x, float y, float z);
-    ///
-    /// @brief  Transform position setter.
-    ///--------------------------------------------------------------------------
-    void set_position(const float32 x, const float32 y, const float32 z);
+  ///--------------------------------------------------------------------------
+  /// @fn   DirectX::XMVECTOR worldPosition();
+  ///
+  /// @brief  Transform world position getter.
+  /// @return XMVECTOR containing X,Y,Z World Position.
+  ///--------------------------------------------------------------------------
+  DirectX::XMVECTOR worldPosition();
 
-    ///--------------------------------------------------------------------------
-    /// @fn   DirectX::XMVECTOR rotation() const;
-    ///
-    /// @brief  Transform rotation getter.
-    /// @return XMVECTOR containing X,Y,Z Rotation.
-    ///--------------------------------------------------------------------------
-    DirectX::XMVECTOR rotation() const;
+  ///--------------------------------------------------------------------------
+  /// @fn   void set_position(float x, float y, float z);
+  ///
+  /// @brief  Transform position setter.
+  ///--------------------------------------------------------------------------
+  void set_position(const float32 x, const float32 y, const float32 z);
 
-    ///--------------------------------------------------------------------------
-    /// @fn   void set_rotation(float x, float y, float z);
-    ///
-    /// @brief  Transform rotation setter.
-    ///--------------------------------------------------------------------------
-    void set_rotation(const float32 x, const float32 y, const float32 z);
+  ///--------------------------------------------------------------------------
+  /// @fn   void traslate(float x, float y, float z);
+  ///
+  /// @brief  Traslate the object in its local transform.
+  ///--------------------------------------------------------------------------
+  void traslate(const float32 x, const float32 y, const float32 z);
 
-    ///--------------------------------------------------------------------------
-    /// @fn   DirectX::XMVECTOR scale() const;
-    ///
-    /// @brief  Transform scale getter.
-    /// @return XMFLOAT3 containing X,Y,Z Scale.
-    ///--------------------------------------------------------------------------
-    DirectX::XMVECTOR scale() const;
+  ///--------------------------------------------------------------------------
+  /// @fn   DirectX::XMVECTOR rotation() const;
+  ///
+  /// @brief  Transform rotation getter.
+  /// @return XMVECTOR containing X,Y,Z Rotation.
+  ///--------------------------------------------------------------------------
+  DirectX::XMVECTOR rotation() const;
 
-    ///--------------------------------------------------------------------------
-    /// @fn   void set_scale(float x, float y, float z);
-    ///
-    /// @brief  Transform scale setter.
-    ///--------------------------------------------------------------------------
-    void set_scale(const float32 x, const float32 y, const float32 z);
+  ///--------------------------------------------------------------------------
+  /// @fn   void set_rotation(float x, float y, float z);
+  ///
+  /// @brief  Transform rotation setter.
+  ///--------------------------------------------------------------------------
+  void set_rotation(const float32 x, const float32 y, const float32 z);
+
+  ///--------------------------------------------------------------------------
+  /// @fn   void rotate(float x, float y, float z);
+  ///
+  /// @brief  Add a rotation to the current one.
+  ///--------------------------------------------------------------------------
+  void rotate(const float32 x, const float32 y, const float32 z);
+
+  ///--------------------------------------------------------------------------
+  /// @fn   DirectX::XMVECTOR scale() const;
+  ///
+  /// @brief  Transform scale getter.
+  /// @return XMFLOAT3 containing X,Y,Z Scale.
+  ///--------------------------------------------------------------------------
+  DirectX::XMVECTOR scale() const;
+
+  ///--------------------------------------------------------------------------
+  /// @fn   void set_scale(float x, float y, float z);
+  ///
+  /// @brief  Transform scale setter.
+  ///--------------------------------------------------------------------------
+  void set_scale(const float32 x, const float32 y, const float32 z);
 
 
-    ///--------------------------------------------------------------------------
-    /// @fn   DirectX::XMMATRIX local_model_matrix() const.
-    ///
-    /// @brief Transform LocalModelMatrix getter. (TRANSPOSED)
-    /// @return XMMATRIX containing LocalModel Transformation Matrix.
-    ///--------------------------------------------------------------------------
-    DirectX::XMMATRIX local_model_matrix();
+  ///--------------------------------------------------------------------------
+  /// @fn   DirectX::XMMATRIX local_model_matrix() const.
+  ///
+  /// @brief Transform LocalModelMatrix getter. (TRANSPOSED)
+  /// @return XMMATRIX containing LocalModel Transformation Matrix.
+  ///--------------------------------------------------------------------------
+  DirectX::XMMATRIX local_model_matrix();
 
-    ///--------------------------------------------------------------------------
-    /// @fn   DirectX::XMMATRIX global_model_matrix() const.
-    ///
-    /// @brief Transform GlobalModelMatrix getter. (TRANSPOSED)
-    /// @return XMMATRIX containing GlobalModel Transformation Matrix.
-    ///--------------------------------------------------------------------------
-    DirectX::XMMATRIX global_model_matrix();
+  ///--------------------------------------------------------------------------
+  /// @fn   DirectX::XMMATRIX global_model_matrix() const.
+  ///
+  /// @brief Transform GlobalModelMatrix getter. (TRANSPOSED)
+  /// @return XMMATRIX containing GlobalModel Transformation Matrix.
+  ///--------------------------------------------------------------------------
+  DirectX::XMMATRIX global_model_matrix();
 
-    /// Recalculates the local matrix.
-    void calculateLocalModelMatrix();
+  ///--------------------------------------------------------------------------
+  /// @fn   DirectX::XMVECTOR forward();
+  ///
+  /// @brief forward vector getter.
+  /// @return forward vector.
+  ///--------------------------------------------------------------------------
+  DirectX::XMVECTOR forward();
 
-    /// Local Model Transformation Matrix.
-    DirectX::XMFLOAT4X4 local_model_matrix_;
-    /// Parent Model Transformation Matrix.
-    DirectX::XMFLOAT4X4 parent_model_matrix_;
+  /// Recalculates the local matrix.
+  void calculateLocalModelMatrix();
 
-    /*******************************************************************************
-    ***                           Private                                        ***
-    *******************************************************************************/
+  /// Local Model Transformation Matrix.
+  DirectX::XMFLOAT4X4 local_model_matrix_;
+  /// Parent Model Transformation Matrix.
+  DirectX::XMFLOAT4X4 parent_model_matrix_;
+  
 
-    /*******************************************************************************
-    ***                       Private Attributes                                 ***
-    *******************************************************************************/
+private:
 
-  private:
-    /// Transform Position.
-    DirectX::XMFLOAT3 position_;
-    /// Transform Rotation.
-    DirectX::XMFLOAT3 rotation_;
-    /// Transform Scale.
-    DirectX::XMFLOAT3 scale_;
+  /*******************************************************************************
+  ***                       Private Attributes                                 ***
+  *******************************************************************************/
+  /// Transform Position.
+  DirectX::XMFLOAT3 position_;
+  /// Transform Rotation.
+  DirectX::XMFLOAT3 rotation_;
+  /// Transform Scale.
+  DirectX::XMFLOAT3 scale_;
 
  
-    /*******************************************************************************
-    ***                              Private methods                             ***
-    *******************************************************************************/
+  /*******************************************************************************
+  ***                              Private methods                             ***
+  *******************************************************************************/
 
 
-  };
+};
 
 }; /* SLX */
 
