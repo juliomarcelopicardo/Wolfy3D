@@ -97,6 +97,8 @@ namespace SLX {
   }
 
   DirectX::XMVECTOR TransformComponent::forward() {
+    //DirectX::XMFLOAT4 forward_float4 = { 0.0f, 0.0f, 1.0f, 0.0f };
+    //return DirectX::XMVector4Transform(DirectX::XMLoadFloat4(&forward_float4), global_model_matrix());
     return DirectX::XMVector4Normalize(DirectX::XMVector4Transform({ 0.0f, 0.0f, 1.0f, 0.0f }, global_model_matrix()));
   }
 
