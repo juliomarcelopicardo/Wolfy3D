@@ -95,6 +95,20 @@ public:
   void set_position(const float32 x, const float32 y, const float32 z);
 
   ///--------------------------------------------------------------------------
+  /// @fn   void traslate(const DirectX::XMVECTOR traslation);
+  ///
+  /// @brief  Traslate the object in its local transform.
+  ///--------------------------------------------------------------------------
+  void traslate(const DirectX::XMVECTOR traslation);
+
+  ///--------------------------------------------------------------------------
+  /// @fn   void traslate(const DirectX::XMFLOAT3 traslation);
+  ///
+  /// @brief  Traslate the object in its local transform.
+  ///--------------------------------------------------------------------------
+  void traslate(const DirectX::XMFLOAT3 traslation);
+
+  ///--------------------------------------------------------------------------
   /// @fn   void traslate(float x, float y, float z);
   ///
   /// @brief  Traslate the object in its local transform.
