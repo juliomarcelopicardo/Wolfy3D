@@ -15,121 +15,118 @@
 #include "silverlynx.h"
 #include "core/core.h"
 
-__declspec(align(16)) class Aeroplane
-{
-  public:
-	Aeroplane(float fX = 0.0f, float fY = 0.0f, float fZ = 0.0f, float fRotY = 0.0f);
+__declspec(align(16)) class Aeroplane {
+
+public:
+   
+  struct Bullet {
+    DirectX::XMFLOAT4 position;
+    DirectX::XMVECTOR forward;
+    DirectX::XMMATRIX orientation_matrix;
+    DirectX::XMMATRIX world_matrix;
+    SLX::CoreGeometry mesh;
+    bool shot;
+  };
+
+  const int kNumberOfBullets = 10;
+
+/*******************************************************************************
+***                        Constructor and destructor                        ***
+*******************************************************************************/
+
+  Aeroplane(SLX::float32 fX = 0.0f, SLX::float32 fY = 0.0f,
+            SLX::float32 fZ = 0.0f, SLX::float32 fRotY = 0.0f);
+
 	~Aeroplane();
 
-	void init(); // Only load the resources once for all instances
+/*******************************************************************************
+***                               Public methods                             ***
+*******************************************************************************/
+  
+  ///--------------------------------------------------------------------------
+  /// @fn   void init();
+  ///
+  /// @brief  Initializes the airplane resources, geometries and matrices.
+  ///--------------------------------------------------------------------------
+  void init();
 
-	void SetWorldPosition(float fX, float fY, float fZ);
+  void move_pitch(SLX::float32 pitch_limit_degrees, bool facing_upwards);
+  void move_roll_yaw(SLX::float32 roll_limit_degrees, bool facing_leftwards, bool enable_yaw);
+  void move_forward();
 
-	void Shoot();
+/*******************************************************************************
+***                          Setters and Getters                             ***
+*******************************************************************************/
 
-	bool m_bMoveUp;
-	bool m_bMoveDown;
-	bool m_bMoveLeft;
-	bool m_bMoveRight;
+  void set_speed(SLX::float32 forward_speed, SLX::float32 rotation_speed_radians);
 
-	bool shoot_;
+  ///--------------------------------------------------------------------------
+  /// @fn   SLX::Object& root()
+  ///
+  /// @brief Aeroplane root getter.
+  /// @return SLX::Object root of the aeroplane.
+  ///--------------------------------------------------------------------------
+  SLX::Object& root();
 
-	const int kNumberOfBullets = 10;
+  ///--------------------------------------------------------------------------
+  /// @fn   SLX::Object& camera_node()
+  ///
+  /// @brief Aeroplane main camera position node getter.
+  /// @return SLX::Object camera node to place the camera.
+  ///--------------------------------------------------------------------------
+  SLX::Object& camera_node();
 
-	struct Bullet {
-		DirectX::XMFLOAT4 position;
-		DirectX::XMVECTOR forward;
-		DirectX::XMMATRIX orientation_matrix;
-		DirectX::XMMATRIX world_matrix;
-		SLX::CoreGeometry mesh;
-		bool shot;
-	};
+  ///--------------------------------------------------------------------------
+  /// @fn   SLX::Object& prop()
+  ///
+  /// @brief Aeroplane propeller component object getter.
+  /// @return SLX::Object aeroplane propeller.
+  ///--------------------------------------------------------------------------
+  SLX::Object& prop();
 
-  SLX::Object root();
+  ///--------------------------------------------------------------------------
+  /// @fn   SLX::Object& turret()
+  ///
+  /// @brief Turret component object getter.
+  /// @return SLX::Object aeroplane turret.
+  ///--------------------------------------------------------------------------
+  SLX::Object& turret();
 
-  public:
-	void update_matrices();
+/*******************************************************************************
+***                       Public  Attributes                                 ***
+*******************************************************************************/
 
-	SLX::CoreGeometry geo_plane_;
-	SLX::CoreGeometry geo_prop_;
-	SLX::CoreGeometry geo_turret_;
-	SLX::CoreGeometry geo_gun_;
+  SLX::float32 forward_speed_;
+  SLX::float32 rotation_speed_;
 
-	SLX::Object plane_root_;
-	SLX::Object plane_;
-	SLX::Object prop_;
-	SLX::Object turret_;
-	SLX::Object gun_;
+private:
 
-	SLX::CoreMaterial mat_;
-	SLX::Object camera_node_;
+/*******************************************************************************
+***                              Private methods                             ***
+*******************************************************************************/
 
-	static bool s_bResourcesReady;
-	std::vector<Bullet> bullets_;
+  void move_yaw(bool facing_leftwards);
 
-	const float kPitchAcceleration = 3.0f;
-	const float kPitchDecceleration = 3.0f;
-	const float kRollAcceleration = 2.0f;
-	const float kRollDecceleration = 2.0f;
+/*******************************************************************************
+***                       Private Attributes                                 ***
+*******************************************************************************/
 
-	/////////////////////////////////////
-	// Plane
+  SLX::CoreMaterial mat_;
 
-	DirectX::XMFLOAT4 rotation_; // Euler rotation angles
-	DirectX::XMFLOAT4 position_; // World position
-	DirectX::XMVECTOR forward_; // Forward Vector for Plane
-	float speed_; // Forward speed
+  SLX::CoreGeometry geo_plane_;
+  SLX::CoreGeometry geo_prop_;
+  SLX::CoreGeometry geo_turret_;
+  SLX::CoreGeometry geo_gun_;
 
-	DirectX::XMMATRIX m_mWorldTrans; // World translation matrix
-	DirectX::XMMATRIX m_mWorldMatrix; // World transformation matrix
+  SLX::Object plane_root_;
+  SLX::Object plane_;
+  SLX::Object prop_;
+  SLX::Object turret_;
+  SLX::Object gun_;
 
-	DirectX::XMFLOAT4 m_v4BulletRot; // Local rotation angles
-	DirectX::XMFLOAT4 m_v4BulletOff; // Local offset
-	DirectX::XMMATRIX m_mBulletWorldMatrix;
+  SLX::Object camera_node_;
 
-	DirectX::XMFLOAT4 m_v4PropRot; // Local rotation angles
-	DirectX::XMFLOAT4 m_v4PropOff; // Local offset
-	DirectX::XMMATRIX m_mPropWorldMatrix; // Propeller's world transformation matrix
-
-	DirectX::XMFLOAT4 m_v4TurretRot; // Local rotation angles
-	DirectX::XMFLOAT4 m_v4TurretOff; // Local offset
-	DirectX::XMMATRIX m_mTurretWorldMatrix; // Turret's world transformation matrix
-
-	DirectX::XMFLOAT4 m_v4GunRot; // Local rotation angles
-	DirectX::XMFLOAT4 m_v4GunOff; // Local offset
-	DirectX::XMMATRIX m_mGunWorldMatrix; // Gun's world transformation matrix
-
-	DirectX::XMFLOAT4 m_v4CamRot; // Local rotation angles
-	DirectX::XMFLOAT4 m_v4CamOff; // Local offset
-
-	DirectX::XMVECTOR m_vCamWorldPos; // World position
-	DirectX::XMMATRIX m_mCamWorldMatrix; // Camera's world transformation matrix
-
-	bool m_bGunCam;
-
-  public:
-	float GetXPosition(void) { return position_.x; }
-	float GetYPosition(void) { return position_.y; }
-	float GetZPosition(void) { return position_.z; }
-	DirectX::XMFLOAT4 GetFocusPosition(void) { return GetPosition(); }
-	DirectX::XMFLOAT4 GetCameraPosition(void)
-	{
-		DirectX::XMFLOAT4 v4Pos;
-		XMStoreFloat4(&v4Pos, m_vCamWorldPos);
-		return v4Pos;
-	}
-	DirectX::XMFLOAT4 GetPosition(void) { return position_; }
-	void SetGunCamera(bool value) { m_bGunCam = value; }
-
-	void* operator new(size_t i)
-	{
-		return _mm_malloc(i, 16);
-	}
-
-	void operator delete(void* p)
-	{
-		_mm_free(p);
-	}
+  std::vector<Bullet> bullets_;
 };
 
 #endif
