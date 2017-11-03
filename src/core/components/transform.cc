@@ -64,8 +64,12 @@ namespace SLX {
     set_position(position_.x + x, position_.y + y, position_.z + z);
   }
 
-  DirectX::XMVECTOR TransformComponent::rotation() const {
+  DirectX::XMVECTOR TransformComponent::rotation_vector() const {
     return DirectX::XMLoadFloat3(&rotation_);
+  }
+
+  DirectX::XMFLOAT3 TransformComponent::rotation_float3() const {
+    return rotation_;
   }
 
   void TransformComponent::set_rotation(const float32 x, const float32 y, const float32 z) {
@@ -77,8 +81,12 @@ namespace SLX {
     set_rotation(rotation_.x + x, rotation_.y + y, rotation_.z + z);
   }
 
-  DirectX::XMVECTOR TransformComponent::scale() const {
+  DirectX::XMVECTOR TransformComponent::scale_vector() const {
     return DirectX::XMLoadFloat3(&scale_);
+  }
+
+  DirectX::XMFLOAT3 TransformComponent::scale_float3() const {
+    return scale_;
   }
 
   void TransformComponent::set_scale(const float32 x, const float32 y, const float32 z) {
@@ -96,10 +104,16 @@ namespace SLX {
                                      local_model_matrix());
   }
 
-  DirectX::XMVECTOR TransformComponent::forward() {
-    //DirectX::XMFLOAT4 forward_float4 = { 0.0f, 0.0f, 1.0f, 0.0f };
-    //return DirectX::XMVector4Transform(DirectX::XMLoadFloat4(&forward_float4), global_model_matrix());
-    return DirectX::XMVector4Normalize(DirectX::XMVector4Transform({ 0.0f, 0.0f, 1.0f, 0.0f }, global_model_matrix()));
+  DirectX::XMVECTOR TransformComponent::forward_vector() {
+    return DirectX::XMVector4Normalize(DirectX::XMVector4Transform({ 0.0f, 0.0f, 1.0f, 0.0f }, DirectX::XMMatrixTranspose(global_model_matrix())));
+  }
+
+  DirectX::XMFLOAT3 TransformComponent::forward_float3() {
+    DirectX::XMVECTOR fwd;
+    DirectX::XMFLOAT3 fwd_float3;
+    fwd = DirectX::XMVector4Normalize(DirectX::XMVector4Transform({ 0.0f, 0.0f, 1.0f, 0.0f }, DirectX::XMMatrixTranspose(global_model_matrix())));
+    DirectX::XMStoreFloat3(&fwd_float3, fwd);
+    return fwd_float3;
   }
 
   /*******************************************************************************
