@@ -34,9 +34,9 @@ public:
 ***                        Constructor and destructor                        ***
 *******************************************************************************/
 
-  Aeroplane(SLX::float32 fX = 0.0f, SLX::float32 fY = 0.0f,
-            SLX::float32 fZ = 0.0f, SLX::float32 fRotY = 0.0f);
-
+  /// Default class constructor
+  Aeroplane();
+  /// Default class destructor
 	~Aeroplane();
 
 /*******************************************************************************
@@ -50,14 +50,44 @@ public:
   ///--------------------------------------------------------------------------
   void init();
 
+  ///--------------------------------------------------------------------------
+  /// @fn   void move_pitch(SLX::float32 pitch_limit_degrees, bool facing_upwards);
+  ///
+  /// @brief Moves the aeroplane in pitch axis according params.
+  /// @param pitch_limit_degrees maximum degrees the pitch can rotate to.
+  /// @param facing_upwards if true aeroplane will move +X, -X otherwise.
+  ///--------------------------------------------------------------------------
   void move_pitch(SLX::float32 pitch_limit_degrees, bool facing_upwards);
+
+  ///--------------------------------------------------------------------------
+  /// @fn   void move_roll_yaw(SLX::float32 roll_limit_degrees, bool facing_leftwards, bool enable_yaw);
+  ///
+  /// @brief Moves the aeroplane in roll and yaw axis according params.
+  /// @param roll_limit_degrees maximum degrees the roll can rotate to.
+  /// @param facing_leftwards if true aeroplane will move (-Y,+Z), (Y,-Z) otherwise.
+  /// @param enable_yaw enables yaw rotation along roll. Useful to disable when
+  ///        we want to stabilize the aeroplane to its original Roll rotation.
+  ///--------------------------------------------------------------------------
   void move_roll_yaw(SLX::float32 roll_limit_degrees, bool facing_leftwards, bool enable_yaw);
+
+  ///--------------------------------------------------------------------------
+  /// @fn     void move_forward();
+  ///
+  /// @brief Moves the aeroplane forward according forward_speed.
+  ///--------------------------------------------------------------------------
   void move_forward();
 
 /*******************************************************************************
 ***                          Setters and Getters                             ***
 *******************************************************************************/
 
+  ///--------------------------------------------------------------------------
+  /// @fn   void set_speed(SLX::float32 forward_speed, SLX::float32 rotation_speed_radians);
+  ///
+  /// @brief Forward and Rotation speed setters.
+  /// @param forward_speed speed of the aeroplane when moving forward.
+  /// @param rotation_speed_radians speed of the aeroplane when rotating Roll,Pitch,Yaww axis.
+  ///--------------------------------------------------------------------------
   void set_speed(SLX::float32 forward_speed, SLX::float32 rotation_speed_radians);
 
   ///--------------------------------------------------------------------------
@@ -96,7 +126,9 @@ public:
 ***                       Public  Attributes                                 ***
 *******************************************************************************/
 
+  /// Speed the aeroplane will take when moving forwards
   SLX::float32 forward_speed_;
+  /// Speed the aeroplane will take when rotating Yaw,Pitch,Roll
   SLX::float32 rotation_speed_;
 
 private:
@@ -105,27 +137,41 @@ private:
 ***                              Private methods                             ***
 *******************************************************************************/
 
+  ///--------------------------------------------------------------------------
+  /// @fn   void move_yaw(bool facing_leftwards)
+  ///
+  /// @brief Moves the aeroplane in yaw axis according facing_leftwards param.
+  /// @param facing_leftwards if true aeroplane will move -Y, +Y otherwise.
+  ///--------------------------------------------------------------------------
   void move_yaw(bool facing_leftwards);
 
 /*******************************************************************************
 ***                       Private Attributes                                 ***
 *******************************************************************************/
 
+  /// Material 
   SLX::CoreMaterial mat_;
-
+  /// Geometry of the main aeroplane
   SLX::CoreGeometry geo_plane_;
+  /// Geometry of the propeller
   SLX::CoreGeometry geo_prop_;
+  /// Geometry of the turret
   SLX::CoreGeometry geo_turret_;
+  /// Geometry of the gun
   SLX::CoreGeometry geo_gun_;
-
+  /// Root of the aeroplane
   SLX::Object plane_root_;
+  /// Plane body object
   SLX::Object plane_;
+  /// Plane propeller object
   SLX::Object prop_;
+  /// Plane turret object
   SLX::Object turret_;
+  ///  Plane gun object
   SLX::Object gun_;
-
+  /// Plane camera node to assign camera position
   SLX::Object camera_node_;
-
+  /// Plane bullets pool
   std::vector<Bullet> bullets_;
 };
 

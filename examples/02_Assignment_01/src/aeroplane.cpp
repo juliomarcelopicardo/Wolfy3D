@@ -14,8 +14,7 @@
 ***                        Constructor and destructor                        ***
 *******************************************************************************/
 
-Aeroplane::Aeroplane(SLX::float32 fX /*= 0.0f*/, SLX::float32 fY /*= 0.0f*/, 
-                     SLX::float32 fZ /*= 0.0f*/, SLX::float32 fRotY /*= 0.0f*/) {
+Aeroplane::Aeroplane() {
 
   rotation_speed_ = 0.0025f;
   forward_speed_ = 0.01f;
@@ -23,7 +22,7 @@ Aeroplane::Aeroplane(SLX::float32 fX /*= 0.0f*/, SLX::float32 fY /*= 0.0f*/,
 
 }
 
-Aeroplane::~Aeroplane(void) {
+Aeroplane::~Aeroplane() {
 
 }
 
