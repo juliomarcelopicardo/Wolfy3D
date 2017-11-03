@@ -117,12 +117,12 @@ int32 main() {
     cam.set_target(temp.x, temp.y, temp.z);
     if (Input::IsKeyboardButtonPressed(Input::kKeyboardButton_W)) {
       DirectX::XMFLOAT3 forward;
-      DirectX::XMStoreFloat3(&forward, DirectX::XMVectorScale(plane_root.transform_->forward(), speed));
+      DirectX::XMStoreFloat3(&forward, DirectX::XMVectorScale(plane_root.transform_->forward_vector(), speed));
       plane_root.transform_->traslate(forward.x, forward.y, forward.z);
     }
     if (Input::IsKeyboardButtonPressed(Input::kKeyboardButton_S)) {
       DirectX::XMFLOAT3 forward;
-      DirectX::XMStoreFloat3(&forward, DirectX::XMVectorScale(plane_root.transform_->forward(), speed));
+      DirectX::XMStoreFloat3(&forward, DirectX::XMVectorScale(plane_root.transform_->forward_vector(), speed));
       plane_root.transform_->traslate(-forward.x, -forward.y, -forward.z);
     }
     if (Input::IsKeyboardButtonPressed(Input::kKeyboardButton_A)) {
@@ -139,7 +139,8 @@ int32 main() {
     turret.transform_->set_rotation(0.0f, (float32)Time() * 0.001f, 0.0f);
 
 	ImGui::SetNextWindowPos(ImVec2(650, 20), ImGuiCond_FirstUseEver);
-	ImGui::ShowTestWindow(0);
+	ImGui::ShowTestWindow(0);
+
     Window::EndFrame();
   }
 
