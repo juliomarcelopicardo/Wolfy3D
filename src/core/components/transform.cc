@@ -55,6 +55,16 @@ namespace SLX {
     return DirectX::XMLoadFloat3(&world_position);
   }
 
+  void TransformComponent::set_position(const DirectX::XMVECTOR position) {
+    DirectX::XMStoreFloat3(&position_, position);
+    owner_->updateLocalModelAndChildrenMatrices();
+  }
+
+  void TransformComponent::set_position(const DirectX::XMFLOAT3 position) {
+    position_ = position;
+    owner_->updateLocalModelAndChildrenMatrices();
+  }
+
   void TransformComponent::set_position(const float32 x, const float32 y, const float32 z) {
     position_ = DirectX::XMFLOAT3(x, y, z);
     owner_->updateLocalModelAndChildrenMatrices();

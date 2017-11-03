@@ -74,6 +74,20 @@ public:
   DirectX::XMVECTOR worldPosition();
 
   ///--------------------------------------------------------------------------
+  /// @fn   void set_position(const DirectX::XMVECTOR position);
+  ///
+  /// @brief  Transform position setter.
+  ///--------------------------------------------------------------------------
+  void set_position(const DirectX::XMVECTOR position);
+
+  ///--------------------------------------------------------------------------
+  /// @fn   void set_position(const DirectX::XMFLOAT3 position);
+  ///
+  /// @brief  Transform position setter.
+  ///--------------------------------------------------------------------------
+  void set_position(const DirectX::XMFLOAT3 position);
+
+  ///--------------------------------------------------------------------------
   /// @fn   void set_position(float x, float y, float z);
   ///
   /// @brief  Transform position setter.
