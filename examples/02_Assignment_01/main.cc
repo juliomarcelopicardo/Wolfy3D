@@ -19,6 +19,49 @@
 #include "aeroplane.h"
 
 namespace SLX {
+
+// Aeroplane we are going to control
+Aeroplane g_plane;
+
+void AirplaneInput() {
+  // Movement on forward is automatic
+  g_plane.move_forward();
+
+  ///////////////////////////////////////////////
+  // Move Airplane on X axis
+
+  if (Input::IsKeyboardButtonPressed(Input::kKeyboardButton_W)) {
+    g_plane.move_pitch(60.0f, false);
+  }
+  else if (!Input::IsKeyboardButtonPressed(Input::kKeyboardButton_S)) {
+    g_plane.move_pitch(0.0f, true);
+  }
+
+  if (Input::IsKeyboardButtonPressed(Input::kKeyboardButton_S)) {
+    g_plane.move_pitch(-60.0f, true);
+  }
+  else if (!Input::IsKeyboardButtonPressed(Input::kKeyboardButton_W)) {
+    g_plane.move_pitch(0.0f, false);
+  }
+
+  ///////////////////////////////////////////////
+  // Move Airplane on YZ axis
+
+  if (Input::IsKeyboardButtonPressed(Input::kKeyboardButton_A)) {
+    g_plane.move_roll_yaw(20.0f, true, true);
+  }
+  else if (!Input::IsKeyboardButtonPressed(Input::kKeyboardButton_D)) {
+    g_plane.move_roll_yaw(0.0f, false, false);
+  }
+
+  if (Input::IsKeyboardButtonPressed(Input::kKeyboardButton_D)) {
+    g_plane.move_roll_yaw(-20.0f, false, true);
+  }
+  else if (!Input::IsKeyboardButtonPressed(Input::kKeyboardButton_A)) {
+    g_plane.move_roll_yaw(0.0f, true, false);
+  }
+}
+
 int32 main() {
   
   Window::Init(1024, 978);
@@ -28,8 +71,7 @@ int32 main() {
   CoreMaterial mat;
   CoreTexture texture;
 
-  Aeroplane plane;
-  plane.init();
+  g_plane.init();
 
   geo_terrain.initTerrain("./../data/Heightmap.bmp", { 100.0f, 10.0f, 100.0f });
   mat.init();
@@ -48,13 +90,10 @@ int32 main() {
   terrain.transform_->set_position(-50.0f, -10.0f, -30.0f);
   root.addChild(&terrain);
 
-  root.addChild(&plane.plane_root_);
+  root.addChild(&g_plane.root());
 
   auto& cam = Core::instance().cam_;
   cam.set_position(0.0f, 4.5f, -15.0f);
-
-  float speed = 0.1f;
-  float rotation_speed = 0.0001f;
 
   // enter the main loop:
   while (Window::StartFrame() && Window::IsOpened() && 
@@ -62,38 +101,23 @@ int32 main() {
 
     DirectX::XMFLOAT3 temp;
 
-    DirectX::XMStoreFloat3(&temp, plane.camera_node_.transform_->worldPosition());
+    DirectX::XMStoreFloat3(&temp, g_plane.camera_node().transform_->worldPosition());
     cam.set_position(temp.x, temp.y, temp.z);
 
-    DirectX::XMStoreFloat3(&temp, plane.plane_root_.transform_->worldPosition());
+    DirectX::XMStoreFloat3(&temp, g_plane.root().transform_->worldPosition());
     cam.set_target(temp.x, temp.y, temp.z);
 
-
-    if (Input::IsKeyboardButtonPressed(Input::kKeyboardButton_W)) {
-      DirectX::XMFLOAT3 forward;
-      DirectX::XMStoreFloat3(&forward, DirectX::XMVectorScale(plane.plane_root_.transform_->forward(), speed));
-      plane.plane_root_.transform_->traslate(forward.x, forward.y, forward.z);
-    }
-    if (Input::IsKeyboardButtonPressed(Input::kKeyboardButton_S)) {
-      DirectX::XMFLOAT3 forward;
-      DirectX::XMStoreFloat3(&forward, DirectX::XMVectorScale(plane.plane_root_.transform_->forward(), speed));
-      plane.plane_root_.transform_->traslate(-forward.x, -forward.y, -forward.z);
-    }
-    if (Input::IsKeyboardButtonPressed(Input::kKeyboardButton_A)) {
-      plane.plane_root_.transform_->rotate(0.0f, -rotation_speed, 0.0f);
-    }
-    if (Input::IsKeyboardButtonPressed(Input::kKeyboardButton_D)) {
-      plane.plane_root_.transform_->rotate(0.0f, rotation_speed, 0.0f);
-    }
+    ///////////////////////////////////////////
+    // Input for our Aeroplane
+    AirplaneInput();
     
-
     texture.use();
     cam.render(&root);
-    plane.prop_.transform_->set_rotation(0.0f, 0.0f, (float32)Time() * 0.01f);
-    plane.turret_.transform_->set_rotation(0.0f, (float32)Time() * 0.001f, 0.0f);
+    g_plane.prop().transform_->set_rotation(0.0f, 0.0f, (float32)Time() * 0.01f);
+    g_plane.turret().transform_->set_rotation(0.0f, (float32)Time() * 0.001f, 0.0f);
 
-	ImGui::SetNextWindowPos(ImVec2(650, 20), ImGuiCond_FirstUseEver);
-	ImGui::ShowTestWindow(0);
+	  ImGui::SetNextWindowPos(ImVec2(650, 20), ImGuiCond_FirstUseEver);
+	  ImGui::ShowTestWindow(0);
 
     Window::EndFrame();
   }
