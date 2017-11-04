@@ -153,7 +153,7 @@ void CoreCamera::update() {
 bool CoreCamera::translate() {
   auto& input = Core::instance().input_;
 
-  if (input.isMouseButtonDown(Input::kMouseButton_Left)) {
+  if (input.isMouseButtonPressed(Input::kMouseButton_Right)) {
     if (input.isKeyboardButtonPressed(Input::kKeyboardButton_A)) {
       DirectX::XMVECTOR scaled_right = DirectX::XMVectorScale(right(), movement_speed_);
       DirectX::XMStoreFloat3(&position_, DirectX::XMVectorSubtract(DirectX::XMLoadFloat3(&position_), scaled_right));
