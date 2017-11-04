@@ -87,10 +87,10 @@ namespace SLX {
       material_->custom_constant_buffer_.padding2 = 0.3f;
       material_->custom_constant_buffer_.padding3 = 0.6f;
 
-      D3D11_MAPPED_SUBRESOURCE new_matrices;
-      ZeroMemory(&new_matrices, sizeof(D3D11_MAPPED_SUBRESOURCE));
-      device_context->Map(material_->matrix_buffer_, 0, D3D11_MAP_WRITE_DISCARD, 0, &new_matrices);
-      memcpy(new_matrices.pData, &material_->custom_constant_buffer_, sizeof(CustomConstantBuffer));
+      D3D11_MAPPED_SUBRESOURCE new_buffer;
+      ZeroMemory(&new_buffer, sizeof(D3D11_MAPPED_SUBRESOURCE));
+      device_context->Map(material_->matrix_buffer_, 0, D3D11_MAP_WRITE_DISCARD, 0, &new_buffer);
+      memcpy(new_buffer.pData, &material_->custom_constant_buffer_, sizeof(CustomConstantBuffer));
       device_context->Unmap(material_->matrix_buffer_, 0);
 
       uint32 stride = sizeof(VertexData);

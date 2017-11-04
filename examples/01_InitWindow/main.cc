@@ -169,7 +169,7 @@ int32 main() {
   robot.body.render3D_->setup(&mat, &robot.geo_body);
   robot.body.render3D_->init();
   robot.body.init();
-  robot.body.transform_->set_position(0.0f, 1.05f, -1.3f);
+  robot.body.transform_->set_position(0.0f, 0.0f, 0.0f);
   robot.root.addChild(&robot.body);
 
   robot.left_ankle.addComponent(ComponentType::Transform);
@@ -177,7 +177,7 @@ int32 main() {
   robot.left_ankle.render3D_->setup(&mat, &robot.geo_left_ankle);
   robot.left_ankle.render3D_->init();
   robot.left_ankle.init();
-  robot.left_ankle.transform_->set_position(0.0f, 1.05f, -1.3f);
+  robot.left_ankle.transform_->set_position(5.0f, 0.0f, 0.0f);
   robot.root.addChild(&robot.left_ankle);
 
   robot.left_elbow.addComponent(ComponentType::Transform);
@@ -185,7 +185,7 @@ int32 main() {
   robot.left_elbow.render3D_->setup(&mat, &robot.geo_left_elbow);
   robot.left_elbow.render3D_->init();
   robot.left_elbow.init();
-  robot.left_elbow.transform_->set_position(0.0f, 1.05f, -1.3f);
+  robot.left_elbow.transform_->set_position(0.0f, 0.0f, 0.0f);
   robot.root.addChild(&robot.left_elbow);
 
   robot.left_hip.addComponent(ComponentType::Transform);
@@ -193,7 +193,7 @@ int32 main() {
   robot.left_hip.render3D_->setup(&mat, &robot.geo_left_hip);
   robot.left_hip.render3D_->init();
   robot.left_hip.init();
-  robot.left_hip.transform_->set_position(0.0f, 1.05f, -1.3f);
+  robot.left_hip.transform_->set_position(0.0f, 5.0f, 0.0f);
   robot.root.addChild(&robot.left_hip);
 
   robot.left_knee.addComponent(ComponentType::Transform);
@@ -201,7 +201,7 @@ int32 main() {
   robot.left_knee.render3D_->setup(&mat, &robot.geo_left_knee);
   robot.left_knee.render3D_->init();
   robot.left_knee.init();
-  robot.left_knee.transform_->set_position(0.0f, 1.05f, -1.3f);
+  robot.left_knee.transform_->set_position(-5.0f, 0.0f, 0.0f);
   robot.root.addChild(&robot.left_knee);
 
   robot.left_shoulder.addComponent(ComponentType::Transform);
@@ -209,7 +209,7 @@ int32 main() {
   robot.left_shoulder.render3D_->setup(&mat, &robot.geo_left_shoulder);
   robot.left_shoulder.render3D_->init();
   robot.left_shoulder.init();
-  robot.left_shoulder.transform_->set_position(0.0f, 1.05f, -1.3f);
+  robot.left_shoulder.transform_->set_position(10.0f, 0.0f, 0.0f);
   robot.root.addChild(&robot.left_shoulder);
 
   robot.left_wrist.addComponent(ComponentType::Transform);
@@ -217,7 +217,7 @@ int32 main() {
   robot.left_wrist.render3D_->setup(&mat, &robot.geo_left_wrist);
   robot.left_wrist.render3D_->init();
   robot.left_wrist.init();
-  robot.left_wrist.transform_->set_position(0.0f, 1.05f, -1.3f);
+  robot.left_wrist.transform_->set_position(-10.0f, 0.0f, 0.0f);
   robot.root.addChild(&robot.left_wrist);
 
   robot.right_ankle.addComponent(ComponentType::Transform);
@@ -225,7 +225,7 @@ int32 main() {
   robot.right_ankle.render3D_->setup(&mat, &robot.geo_right_ankle);
   robot.right_ankle.render3D_->init();
   robot.right_ankle.init();
-  robot.right_ankle.transform_->set_position(0.0f, 1.05f, -1.3f);
+  robot.right_ankle.transform_->set_position(0.0f, -5.0f, 0.0f);
   robot.root.addChild(&robot.right_ankle);
 
   robot.right_elbow.addComponent(ComponentType::Transform);
@@ -233,7 +233,7 @@ int32 main() {
   robot.right_elbow.render3D_->setup(&mat, &robot.geo_right_elbow);
   robot.right_elbow.render3D_->init();
   robot.right_elbow.init();
-  robot.right_elbow.transform_->set_position(0.0f, 1.05f, -1.3f);
+  robot.right_elbow.transform_->set_position(0.0f, -10.0f, 0.0f);
   robot.root.addChild(&robot.right_elbow);
 
   robot.right_hip.addComponent(ComponentType::Transform);
@@ -241,7 +241,7 @@ int32 main() {
   robot.right_hip.render3D_->setup(&mat, &robot.geo_right_hip);
   robot.right_hip.render3D_->init();
   robot.right_hip.init();
-  robot.right_hip.transform_->set_position(0.0f, 1.05f, -1.3f);
+  robot.right_hip.transform_->set_position(10.0f, 0.0f, 0.0f);
   robot.root.addChild(&robot.right_hip);
 
   robot.right_knee.addComponent(ComponentType::Transform);
@@ -249,7 +249,7 @@ int32 main() {
   robot.right_knee.render3D_->setup(&mat, &robot.geo_right_knee);
   robot.right_knee.render3D_->init();
   robot.right_knee.init();
-  robot.right_knee.transform_->set_position(0.0f, 1.05f, -1.3f);
+  robot.right_knee.transform_->set_position(10.0f, 5.0f, 0.0f);
   robot.root.addChild(&robot.right_knee);
 
   robot.right_shoulder.addComponent(ComponentType::Transform);
@@ -257,7 +257,7 @@ int32 main() {
   robot.right_shoulder.render3D_->setup(&mat, &robot.geo_right_shoulder);
   robot.right_shoulder.render3D_->init();
   robot.right_shoulder.init();
-  robot.right_shoulder.transform_->set_position(0.0f, 1.05f, -1.3f);
+  robot.right_shoulder.transform_->set_position(5.0f, 10.0f, 0.0f);
   robot.root.addChild(&robot.right_shoulder);
 
   robot.right_wrist.addComponent(ComponentType::Transform);
@@ -265,7 +265,7 @@ int32 main() {
   robot.right_wrist.render3D_->setup(&mat, &robot.geo_right_wrist);
   robot.right_wrist.render3D_->init();
   robot.right_wrist.init();
-  robot.right_wrist.transform_->set_position(0.0f, 1.05f, -1.3f);
+  robot.right_wrist.transform_->set_position(-5.0f, 10.0f, 0.0f);
   robot.root.addChild(&robot.right_wrist);
 
   robot.neck.addComponent(ComponentType::Transform);
@@ -273,7 +273,7 @@ int32 main() {
   robot.neck.render3D_->setup(&mat, &robot.geo_neck);
   robot.neck.render3D_->init();
   robot.neck.init();
-  robot.neck.transform_->set_position(0.0f, 1.05f, -1.3f);
+  robot.neck.transform_->set_position(-10.0f, -5.0f, 0.0f);
   robot.root.addChild(&robot.neck);
 
   robot.pelvis_presley.addComponent(ComponentType::Transform);
@@ -281,7 +281,7 @@ int32 main() {
   robot.pelvis_presley.render3D_->setup(&mat, &robot.geo_pelvis_presley);
   robot.pelvis_presley.render3D_->init();
   robot.pelvis_presley.init();
-  robot.pelvis_presley.transform_->set_position(0.0f, 1.05f, -1.3f);
+  robot.pelvis_presley.transform_->set_position(10.0f, -10.0f, 0.0f);
   robot.root.addChild(&robot.pelvis_presley);
 
 
