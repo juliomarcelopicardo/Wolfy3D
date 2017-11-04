@@ -110,27 +110,6 @@ int32 main() {
   while (Window::StartFrame() && Window::IsOpened() && 
          !Input::IsKeyboardButtonDown(Input::kKeyboardButton_Escape)) {
 
-    DirectX::XMFLOAT3 temp;
-    DirectX::XMStoreFloat3(&temp, cam_node.transform_->worldPosition());
-    cam.set_position(temp.x, temp.y, temp.z);
-    DirectX::XMStoreFloat3(&temp, plane_root.transform_->worldPosition());
-    cam.set_target(temp.x, temp.y, temp.z);
-    if (Input::IsKeyboardButtonPressed(Input::kKeyboardButton_W)) {
-      DirectX::XMFLOAT3 forward;
-      DirectX::XMStoreFloat3(&forward, DirectX::XMVectorScale(plane_root.transform_->forward_vector(), speed));
-      plane_root.transform_->traslate(forward.x, forward.y, forward.z);
-    }
-    if (Input::IsKeyboardButtonPressed(Input::kKeyboardButton_S)) {
-      DirectX::XMFLOAT3 forward;
-      DirectX::XMStoreFloat3(&forward, DirectX::XMVectorScale(plane_root.transform_->forward_vector(), speed));
-      plane_root.transform_->traslate(-forward.x, -forward.y, -forward.z);
-    }
-    if (Input::IsKeyboardButtonPressed(Input::kKeyboardButton_A)) {
-      plane_root.transform_->rotate(0.0f, -rotation_speed, 0.0f);
-    }
-    if (Input::IsKeyboardButtonPressed(Input::kKeyboardButton_D)) {
-      plane_root.transform_->rotate(0.0f, rotation_speed, 0.0f);
-    }
     
 
     texture.use();

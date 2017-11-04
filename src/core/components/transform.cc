@@ -131,10 +131,9 @@ namespace SLX {
   }
 
   DirectX::XMFLOAT3 TransformComponent::forward_float3() {
-    DirectX::XMVECTOR fwd;
     DirectX::XMFLOAT3 fwd_float3;
-    fwd = DirectX::XMVector4Normalize(DirectX::XMVector4Transform({ 0.0f, 0.0f, 1.0f, 0.0f }, DirectX::XMMatrixTranspose(global_model_matrix())));
-    DirectX::XMStoreFloat3(&fwd_float3, fwd);
+    DirectX::XMStoreFloat3(&fwd_float3, DirectX::XMVector4Normalize(DirectX::XMVector4Transform({ 0.0f, 0.0f, 1.0f, 0.0f }, 
+                                                                    DirectX::XMMatrixTranspose(global_model_matrix()))));
     return fwd_float3;
   }
 
