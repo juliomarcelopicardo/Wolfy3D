@@ -651,10 +651,13 @@ bool CoreGeometry::initFromFile(const char * filename, const DirectX::XMFLOAT4 c
   uint32 id = 0; // position of the iterator of the line.
 
   // Get the number of vertices.
+
+
   while (!file.eof()) {
     std::getline(file, line);
-    if (line.find_first_of('{') != -1) {
+    if (line.find("Mesh") != std::string::npos) {
       number = "";
+      std::getline(file, line);
       std::getline(file, line);
       line_length = line.length();
       while (id < line_length && line[id] != ';') {
@@ -763,8 +766,9 @@ bool CoreGeometry::initFromFile(const char * filename, const DirectX::XMFLOAT4 c
   id = 0;
   while (!file.eof()) {
     std::getline(file, line);
-    if (line.find_first_of('{') != -1) {
+    if (line.find("MeshNormals") != std::string::npos) {
       number = "";
+      std::getline(file, line);
       std::getline(file, line);
       line_length = line.length();
       while (id < line_length && line[id] != ';') {
@@ -853,7 +857,8 @@ bool CoreGeometry::initFromFile(const char * filename, const DirectX::XMFLOAT4 c
   // Go to the uv section.
   while (!file.eof()) {
     std::getline(file, line);
-    if (line.find_first_of('{') != -1) {
+    if (line.find("MeshTextureCoords") != std::string::npos) {
+      std::getline(file, line);
       std::getline(file, line);
       break;
     }

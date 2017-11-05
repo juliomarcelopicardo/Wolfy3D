@@ -74,11 +74,39 @@ public:
   DirectX::XMVECTOR worldPosition();
 
   ///--------------------------------------------------------------------------
+  /// @fn   void set_position(const DirectX::XMVECTOR position);
+  ///
+  /// @brief  Transform position setter.
+  ///--------------------------------------------------------------------------
+  void set_position(const DirectX::XMVECTOR position);
+
+  ///--------------------------------------------------------------------------
+  /// @fn   void set_position(const DirectX::XMFLOAT3 position);
+  ///
+  /// @brief  Transform position setter.
+  ///--------------------------------------------------------------------------
+  void set_position(const DirectX::XMFLOAT3 position);
+
+  ///--------------------------------------------------------------------------
   /// @fn   void set_position(float x, float y, float z);
   ///
   /// @brief  Transform position setter.
   ///--------------------------------------------------------------------------
   void set_position(const float32 x, const float32 y, const float32 z);
+
+  ///--------------------------------------------------------------------------
+  /// @fn   void traslate(const DirectX::XMVECTOR traslation);
+  ///
+  /// @brief  Traslate the object in its local transform.
+  ///--------------------------------------------------------------------------
+  void traslate(const DirectX::XMVECTOR traslation);
+
+  ///--------------------------------------------------------------------------
+  /// @fn   void traslate(const DirectX::XMFLOAT3 traslation);
+  ///
+  /// @brief  Traslate the object in its local transform.
+  ///--------------------------------------------------------------------------
+  void traslate(const DirectX::XMFLOAT3 traslation);
 
   ///--------------------------------------------------------------------------
   /// @fn   void traslate(float x, float y, float z);
