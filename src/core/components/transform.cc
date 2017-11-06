@@ -48,6 +48,10 @@ namespace SLX {
     return DirectX::XMLoadFloat3(&position_);
   }
 
+  DirectX::XMFLOAT3 TransformComponent::position_float3() const {
+    return position_;
+  }
+
   DirectX::XMVECTOR TransformComponent::worldPosition() {
     DirectX::XMFLOAT4X4 matrix;
     DirectX::XMStoreFloat4x4(&matrix, global_model_matrix());
@@ -99,6 +103,11 @@ namespace SLX {
     owner_->updateLocalModelAndChildrenMatrices();
   }
 
+  void TransformComponent::set_rotation(const DirectX::XMFLOAT3 rotation) {
+    rotation_ = rotation;
+    owner_->updateLocalModelAndChildrenMatrices();
+  }
+
   void TransformComponent::rotate(const float32 x, const float32 y, const float32 z) {
     set_rotation(rotation_.x + x, rotation_.y + y, rotation_.z + z);
   }
@@ -130,10 +139,22 @@ namespace SLX {
     return DirectX::XMVector4Normalize(DirectX::XMVector4Transform({ 0.0f, 0.0f, 1.0f, 0.0f }, DirectX::XMMatrixTranspose(global_model_matrix())));
   }
 
+  DirectX::XMVECTOR TransformComponent::forward_local_vector() {
+    calculateLocalModelMatrix();
+    return DirectX::XMVector4Normalize(DirectX::XMVector4Transform({ 0.0f, 0.0f, 1.0f, 0.0f }, DirectX::XMMatrixTranspose(local_model_matrix())));
+  }
+
   DirectX::XMFLOAT3 TransformComponent::forward_float3() {
     DirectX::XMFLOAT3 fwd_float3;
     DirectX::XMStoreFloat3(&fwd_float3, DirectX::XMVector4Normalize(DirectX::XMVector4Transform({ 0.0f, 0.0f, 1.0f, 0.0f }, 
                                                                     DirectX::XMMatrixTranspose(global_model_matrix()))));
+    return fwd_float3;
+  }
+
+  DirectX::XMFLOAT3 TransformComponent::forward_local_float3() {
+    DirectX::XMFLOAT3 fwd_float3;
+    DirectX::XMStoreFloat3(&fwd_float3, DirectX::XMVector4Normalize(DirectX::XMVector4Transform({ 0.0f, 0.0f, 1.0f, 0.0f },
+      DirectX::XMMatrixTranspose(local_model_matrix()))));
     return fwd_float3;
   }
 

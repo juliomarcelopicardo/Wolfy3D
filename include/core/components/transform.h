@@ -66,6 +66,14 @@ public:
   DirectX::XMVECTOR position() const;
 
   ///--------------------------------------------------------------------------
+  /// @fn   DirectX::XMVECTOR position_float3() const;
+  ///
+  /// @brief  Transform position getter.
+  /// @return XMFLOAT3 containing X,Y,Z Position.
+  ///--------------------------------------------------------------------------
+  DirectX::XMFLOAT3 position_float3() const;
+
+  ///--------------------------------------------------------------------------
   /// @fn   DirectX::XMVECTOR worldPosition();
   ///
   /// @brief  Transform world position getter.
@@ -139,6 +147,13 @@ public:
   void set_rotation(const float32 x, const float32 y, const float32 z);
 
   ///--------------------------------------------------------------------------
+  /// @fn   void set_rotation(const DirectX::XMFLOAT3 rotation);
+  ///
+  /// @brief  Transform rotation setter.
+  ///--------------------------------------------------------------------------
+  void set_rotation(const DirectX::XMFLOAT3 rotation);
+
+  ///--------------------------------------------------------------------------
   /// @fn   void rotate(float x, float y, float z);
   ///
   /// @brief  Add a rotation to the current one.
@@ -193,12 +208,28 @@ public:
   DirectX::XMVECTOR forward_vector();
 
   ///--------------------------------------------------------------------------
+  /// @fn   DirectX::XMVECTOR forward_local_vector();
+  ///
+  /// @brief forward vector of local matrix getter.
+  /// @return forward vector of local matrix.
+  ///--------------------------------------------------------------------------
+  DirectX::XMVECTOR forward_local_vector();
+
+  ///--------------------------------------------------------------------------
   /// @fn   DirectX::XMFLOAT3 forward();
   ///
   /// @brief forward vector getter.
   /// @return forward vector.
   ///--------------------------------------------------------------------------
   DirectX::XMFLOAT3 forward_float3();
+
+  ///--------------------------------------------------------------------------
+  /// @fn   DirectX::XMFLOAT3 forward_local_float3()
+  ///
+  /// @brief forward vector of the local matrix getter.
+  /// @return forward vector of the local matrix.
+  ///--------------------------------------------------------------------------
+  DirectX::XMFLOAT3 forward_local_float3();
 
   /// Recalculates the local matrix.
   void calculateLocalModelMatrix();
