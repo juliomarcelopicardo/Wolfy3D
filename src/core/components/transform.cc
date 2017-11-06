@@ -93,20 +93,38 @@ namespace SLX {
     owner_->updateLocalModelAndChildrenMatrices();
   }
 
-  void TransformComponent::traslate(const DirectX::XMVECTOR traslation) {
+  void TransformComponent::localTraslate(const DirectX::XMVECTOR traslation) {
     DirectX::XMFLOAT3 offset;
     DirectX::XMStoreFloat3(&offset, traslation);
     set_position(offset);
   }
 
-  void TransformComponent::traslate(const DirectX::XMFLOAT3 traslation) {
+  void TransformComponent::localTraslate(const DirectX::XMFLOAT3 traslation) {
     set_position(position_.x + traslation.x, 
                  position_.y + traslation.y, 
                  position_.z + traslation.z);
   }
 
-  void TransformComponent::traslate(const float32 x, const float32 y, const float32 z) {
+  void TransformComponent::localTraslate(const float32 x, const float32 y, const float32 z) {
     set_position(position_.x + x, position_.y + y, position_.z + z);
+  }
+
+  void TransformComponent::worldTraslate(const DirectX::XMVECTOR traslation) {
+    set_world_position(DirectX::XMVectorAdd(worldPosition(),traslation));
+  }
+
+  void TransformComponent::worldTraslate(const DirectX::XMFLOAT3 traslation) {
+    DirectX::XMFLOAT3 position;
+    DirectX::XMStoreFloat3(&position, worldPosition());
+    set_world_position(position.x + traslation.x,
+                       position.y + traslation.y,
+                       position.z + traslation.z);
+  }
+
+  void TransformComponent::worldTraslate(const float32 x, const float32 y, const float32 z) {
+    DirectX::XMFLOAT3 position;
+    DirectX::XMStoreFloat3(&position, worldPosition());
+    set_world_position(position.x + x, position.y + y, position.z + z);
   }
 
   DirectX::XMVECTOR TransformComponent::rotation_vector() const {
