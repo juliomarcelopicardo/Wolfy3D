@@ -22,10 +22,15 @@ namespace SLX {
 
 // Aeroplane we are going to control
 Aeroplane g_plane;
+Object root;
 
 void AirplaneInput() {
   // Movement on forward is automatic
   g_plane.move_forward();
+
+  if (Input::IsKeyboardButtonPressed(Input::kKeyboardButton_Q)) {
+    g_plane.shoot();
+  }
 
   ///////////////////////////////////////////////
   // Move Airplane on X axis
@@ -77,7 +82,7 @@ int32 main() {
   mat.init();
   texture.load("./../data/texture.png");
 
-  Object terrain, root;
+  Object terrain;
 
   root.addComponent(ComponentType::Transform);
   root.init();
@@ -111,6 +116,8 @@ int32 main() {
     // Input for our Aeroplane
     AirplaneInput();
     
+    g_plane.update();
+
     texture.use();
     cam.render(&root);
     g_plane.prop().transform_->set_rotation(0.0f, 0.0f, (float32)Time() * 0.01f);
