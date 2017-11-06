@@ -248,7 +248,7 @@ namespace SLX {
       if (ButtonStatus* button = input.getButton(wParam)) {
         button->is_down = false;
         button->is_pressed = false;
-        button->is_up = false;
+        button->is_up = true;
       }
 			if (wParam < 256)
 				io.KeysDown[wParam] = 0;
