@@ -94,7 +94,7 @@ int32 main() {
 
   plane_root.addComponent(ComponentType::Transform);
   plane_root.init();
-  root.addChild(&plane_root);
+  //root.addChild(&plane_root);
 
   cam_node.addComponent(ComponentType::Transform);
   cam_node.init();
@@ -307,7 +307,14 @@ int32 main() {
   while (Window::StartFrame() && Window::IsOpened() && 
          !Input::IsKeyboardButtonDown(Input::kKeyboardButton_Escape)) {
 
-    
+    if (Input::IsMouseButtonDown(Input::kMouseButton_Left)) {
+      DirectX::XMFLOAT3 position = { 0.0f, 0.0f, 0.0f };
+      robot.neck.transform_->set_world_position(DirectX::XMLoadFloat3(&position));
+    }
+    if (Input::IsMouseButtonDown(Input::kMouseButton_Middle)) {
+      DirectX::XMFLOAT3 position = { 1.0f, 0.0f, 0.0f };
+      robot.neck.transform_->worldTraslate(1.0f, 0.0f, 0.0f);
+    }
 
     texture.use();
     cam.render(&root);
