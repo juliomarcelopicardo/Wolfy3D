@@ -6,6 +6,7 @@
 *
 */
 
+#include "core/object.h"
 #include "core/components/component.h"
 
 namespace SLX {
@@ -14,13 +15,18 @@ namespace SLX {
   ***                        Constructor and destructor                        ***
   *******************************************************************************/
 
+
   Component::Component() {
     type_ = ComponentType::None;
     initialized_ = false;
+    owner_ = nullptr;
   }
 
   Component::~Component() {
-
+    owner_ = nullptr;
   }
 
+  void Component::set_owner(Object* object) {
+    owner_ = object;
+  }
 }; /* SLX */

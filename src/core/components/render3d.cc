@@ -41,7 +41,7 @@ namespace SLX {
     }
     
     if (!geometry_) {
-      geometry_->init();
+      geometry_->initTriangle();
     }
 
     if (material_ && geometry_) {
@@ -79,16 +79,19 @@ namespace SLX {
       auto* device_context = Core::instance().d3d_.deviceContext();
       auto& cam = Core::instance().cam_;
 
-      DirectX::XMFLOAT4X4 mvp[3];
-      DirectX::XMStoreFloat4x4(mvp, transform->model_matrix());
-      DirectX::XMStoreFloat4x4(&mvp[1], DirectX::XMMatrixTranspose(Core::instance().cam_.viewMatrix()));
-      DirectX::XMStoreFloat4x4(&mvp[2], DirectX::XMMatrixTranspose(Core::instance().cam_.projectionMatrix()));
+      DirectX::XMStoreFloat4x4(&material_->custom_constant_buffer_.matrices.model, transform->global_model_matrix());
+      DirectX::XMStoreFloat4x4(&material_->custom_constant_buffer_.matrices.view, DirectX::XMMatrixTranspose(Core::instance().cam_.viewMatrix()));
+      DirectX::XMStoreFloat4x4(&material_->custom_constant_buffer_.matrices.projection, DirectX::XMMatrixTranspose(Core::instance().cam_.projectionMatrix()));
+      material_->custom_constant_buffer_.current_time = (float32)Time();
+      material_->custom_constant_buffer_.padding = 0.0f;
+      material_->custom_constant_buffer_.padding2 = 0.3f;
+      material_->custom_constant_buffer_.padding3 = 0.6f;
 
-      D3D11_MAPPED_SUBRESOURCE new_matrices;
-      ZeroMemory(&new_matrices, sizeof(D3D11_MAPPED_SUBRESOURCE));
-      device_context->Map(geometry_->matrix_buffer_, 0, D3D11_MAP_WRITE_DISCARD, 0, &new_matrices);
-      memcpy(new_matrices.pData, mvp, sizeof(DirectX::XMFLOAT4X4) * 3);
-      device_context->Unmap(geometry_->matrix_buffer_, 0);
+      D3D11_MAPPED_SUBRESOURCE new_buffer;
+      ZeroMemory(&new_buffer, sizeof(D3D11_MAPPED_SUBRESOURCE));
+      device_context->Map(material_->matrix_buffer_, 0, D3D11_MAP_WRITE_DISCARD, 0, &new_buffer);
+      memcpy(new_buffer.pData, &material_->custom_constant_buffer_, sizeof(CustomConstantBuffer));
+      device_context->Unmap(material_->matrix_buffer_, 0);
 
       uint32 stride = sizeof(VertexData);
       uint32 offset = 0;
@@ -98,7 +101,8 @@ namespace SLX {
       device_context->IASetPrimitiveTopology(geometry_->topology_);
       device_context->VSSetShader(material_->vertex_shader_, 0, 0);
       device_context->PSSetShader(material_->pixel_shader_, 0, 0);
-      device_context->VSSetConstantBuffers(0, 1, &geometry_->matrix_buffer_);
+      device_context->VSSetConstantBuffers(0, 1, &material_->matrix_buffer_);
+      device_context->PSSetConstantBuffers(0, 1, &material_->matrix_buffer_);
       device_context->IASetInputLayout(material_->input_layout_);
       device_context->DrawIndexed(geometry_->vertex_index_.size(), 0, 0);
     }

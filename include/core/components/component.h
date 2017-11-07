@@ -15,6 +15,11 @@ namespace SLX {
 
 class Component {
 
+ public:
+
+   /// Public owner setter, to set the object which will possess the component.
+   void set_owner(class Object* object);
+
   protected :
 
     /*******************************************************************************
@@ -25,6 +30,8 @@ class Component {
     ComponentType type_;
     /// Whether this component have been initialized or not.
     bool initialized_;
+    /// Object who possess the component.
+    class Object* owner_;
 
     /*******************************************************************************
     ***                        Constructor and destructor                        ***

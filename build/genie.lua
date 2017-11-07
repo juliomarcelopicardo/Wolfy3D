@@ -51,8 +51,8 @@ project "SilverLynx"
   includedirs {
     "$(DXSDK_DIR)Include",
     path.join(PROJ_DIR, "include/"),
-	path.join(PROJ_DIR, "external/"),
-	path.join(PROJ_DIR, "external/imgui/")
+	  path.join(PROJ_DIR, "external/"),
+	  path.join(PROJ_DIR, "external/imgui/")
   }
 
   files {
@@ -66,9 +66,7 @@ project "SilverLynx"
 	path.join(PROJ_DIR, "include/core/components/*.h"),
 	path.join(PROJ_DIR, "external/imgui/*.cpp"),
 	path.join(PROJ_DIR, "external/imgui/*.h"),
-    path.join(PROJ_DIR, "data/geometries/*.*"),
-    path.join(PROJ_DIR, "data/materials/*.*"),
-    path.join(PROJ_DIR, "data/textures/*.*")
+    path.join(PROJ_DIR, "data/**.**"),
   }
 
   configuration "Debug"
@@ -103,11 +101,14 @@ function GenerateProject(name)
 	path.join(PROJ_DIR, "external/"),
     path.join(PROJ_DIR, "include/"),
     path.join(PROJ_DIR, "src/"),
+	path.join(PROJ_DIR, "examples/"..name.."/include/")
   }
 
   files {
     path.join(PROJ_DIR, "data/"..name.."/*.*"),
     path.join(PROJ_DIR, "examples/"..name.."/*.*"),
+	path.join(PROJ_DIR, "examples/"..name.."/src/*.*"),
+	path.join(PROJ_DIR, "examples/"..name.."/include/*.*"),
   }
 
   configuration "Debug"
@@ -118,7 +119,7 @@ function GenerateProject(name)
 			"d3dx11",
 			"d3dx10",
 			"SilverLynx",
-	  		"d3dcompiler"
+	  	"d3dcompiler"
 	  }
 
   configuration "Release"
@@ -129,7 +130,7 @@ function GenerateProject(name)
 			"d3dx11",
 			"d3dx10",
 			"SilverLynx",
-	  		"d3dcompiler"
+	  	"d3dcompiler"
   	}
 --[[
 
@@ -144,3 +145,4 @@ end
 
 -- PROJECTS
 GenerateProject("01_InitWindow")
+GenerateProject("02_Assignment_01")

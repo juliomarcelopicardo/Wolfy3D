@@ -11,9 +11,23 @@
 
 #include "silverlynx.h"
 #include "D3DX11.h"
+#include "DirectXMath.h"
 #include <vector>
 
 namespace SLX {
+
+struct Matrices {
+  DirectX::XMFLOAT4X4 model;
+  DirectX::XMFLOAT4X4 view;
+  DirectX::XMFLOAT4X4 projection;
+};
+
+struct CustomConstantBuffer {
+  Matrices matrices;
+  float32 current_time;
+  // ESTO ES PORQUE LOS CONSTANT BUFFER TIENEN QUE IR EN BLOQUES DE 16Bytes
+  float32 padding, padding2, padding3;
+};
 
 class CoreMaterial {
 
@@ -51,6 +65,10 @@ class CoreMaterial {
   ID3D11PixelShader* pixel_shader_;
   /// Input Layout
   ID3D11InputLayout* input_layout_;
+  /// Matrices buffer
+  ID3D11Buffer* matrix_buffer_;
+
+  CustomConstantBuffer custom_constant_buffer_;
 
 /*******************************************************************************
 ***                           Private                                        ***
@@ -66,7 +84,14 @@ class CoreMaterial {
 /*******************************************************************************
 ***                              Private methods                             ***
 *******************************************************************************/
-
+  
+  ///--------------------------------------------------------------------------
+  /// @fn   bool createMatrixBuffer();
+  ///
+  /// @brief  Creates the matrix buffer.
+  /// @return true if successfully initialized, false otherwise.
+  ///--------------------------------------------------------------------------
+  bool createMatrixBuffer();
 
 
 }; /* CoreMaterial */

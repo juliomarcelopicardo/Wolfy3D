@@ -18,24 +18,18 @@ void Init(const int32 width,
                 const char* display_name) {
 
   Core::instance().window_.init(width, height, display_name);
-  Core::instance().d3d_.init();
 }
 
 void Close() {
 	Core::instance().window_.shutdown();
-  Core::instance().d3d_.shutdown();
 }
 
 bool StartFrame() {
-  if (!Core::instance().window_.updateMessages()) {
-    return false;
-  }
-  Core::instance().d3d_.startRenderFrame();
-  return true;
+  return Core::instance().window_.startFrame();
 }
 
 void EndFrame() {
-  Core::instance().d3d_.endRenderFrame();
+  Core::instance().window_.endFrame();
 }
 
 int32 Height() {

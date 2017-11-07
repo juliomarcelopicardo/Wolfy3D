@@ -42,8 +42,8 @@ namespace SLX {
 
   bool DirectXFramework::init() {
 
-    unsigned int screen_width = (unsigned int)Core::instance().window_.width_;
-    unsigned int screen_height = (unsigned int)Core::instance().window_.height_;
+    uint32 screen_width = (uint32)Core::instance().window_.width_;
+    uint32 screen_height = (uint32)Core::instance().window_.height_;
 
     // Init Video card adapter and settings
     if (!initVideoCard()) {
@@ -92,8 +92,8 @@ namespace SLX {
     viewport.TopLeftY = 0;
     viewport.MinDepth = 0.0f;
     viewport.MaxDepth = 1.0f;
-    viewport.Width = (float)SLX::Core::instance().window_.width_;
-    viewport.Height = (float)SLX::Core::instance().window_.height_;
+    viewport.Width = (float32)SLX::Core::instance().window_.width_;
+    viewport.Height = (float32)SLX::Core::instance().window_.height_;
 
     // RSSetViewports() is a function that activates viewport structs.
     // The first parameter is the number of viewports being used, 
@@ -104,8 +104,8 @@ namespace SLX {
     // Setup The Projection Matrix
 
     // Setup the projection matrix.
-    float fov = (float)D3DX_PI / 4.0f;
-    float aspect = (float)SLX::Core::instance().window_.width_ / (float)SLX::Core::instance().window_.height_;
+    float32 fov = (float32)D3DX_PI / 4.0f;
+    float32 aspect = (float32)SLX::Core::instance().window_.width_ / (float32)SLX::Core::instance().window_.height_;
 
     // Create the projection matrix for 3D rendering.
     D3DXMatrixPerspectiveFovLH(&projection_matrix_, fov, aspect, SCREEN_NEAR, SCREEN_DEPTH);
@@ -114,8 +114,8 @@ namespace SLX {
     D3DXMatrixIdentity(&world_matrix_);
 
     // Create an orthographic projection matrix for 2D rendering.
-    D3DXMatrixOrthoLH(&ortho_matrix_, (float)SLX::Core::instance().window_.width_,
-      (float)SLX::Core::instance().window_.height_, SCREEN_NEAR, SCREEN_DEPTH);
+    D3DXMatrixOrthoLH(&ortho_matrix_, (float32)SLX::Core::instance().window_.width_,
+      (float32)SLX::Core::instance().window_.height_, SCREEN_NEAR, SCREEN_DEPTH);
 
 	
 	//////////////////////////////////////////////
@@ -126,7 +126,7 @@ namespace SLX {
 
   }
 
-  void DirectXFramework::startRenderFrame(float r, float g, float b, float a) {
+  void DirectXFramework::startRenderFrame(float32 r, float32 g, float32 b, float32 a) {
     // clear the back buffer to a deep blue
     device_context_->ClearRenderTargetView(render_target_view_, D3DXCOLOR(r, g, b, a));
     device_context_->ClearDepthStencilView(depth_stencil_view_, D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0);
@@ -217,7 +217,7 @@ namespace SLX {
 
     // Variables used for error checking
     HRESULT result;
-    int error;
+    int32 error;
 
     // Video card variables
     IDXGIFactory* factory;
@@ -225,11 +225,11 @@ namespace SLX {
     IDXGIOutput* adapterOutput;
     DXGI_MODE_DESC* displayModeList;
     DXGI_ADAPTER_DESC adapterDesc;
-    unsigned int number_modes;
+    uint32 number_modes;
 
-    unsigned int i, numerator, denominator, stringLength;
-    unsigned int screen_width = (unsigned int)Core::instance().window_.width_;
-    unsigned int screen_height = (unsigned int)Core::instance().window_.height_;
+    uint32 i, numerator, denominator, stringLength;
+    uint32 screen_width = (uint32)Core::instance().window_.width_;
+    uint32 screen_height = (uint32)Core::instance().window_.height_;
 
     // Create a DirectX graphics interface factory.
     result = CreateDXGIFactory(__uuidof(IDXGIFactory), (void**)&factory);
@@ -321,7 +321,7 @@ namespace SLX {
   bool DirectXFramework::initSwapChainDescription() {
 
     HRESULT result;
-    unsigned int numerator, denominator;
+    uint32 numerator, denominator;
 
     // create a struct to hold information about the swap chain
     DXGI_SWAP_CHAIN_DESC swap_chain_description;
@@ -364,7 +364,7 @@ namespace SLX {
     swap_chain_description.BufferDesc.Height = Core::instance().window_.height_;
     swap_chain_description.BufferUsage = DXGI_USAGE_RENDER_TARGET_OUTPUT;                        // how swap chain is to be used
     swap_chain_description.OutputWindow = Core::instance().window_.window_handle_;               // the window to be used
-    swap_chain_description.SampleDesc.Count = 4;                                                 // how many multisamples                                              // quality of the multisampling
+    swap_chain_description.SampleDesc.Count = 1;                                                 // how many multisamples 
     swap_chain_description.Windowed = TRUE;                                                      // windowed/full-screen mode
     swap_chain_description.Flags = DXGI_SWAP_CHAIN_FLAG_ALLOW_MODE_SWITCH;                       // allows swithing between fullscreen and windowed.        
     swap_chain_description.BufferDesc.ScanlineOrdering = DXGI_MODE_SCANLINE_ORDER_UNSPECIFIED;   // Set the scan line ordering to unspecified.
@@ -440,7 +440,7 @@ namespace SLX {
     depth_buffer_description.Height = Core::instance().window_.height_;
     depth_buffer_description.MipLevels = 1;
     depth_buffer_description.ArraySize = 1;
-    depth_buffer_description.Format = DXGI_FORMAT_D32_FLOAT_S8X24_UINT;
+    depth_buffer_description.Format = DXGI_FORMAT_D24_UNORM_S8_UINT;
     depth_buffer_description.SampleDesc.Count = 1;
     depth_buffer_description.SampleDesc.Quality = 0;
     depth_buffer_description.Usage = D3D11_USAGE_DEFAULT;
@@ -513,7 +513,7 @@ namespace SLX {
     D3D11_DEPTH_STENCIL_VIEW_DESC depth_stencil_view_desc;
     ZeroMemory(&depth_stencil_view_desc, sizeof(D3D11_DEPTH_STENCIL_VIEW_DESC));
 
-    depth_stencil_view_desc.Format = DXGI_FORMAT_D32_FLOAT_S8X24_UINT;
+    depth_stencil_view_desc.Format = DXGI_FORMAT_D24_UNORM_S8_UINT;
     depth_stencil_view_desc.ViewDimension = D3D11_DSV_DIMENSION_TEXTURE2D;
     depth_stencil_view_desc.Texture2D.MipSlice = 0;
 

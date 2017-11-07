@@ -26,6 +26,7 @@ CoreMaterial::~CoreMaterial() {
   if (vertex_shader_) { vertex_shader_->Release(); }
   if (pixel_shader_) { pixel_shader_->Release(); }
   if (input_layout_) { input_layout_->Release(); }
+  if (matrix_buffer_) { matrix_buffer_->Release(); }
 }
 
 /*******************************************************************************
@@ -102,7 +103,27 @@ bool CoreMaterial::init() {
   device->CreateInputLayout(layout_info, 4, vertex_shader->GetBufferPointer(), vertex_shader->GetBufferSize(), &input_layout_);
 
   if (error) { error->Release(); }
+  if (!createMatrixBuffer()) { return false; }
 
+  return true;
+}
+
+bool CoreMaterial::createMatrixBuffer() {
+  // Creamos un buffer para almacenar las matrices.
+  D3D11_BUFFER_DESC matrix_description;
+  ZeroMemory(&matrix_description, sizeof(D3D11_BUFFER_DESC));
+
+  matrix_description.Usage = D3D11_USAGE_DYNAMIC;
+  matrix_description.ByteWidth = sizeof(CustomConstantBuffer);
+  matrix_description.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
+  matrix_description.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
+
+  auto* device = Core::instance().d3d_.device();
+
+  if (FAILED(device->CreateBuffer(&matrix_description, NULL, &matrix_buffer_))) {
+    MessageBox(NULL, "ERROR - Matrix buffer not created", "ERROR", MB_OK);
+    return false;
+  }
   return true;
 }
 

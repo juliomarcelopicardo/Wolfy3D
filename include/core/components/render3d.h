@@ -14,12 +14,7 @@
 
 namespace SLX {
 
-  class Object;
-  class CoreGeometry;
-  class CoreMaterial;
-  class TransformComponent;
-
-class Render3DComponent : Component {
+class Render3DComponent : public Component {
 
   public:
 
@@ -66,7 +61,7 @@ class Render3DComponent : Component {
     /// @param  mat CoreMaterial to assign to this component.
     /// @param  geo CoreGeometry to assign to this component.
     ///--------------------------------------------------------------------------
-    void setup(CoreMaterial* mat, CoreGeometry* geo);
+    void setup(class CoreMaterial* mat, class CoreGeometry* geo);
 
     ///--------------------------------------------------------------------------
     /// @fn   void render(TransformComponent* transform);
@@ -74,7 +69,7 @@ class Render3DComponent : Component {
     /// @brief  renders this component using the specified transform.
     /// @param  transform TransformComponent use to obtain matrices for rendering.
     ///--------------------------------------------------------------------------
-    void render(TransformComponent* transform);
+    void render(class TransformComponent* transform);
 
     /*******************************************************************************
     ***                           Private                                        ***
@@ -87,9 +82,9 @@ class Render3DComponent : Component {
   private:
     
     /// Material of the component.
-    CoreMaterial* material_;
+    class CoreMaterial* material_;
     /// Geometry of the component.
-    CoreGeometry* geometry_;
+    class CoreGeometry* geometry_;
 
     /*******************************************************************************
     ***                              Private methods                             ***

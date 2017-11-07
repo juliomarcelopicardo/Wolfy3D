@@ -9,6 +9,7 @@
 #include "SilverLynx/globals.h"
 #include "core/window.h"
 #include "core/core.h"
+#include "core/input.h"
 #include "imgui/imgui.h"
 #include "imgui/imgui_impl_dx11.h"
 
@@ -39,7 +40,23 @@ namespace SLX {
     setupWindowClassInfo();
     setupWindowHandle(name);
 
+    Core::instance().d3d_.init();
+
     is_opened_ = true;
+  }
+
+  bool CoreWindow::startFrame() {
+    Core::instance().input_.refreshButtonsUp();
+    if (!updateMessages()) {
+      return false;
+    }
+    Core::instance().cam_.update();
+    Core::instance().d3d_.startRenderFrame();
+    return true;
+  }
+
+  void CoreWindow::endFrame() {
+    Core::instance().d3d_.endRenderFrame();
   }
 
   bool CoreWindow::updateMessages() {
@@ -58,6 +75,7 @@ namespace SLX {
 
   void CoreWindow::shutdown() {
 	  ImGui_ImplDX11_Shutdown();
+    Core::instance().d3d_.shutdown();
   }
 
   /*******************************************************************************
@@ -130,7 +148,9 @@ namespace SLX {
     PAINTSTRUCT ps;
     HDC hdc;
 
+  auto& input = SLX::Core::instance().input_;
 	ImGuiIO& io = ImGui::GetIO();
+
 	switch (message) {
 	
 		/////////////////////////////////
@@ -152,28 +172,84 @@ namespace SLX {
 		*/
 
 		/////////////////////////////////
-		// ImGui Input
-		case WM_LBUTTONDOWN: io.MouseDown[0] = true; return true;
-		case WM_LBUTTONUP: io.MouseDown[0] = false; return true;
-		case WM_RBUTTONDOWN: io.MouseDown[1] = true; return true;
-		case WM_RBUTTONUP: io.MouseDown[1] = false; return true;
-		case WM_MBUTTONDOWN: io.MouseDown[2] = true; return true;
-		case WM_MBUTTONUP: io.MouseDown[2] = false; return true;
+		// INPUT MOUSE
+		case WM_LBUTTONDOWN: {
+      io.MouseDown[0] = true; 
+      input.mouse_button_[0].is_down = true;
+      input.mouse_button_[0].is_pressed = true;
+      input.mouse_button_[0].is_up = false;
+      return true; 
+    }
+		case WM_LBUTTONUP: {
+      io.MouseDown[0] = false; 
+      input.mouse_button_[0].is_down = false;
+      input.mouse_button_[0].is_pressed = false;
+      input.mouse_button_[0].is_up = true;
+      return true; 
+    }
+		case WM_RBUTTONDOWN: {
+      io.MouseDown[1] = true;
+      input.mouse_button_[1].is_down = true;
+      input.mouse_button_[1].is_pressed = true;
+      input.mouse_button_[1].is_up = false;
+      return true; 
+    }
+		case WM_RBUTTONUP: {
+      io.MouseDown[1] = false; 
+      input.mouse_button_[1].is_down = false;
+      input.mouse_button_[1].is_pressed = false;
+      input.mouse_button_[1].is_up = true;
+      return true; 
+    }
+		case WM_MBUTTONDOWN: {
+      io.MouseDown[2] = true;
+      input.mouse_button_[2].is_down = true;
+      input.mouse_button_[2].is_pressed = true;
+      input.mouse_button_[2].is_up = false;
+      return true; 
+    }
+		case WM_MBUTTONUP: {
+      io.MouseDown[2] = false; 
+      input.mouse_button_[2].is_down = false;
+      input.mouse_button_[2].is_pressed = false;
+      input.mouse_button_[2].is_up = true;
+      return true; 
+    }
 		case WM_MOUSEWHEEL: {
 			io.MouseWheel += GET_WHEEL_DELTA_WPARAM(wParam) > 0 ? +1.0f : -1.0f;
+      input.mouse_wheel_ = io.MouseWheel;
 			return true;
 		}
 		case WM_MOUSEMOVE: {
 			io.MousePos.x = (signed short)(lParam);
 			io.MousePos.y = (signed short)(lParam >> 16);
+      input.mouse_position_.x = (float)(io.MousePos.x);
+      input.mouse_position_.y = (float)(io.MousePos.y);
 			return true;
 		}
 		case WM_KEYDOWN: {
+      // Para probar y añadir nuevas teclas 
+      /*
+      char prueba[128] = "";
+      sprintf(prueba, "Tecla: %d\n", wParam);
+      OutputDebugString(prueba);
+      */
+      
+      if (ButtonStatus* button = input.getButton(wParam)) {
+        button->is_down = true;
+        button->is_pressed = true;
+        button->is_up = false;
+      }
 			if (wParam < 256)
 				io.KeysDown[wParam] = 1;
 			return true;
 		}
 		case WM_KEYUP: {
+      if (ButtonStatus* button = input.getButton(wParam)) {
+        button->is_down = false;
+        button->is_pressed = false;
+        button->is_up = true;
+      }
 			if (wParam < 256)
 				io.KeysDown[wParam] = 0;
 			return true;
