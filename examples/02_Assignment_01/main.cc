@@ -28,7 +28,7 @@ void AirplaneInput() {
   // Movement on forward is automatic
   g_plane.move_forward();
 
-  if (Input::IsKeyboardButtonPressed(Input::kKeyboardButton_Q)) {
+  if (Input::IsMouseButtonUp(SLX::Input::kMouseButton_Left)) {
     g_plane.shoot();
   }
 
@@ -76,9 +76,7 @@ int32 main() {
   CoreMaterial mat;
   CoreTexture texture;
 
-  g_plane.init();
-
-  geo_terrain.initTerrain("./../data/Heightmap.bmp", { 100.0f, 10.0f, 100.0f });
+  geo_terrain.initTerrain("./../data/Heightmap.bmp", { 1000.0f, 50.0f, 1000.0f });
   mat.init();
   texture.load("./../data/texture.png");
 
@@ -86,6 +84,8 @@ int32 main() {
 
   root.addComponent(ComponentType::Transform);
   root.init();
+
+  g_plane.init(&root);
 
   terrain.addComponent(ComponentType::Transform);
   terrain.addComponent(ComponentType::Render3D);
@@ -99,6 +99,7 @@ int32 main() {
 
   auto& cam = Core::instance().cam_;
   cam.set_position(0.0f, 4.5f, -15.0f);
+  cam.setupPerspective(DirectX::XMConvertToRadians(45.0f), 1024.0f / 978.0f, 0.1f, 1000.0f);
 
   // enter the main loop:
   while (Window::StartFrame() && Window::IsOpened() && 
