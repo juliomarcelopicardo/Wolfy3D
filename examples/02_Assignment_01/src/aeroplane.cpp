@@ -18,6 +18,7 @@ Aeroplane::Aeroplane() {
 
   rotation_speed_ = 0.0025f;
   forward_speed_ = 0.01f;
+  bullet_speed_ = 0.06f;
   bullets_.empty();
 
 }
@@ -30,7 +31,7 @@ Aeroplane::~Aeroplane() {
 ***                               Public methods                             ***
 *******************************************************************************/
 
-void Aeroplane::init(void) {
+void Aeroplane::init(SLX::Object* scene) {
 	// Init geometry resources
 	geo_plane_.initFromFile("./../data/geometries/plane/plane.x");
 	geo_prop_.initFromFile("./../data/geometries/plane/prop.x");
@@ -78,6 +79,66 @@ void Aeroplane::init(void) {
   gun_.init();
   gun_.transform_->set_position(0.0f, 0.5f, 0.0f);
   turret_.addChild(&gun_);
+
+  gun_node_.addComponent(SLX::ComponentType::Transform);
+  //gun_node_.addComponent(SLX::ComponentType::Render3D);
+  //gun_node_.render3D_->setup(&mat_, &geo_bullet_);
+  //gun_node_.render3D_->init();
+  gun_node_.init();
+  gun_node_.transform_->set_position(0.0f, 0.0f, 2.0f);
+  gun_node_.transform_->set_scale(0.02f, 0.02f, 0.02f);
+  gun_.addChild(&gun_node_);
+
+  //////////////////////////////////
+  // Bullet Initialization
+
+  geo_bullet_.initFromFile("./../data/geometries/plane/bullet.x");
+
+  bullets_.resize(kNumberOfBullets);
+  
+  SLX::int32 loops = bullets_.size();
+  for (SLX::int32 i = 0; i < loops; i++) {
+    bullets_[i].obj = new SLX::Object();
+    bullets_[i].obj->addComponent(SLX::ComponentType::Transform);
+    bullets_[i].obj->addComponent(SLX::ComponentType::Render3D);
+    bullets_[i].obj->render3D_->setup(&mat_, &geo_bullet_);
+    bullets_[i].obj->render3D_->init();
+    bullets_[i].obj->init();
+    bullets_[i].obj->transform_->set_position(-1000.0f, 0.0f, 0.0f);
+    bullets_[i].obj->transform_->set_scale(0.02f, 0.02f, 0.02f);
+    bullets_[i].shot = false;
+    scene->addChild(bullets_[i].obj);
+  }
+}
+
+void Aeroplane::shoot() {
+  
+  // Shoot the next bullet in the magazine
+  // If it reaches the maximum start shooting from 
+  // The begining again
+  
+  if (current_bullet_ == bullets_.size()) {
+    current_bullet_ = 0;
+  }
+
+  bullets_[current_bullet_].dir = gun_.transform_->forward_vector();
+  bullets_[current_bullet_].obj->transform_->set_world_position(gun_node_.transform_->worldPosition());
+  bullets_[current_bullet_].obj->transform_->set_rotation(gun_node_.transform_->rotation_float3());
+  
+
+  bullets_[current_bullet_].shot = true;
+  current_bullet_++;
+}
+
+void Aeroplane::update() {
+  DirectX::XMFLOAT3 forward;
+
+  for (int i = 0; i < bullets_.size(); i++) {
+    if (bullets_[i].shot) {
+      DirectX::XMStoreFloat3(&forward, DirectX::XMVectorScale(bullets_[i].dir, bullet_speed_));
+      bullets_[i].obj->transform_->worldTraslate(forward.x, forward.y, forward.z);
+    }
+  }
 }
 
 void Aeroplane::move_pitch(SLX::float32 pitch_limit_degrees, bool facing_upwards) {

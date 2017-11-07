@@ -20,12 +20,9 @@ __declspec(align(16)) class Aeroplane {
 public:
    
   struct Bullet {
-    DirectX::XMFLOAT4 position;
-    DirectX::XMVECTOR forward;
-    DirectX::XMMATRIX orientation_matrix;
-    DirectX::XMMATRIX world_matrix;
-    SLX::CoreGeometry mesh;
+    SLX::Object* obj;
     bool shot;
+    DirectX::XMVECTOR dir;
   };
 
   const int kNumberOfBullets = 10;
@@ -48,7 +45,11 @@ public:
   ///
   /// @brief  Initializes the airplane resources, geometries and matrices.
   ///--------------------------------------------------------------------------
-  void init();
+  void init(SLX::Object* scene);
+
+
+  void shoot();
+  void update();
 
   ///--------------------------------------------------------------------------
   /// @fn   void move_pitch(SLX::float32 pitch_limit_degrees, bool facing_upwards);
@@ -128,6 +129,8 @@ public:
 
   /// Speed the aeroplane will take when moving forwards
   SLX::float32 forward_speed_;
+  /// Speed the bullet will take when moving forwards
+  SLX::float32 bullet_speed_;
   /// Speed the aeroplane will take when rotating Yaw,Pitch,Roll
   SLX::float32 rotation_speed_;
 
@@ -173,6 +176,12 @@ private:
   SLX::Object camera_node_;
   /// Plane bullets pool
   std::vector<Bullet> bullets_;
+
+  SLX::Object gun_node_;
+
+  SLX::CoreGeometry geo_bullet_;
+
+  int current_bullet_;
 };
 
 #endif
