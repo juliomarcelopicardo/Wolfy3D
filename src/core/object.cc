@@ -22,15 +22,11 @@ namespace SLX {
   Object::Object() {
     initialized_ = false;
     render3D_ = nullptr;
-    transform_ = nullptr;
     parent_ = nullptr;
+    transform_.set_owner(this);
   }
 
   Object::~Object() {
-    if (transform_) {
-      delete transform_;
-    }
-
     if (render3D_) {
       delete render3D_;
     }
@@ -42,21 +38,7 @@ namespace SLX {
   ***                               Public methods                             ***
   *******************************************************************************/
 
-  void Object::init() {
-    if (!initialized_) {
-      if (!transform_) {
-        transform_ = new TransformComponent;
-        transform_->set_owner(this);
-        initialized_ = true;
-      }
-    }
-  }
-
   void Object::addComponent(ComponentType component, CoreMaterial *mat, CoreGeometry *geo) {
-    if (!initialized_) {
-      init();
-    }
-
     switch (component) {
       case SLX::ComponentType::Render3D: {
         if (!render3D_) {
@@ -72,16 +54,6 @@ namespace SLX {
 
   void Object::addChild(Object* obj) {
 
-    if (!initialized_) {
-      init();
-    }
-
-    if (obj) {
-      if (!obj->initialized_) {
-        obj->init();
-      }
-    }
-
     uint32 num_children = children_.size();
     for (uint32 i = 0; i < num_children; ++i) {
       if (children_[i] == obj) {
@@ -90,33 +62,38 @@ namespace SLX {
       }
     }
     children_.push_back(obj);
-    DirectX::XMStoreFloat4x4(&obj->transform_->parent_model_matrix_, transform_->global_model_matrix());
+    DirectX::XMStoreFloat4x4(&obj->transform_.parent_model_matrix_, transform_.global_model_matrix());
     obj->parent_ = this;
     obj->updateLocalModelAndChildrenMatrices();
   }
 
+  /*******************************************************************************
+  ***                           Transform methods                              ***
+  *******************************************************************************/
+
   void Object::updateLocalModelAndChildrenMatrices() {
 
-    if (!initialized_) {
-      init();
-    }
-
-    transform_->calculateLocalModelMatrix();
+    transform_.calculateLocalModelMatrix();
     uint32 num_children = children_.size();
     for (uint32 i = 0; i < num_children; i++) {
-      DirectX::XMStoreFloat4x4(&children_[i]->transform_->parent_model_matrix_, transform_->global_model_matrix());
+      DirectX::XMStoreFloat4x4(&children_[i]->transform_.parent_model_matrix_, transform_.global_model_matrix());
       children_[i]->updateLocalModelAndChildrenMatrices();
     }
   }
 
-  SLX::TransformComponent* Object::transform() {
+  /*******************************************************************************
+  ***                            Setters & Getters                             ***
+  *******************************************************************************/
 
-    if (!transform_) {
-      transform_ = new TransformComponent;
-      transform_->set_owner(this);
-    }
-
+  SLX::TransformComponent& Object::transform() {
     return transform_;
+  }
+
+  SLX::Render3DComponent* Object::render3D() {
+    if (!render3D_) {
+      addComponent(SLX::ComponentType::Render3D, &SLX::Core::instance().default_material_, &SLX::Core::instance().default_geometry_);
+    }
+    return render3D_;
   }
 
 }; /* SLX */

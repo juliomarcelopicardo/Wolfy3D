@@ -20,13 +20,6 @@ class Object {
  public:
 
   /*******************************************************************************
-  ***                               Attributes                                 ***
-  *******************************************************************************/
-
-  /// Render3D component.
-  Render3DComponent* render3D_;
-
-  /*******************************************************************************
   ***                        Constructor and destructor                        ***
   *******************************************************************************/
 
@@ -39,13 +32,6 @@ class Object {
   /*******************************************************************************
   ***                               Public methods                             ***
   *******************************************************************************/
-
-  ///--------------------------------------------------------------------------
-  /// @fn   void init();
-  ///
-  /// @brief  Initializes the component.
-  ///--------------------------------------------------------------------------
-  void init();
 
   ///--------------------------------------------------------------------------
   /// @fn     void addComponent(ComponentType component);
@@ -69,23 +55,41 @@ class Object {
   ***                           Transform methods                              ***
   *******************************************************************************/
 
+  ///--------------------------------------------------------------------------
+  /// @fn       void updateLocalModelAndChildrenMatrices();
+  ///
+  /// @brief Updates the local model of this object and all of its children.
+  ///--------------------------------------------------------------------------
   void updateLocalModelAndChildrenMatrices();
 
   /*******************************************************************************
   ***                            Setters & Getters                             ***
   *******************************************************************************/
 
-  TransformComponent* transform();
+  ///--------------------------------------------------------------------------
+  /// @fn     TransformComponent& transform();
+  ///
+  /// @brief Transform component getter
+  /// @return TransformComponent attached to this object.
+  ///--------------------------------------------------------------------------
+  TransformComponent& transform();
+
+  ///--------------------------------------------------------------------------
+  /// @fn     Render3DComponent* render3D();
+  ///
+  /// @brief Render3DComponent getter.
+  /// @return Render3DComponent pointer attached to this object.
+  ///--------------------------------------------------------------------------
+  Render3DComponent* render3D();
 
   /*******************************************************************************
   ***                           Private                                        ***
   *******************************************************************************/
 
+  /// Parent of this object
   Object* parent_;
+  /// Childrens attached to this object
   std::vector<Object*> children_;
-
-  /// Transform component.
-  TransformComponent* transform_;
 
  private:
 
@@ -98,8 +102,11 @@ class Object {
 
   /// Whether this object is initialized or not.
   bool initialized_;
-
-
+  /// Transform component.
+  TransformComponent transform_;
+  /// Render3D component.
+  Render3DComponent* render3D_;
+  
   /*******************************************************************************
   ***                              Private methods                             ***
   *******************************************************************************/
