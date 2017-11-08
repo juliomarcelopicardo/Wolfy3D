@@ -41,6 +41,7 @@ namespace SLX {
     setupWindowHandle(name);
 
     Core::instance().d3d_.init();
+    Core::instance().init();
 
     is_opened_ = true;
   }
