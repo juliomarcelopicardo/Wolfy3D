@@ -91,4 +91,10 @@ Core::Core() {}
 
 Core::~Core() {}
 
+
+void Core::init() {
+  default_geometry_.initCube();
+  default_material_.init();
+}
+
 };/* JI */

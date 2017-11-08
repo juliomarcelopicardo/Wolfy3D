@@ -62,26 +62,45 @@ class Core {
 
   /// Singleton instance.
   static Core& instance();
+
 /*******************************************************************************
 ***                        Constructor and destructor                        ***
 *******************************************************************************/
+  
   Core();
   ~Core();
+
+/*******************************************************************************
+***                               Public methods                             ***
+*******************************************************************************/
+
+  ///--------------------------------------------------------------------------
+  /// @fn    void init();
+  ///
+  /// @brief initializes the core attributes.
+  ///--------------------------------------------------------------------------
+  void init();
 
 /*******************************************************************************
 ***                               Attributes                                 ***
 *******************************************************************************/
 
+  /// Core Window containing the main application window.
   CoreWindow window_;
+  /// DirectX11 Framework.
   DirectXFramework d3d_;
+  /// Chrome debugger.
   ChromeDebugger debugger_;
-
-
+  /// Application start time. Used for timestamp purposes.
   uint64 start_time_;
-
+  /// Main application camera.
   CoreCamera cam_;
+  /// Application input module.
   CoreInput input_;
-
+  /// Default material to be assigned to uninitialized 3DComponents.
+  CoreMaterial default_material_;
+  /// Default geometry to be assigned to uninitialized 3DComponents.
+  CoreGeometry default_geometry_;
 
 /*******************************************************************************
 ***                         Private Copy Constructor                         ***

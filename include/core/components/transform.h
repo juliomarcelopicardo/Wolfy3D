@@ -10,11 +10,11 @@
 #define __TRANSFORM_H__ 1
 
 #include <DirectXMath.h>
-#include "core/components/component.h"
+#include "SilverLynx/globals.h"
 
 namespace SLX {
 
-class TransformComponent : public Component {
+class TransformComponent {
 
 public:
 
@@ -32,30 +32,17 @@ public:
 ***                               Public methods                             ***
 *******************************************************************************/
 
-  ///--------------------------------------------------------------------------
-  /// @fn   void init();
-  ///
-  /// @brief  Initializes the component.
-  ///--------------------------------------------------------------------------
-  void init();
-
-  ///--------------------------------------------------------------------------
-  /// @fn   void update();
-  ///
-  /// @brief  Updates the component.
-  ///--------------------------------------------------------------------------
-  void update();
-
-  ///--------------------------------------------------------------------------
-  /// @fn   void shutdown();
-  ///
-  /// @brief  Deallocates any memory and setup from this component.
-  ///--------------------------------------------------------------------------
-  void shutdown();
-
 /*******************************************************************************
 ***                          Setters and Getters                             ***
 *******************************************************************************/
+  
+///--------------------------------------------------------------------------
+  /// @fn   void set_owner(class Object* owner);
+  ///
+  /// @brief  Owner of this component setter
+  /// @param  Object owner pointer of this component to be set.
+  ///--------------------------------------------------------------------------
+  void set_owner(class Object* owner);
 
   ///--------------------------------------------------------------------------
   /// @fn   DirectX::XMVECTOR position() const;
@@ -79,7 +66,7 @@ public:
   /// @brief  Transform world position getter.
   /// @return XMVECTOR containing X,Y,Z World Position.
   ///--------------------------------------------------------------------------
-  DirectX::XMVECTOR worldPosition();
+  DirectX::XMVECTOR world_position();
 
   ///--------------------------------------------------------------------------
   /// @fn   void set_position(const DirectX::XMVECTOR position);
@@ -293,7 +280,8 @@ private:
   DirectX::XMFLOAT3 rotation_;
   /// Transform Scale.
   DirectX::XMFLOAT3 scale_;
-
+  /// Object who possess the component.
+  class Object* owner_;
  
   /*******************************************************************************
   ***                              Private methods                             ***
