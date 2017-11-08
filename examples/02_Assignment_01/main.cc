@@ -85,8 +85,7 @@ int32 main() {
   g_plane.init(&root);
 
   terrain.addComponent(ComponentType::Render3D, &mat, &geo_terrain);
-  terrain.init();
-  terrain.transform()->set_position(-50.0f, -10.0f, -30.0f);
+  terrain.transform().set_position(-50.0f, -10.0f, -30.0f);
   root.addChild(&terrain);
 
   root.addChild(&g_plane.root());
@@ -101,10 +100,10 @@ int32 main() {
 
     DirectX::XMFLOAT3 temp;
 
-    DirectX::XMStoreFloat3(&temp, g_plane.camera_node().transform()->world_position());
+    DirectX::XMStoreFloat3(&temp, g_plane.camera_node().transform().world_position());
     cam.set_position(temp.x, temp.y, temp.z);
 
-    DirectX::XMStoreFloat3(&temp, g_plane.root().transform()->world_position());
+    DirectX::XMStoreFloat3(&temp, g_plane.root().transform().world_position());
     cam.set_target(temp.x, temp.y, temp.z);
 
     ///////////////////////////////////////////
@@ -115,8 +114,8 @@ int32 main() {
 
     texture.use();
     cam.render(&root);
-    g_plane.prop().transform()->set_rotation(0.0f, 0.0f, (float32)Time() * 0.01f);
-    g_plane.turret().transform()->set_rotation(0.0f, (float32)Time() * 0.001f, 0.0f);
+    g_plane.prop().transform().set_rotation(0.0f, 0.0f, (float32)Time() * 0.01f);
+    g_plane.turret().transform().set_rotation(0.0f, (float32)Time() * 0.001f, 0.0f);
 
 	  ImGui::SetNextWindowPos(ImVec2(650, 20), ImGuiCond_FirstUseEver);
 	  ImGui::ShowTestWindow(0);
