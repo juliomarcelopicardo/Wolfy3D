@@ -90,9 +90,6 @@ namespace SLX {
   }
 
   SLX::Render3DComponent* Object::render3D() {
-    if (!render3D_) {
-      addComponent(SLX::ComponentType::Render3D, &SLX::Core::instance().default_material_, &SLX::Core::instance().default_geometry_);
-    }
     return render3D_;
   }
 
