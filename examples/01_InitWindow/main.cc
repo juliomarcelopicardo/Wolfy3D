@@ -80,25 +80,25 @@ int32 main() {
   Object plane_root, plane, prop, turret, gun, cam_node, terrain, root;
 
   terrain.addComponent(ComponentType::Render3D, &mat, &geo_terrain);
-  terrain.transform()->set_position(-50.0f, -10.0f, -30.0f);
+  terrain.transform().set_position(-50.0f, -10.0f, -30.0f);
   root.addChild(&terrain);
 
-  cam_node.transform()->set_position(0.0f, 4.5f, -15.0f);
+  cam_node.transform().set_position(0.0f, 4.5f, -15.0f);
   plane_root.addChild(&cam_node);
 
   plane.addComponent(ComponentType::Render3D, &mat, &geo_plane);
   plane_root.addChild(&plane);
 
   prop.addComponent(ComponentType::Render3D, &mat, &geo_prop);
-  prop.transform()->set_position(0.0f, 0.0f, 1.9f);
+  prop.transform().set_position(0.0f, 0.0f, 1.9f);
   plane.addChild(&prop);
 
   turret.addComponent(ComponentType::Render3D, &mat, &geo_turret);
-  turret.transform()->set_position(0.0f, 1.05f, -1.3f);
+  turret.transform().set_position(0.0f, 1.05f, -1.3f);
   plane.addChild(&turret);
 
   gun.addComponent(ComponentType::Render3D, &mat, &geo_gun);
-  gun.transform()->set_position(0.0f, 0.5f, 0.0f);
+  gun.transform().set_position(0.0f, 0.5f, 0.0f);
   turret.addChild(&gun);
 
   /*
@@ -125,70 +125,70 @@ int32 main() {
 
 
   root.addChild(&robot.root);
-  robot.root.transform()->set_position(0.0f, 0.0f, 20.0f);
+  robot.root.transform().set_position(0.0f, 0.0f, 20.0f);
 
   robot.body.addComponent(ComponentType::Render3D, &mat, &robot.geo_body);
-  robot.body.transform()->set_position(0.0f, 0.0f, 0.0f);
+  robot.body.transform().set_position(0.0f, 0.0f, 0.0f);
   robot.root.addChild(&robot.body);
 
   robot.left_ankle.addComponent(ComponentType::Render3D, &mat, &robot.geo_left_ankle);
-  robot.left_ankle.transform()->set_position(5.0f, 0.0f, 0.0f);
+  robot.left_ankle.transform().set_position(5.0f, 0.0f, 0.0f);
   robot.root.addChild(&robot.left_ankle);
 
   robot.left_elbow.addComponent(ComponentType::Render3D, &mat, &robot.geo_left_elbow);
-  robot.left_elbow.transform()->set_position(0.0f, 0.0f, 0.0f);
+  robot.left_elbow.transform().set_position(0.0f, 0.0f, 0.0f);
   robot.root.addChild(&robot.left_elbow);
 
   robot.left_hip.addComponent(ComponentType::Render3D, &mat, &robot.geo_left_hip);
-  robot.left_hip.transform()->set_position(0.0f, 5.0f, 0.0f);
+  robot.left_hip.transform().set_position(0.0f, 5.0f, 0.0f);
   robot.root.addChild(&robot.left_hip);
 
   robot.left_knee.addComponent(ComponentType::Render3D, &mat, &robot.geo_left_knee);
-  robot.left_knee.transform()->set_position(-5.0f, 0.0f, 0.0f);
+  robot.left_knee.transform().set_position(-5.0f, 0.0f, 0.0f);
   robot.root.addChild(&robot.left_knee);
 
   robot.left_shoulder.addComponent(ComponentType::Render3D, &mat, &robot.geo_left_shoulder);
-  robot.left_shoulder.transform()->set_position(10.0f, 0.0f, 0.0f);
+  robot.left_shoulder.transform().set_position(10.0f, 0.0f, 0.0f);
   robot.root.addChild(&robot.left_shoulder);
 
   robot.left_wrist.addComponent(ComponentType::Render3D, &mat, &robot.geo_left_wrist);
-  robot.left_wrist.transform()->set_position(-10.0f, 0.0f, 0.0f);
+  robot.left_wrist.transform().set_position(-10.0f, 0.0f, 0.0f);
   robot.root.addChild(&robot.left_wrist);
 
   robot.right_ankle.addComponent(ComponentType::Render3D, &mat, &robot.geo_right_ankle);
-  robot.right_ankle.transform()->set_position(0.0f, -5.0f, 0.0f);
+  robot.right_ankle.transform().set_position(0.0f, -5.0f, 0.0f);
   robot.root.addChild(&robot.right_ankle);
 
   robot.right_elbow.addComponent(ComponentType::Render3D, &mat, &robot.geo_right_elbow);
-  robot.right_elbow.transform()->set_position(0.0f, -10.0f, 0.0f);
+  robot.right_elbow.transform().set_position(0.0f, -10.0f, 0.0f);
   robot.root.addChild(&robot.right_elbow);
 
   robot.right_hip.addComponent(ComponentType::Render3D, &mat, &robot.geo_right_hip);
-  robot.right_hip.transform()->set_position(10.0f, 0.0f, 0.0f);
+  robot.right_hip.transform().set_position(10.0f, 0.0f, 0.0f);
   robot.root.addChild(&robot.right_hip);
 
   robot.right_knee.addComponent(ComponentType::Render3D, &mat, &robot.geo_right_knee);
-  robot.right_knee.transform()->set_position(10.0f, 5.0f, 0.0f);
+  robot.right_knee.transform().set_position(10.0f, 5.0f, 0.0f);
   robot.root.addChild(&robot.right_knee);
 
   robot.right_shoulder.addComponent(ComponentType::Render3D, &mat, &robot.geo_right_shoulder);
-  robot.right_shoulder.transform()->set_position(5.0f, 10.0f, 0.0f);
+  robot.right_shoulder.transform().set_position(5.0f, 10.0f, 0.0f);
   robot.root.addChild(&robot.right_shoulder);
 
   robot.right_wrist.addComponent(ComponentType::Render3D, &mat, &robot.geo_right_wrist);
-  robot.right_wrist.transform()->set_position(-5.0f, 10.0f, 0.0f);
+  robot.right_wrist.transform().set_position(-5.0f, 10.0f, 0.0f);
   robot.root.addChild(&robot.right_wrist);
 
   robot.neck.addComponent(ComponentType::Render3D, &mat, &robot.geo_neck);
-  robot.neck.transform()->set_position(-10.0f, -5.0f, 0.0f);
+  robot.neck.transform().set_position(-10.0f, -5.0f, 0.0f);
   robot.root.addChild(&robot.neck);
 
   robot.pelvis_presley.addComponent(ComponentType::Render3D, &mat, &robot.geo_pelvis_presley);
-  robot.pelvis_presley.transform()->set_position(10.0f, -10.0f, 0.0f);
+  robot.pelvis_presley.transform().set_position(10.0f, -10.0f, 0.0f);
   robot.root.addChild(&robot.pelvis_presley);
 
 
-  //plane_root.transform()->set_rotation(0.0f, DirectX::XM_PI, 0.0f);
+  //plane_root.transform().set_rotation(0.0f, DirectX::XM_PI, 0.0f);
   char textico[256];
   sprintf_s(textico, "Iniciando ventana con dimensiones %d x %d", Window::Width(), Window::Height());
   auto& cam = Core::instance().cam_;
@@ -203,17 +203,17 @@ int32 main() {
 
     if (Input::IsMouseButtonDown(Input::kMouseButton_Left)) {
       DirectX::XMFLOAT3 position = { 0.0f, 0.0f, 0.0f };
-      robot.neck.transform()->set_world_position(DirectX::XMLoadFloat3(&position));
+      robot.neck.transform().set_world_position(DirectX::XMLoadFloat3(&position));
     }
     if (Input::IsMouseButtonDown(Input::kMouseButton_Middle)) {
       DirectX::XMFLOAT3 position = { 1.0f, 0.0f, 0.0f };
-      robot.neck.transform()->worldTraslate(1.0f, 0.0f, 0.0f);
+      robot.neck.transform().worldTraslate(1.0f, 0.0f, 0.0f);
     }
 
     texture.use();
     cam.render(&root);
-    prop.transform()->set_rotation(0.0f, 0.0f, (float32)Time() * 0.01f);
-    turret.transform()->set_rotation(0.0f, (float32)Time() * 0.001f, 0.0f);
+    prop.transform().set_rotation(0.0f, 0.0f, (float32)Time() * 0.01f);
+    turret.transform().set_rotation(0.0f, (float32)Time() * 0.001f, 0.0f);
 
 	ImGui::SetNextWindowPos(ImVec2(650, 20), ImGuiCond_FirstUseEver);
 	ImGui::ShowTestWindow(0);
