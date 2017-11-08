@@ -15,7 +15,6 @@
 
 namespace SLX {
 
-  
   /*******************************************************************************
   ***                        Constructor and destructor                        ***
   *******************************************************************************/
@@ -47,35 +46,24 @@ namespace SLX {
     if (!initialized_) {
       if (!transform_) {
         transform_ = new TransformComponent;
-        transform_->init();
         transform_->set_owner(this);
         initialized_ = true;
       }
     }
   }
 
-  void Object::update() {
-
+  void Object::addComponent(ComponentType component, CoreMaterial *mat, CoreGeometry *geo) {
     if (!initialized_) {
       init();
     }
 
-    if (transform_) {
-      transform_->update();
-    }
-
-    if (render3D_) {
-      render3D_->update();
-    }
-  }
-
-  void Object::addComponent(ComponentType component) {
     switch (component) {
       case SLX::ComponentType::Render3D: {
         if (!render3D_) {
           render3D_ = new Render3DComponent;
-          render3D_->init();
-          render3D_->set_owner(this);
+          if (mat && geo) {
+            render3D_->init(mat, geo);
+          }
         }
         break;
       }
@@ -83,6 +71,17 @@ namespace SLX {
   }
 
   void Object::addChild(Object* obj) {
+
+    if (!initialized_) {
+      init();
+    }
+
+    if (obj) {
+      if (!obj->initialized_) {
+        obj->init();
+      }
+    }
+
     uint32 num_children = children_.size();
     for (uint32 i = 0; i < num_children; ++i) {
       if (children_[i] == obj) {
@@ -97,12 +96,27 @@ namespace SLX {
   }
 
   void Object::updateLocalModelAndChildrenMatrices() {
+
+    if (!initialized_) {
+      init();
+    }
+
     transform_->calculateLocalModelMatrix();
     uint32 num_children = children_.size();
     for (uint32 i = 0; i < num_children; i++) {
       DirectX::XMStoreFloat4x4(&children_[i]->transform_->parent_model_matrix_, transform_->global_model_matrix());
       children_[i]->updateLocalModelAndChildrenMatrices();
     }
+  }
+
+  SLX::TransformComponent* Object::transform() {
+
+    if (!transform_) {
+      transform_ = new TransformComponent;
+      transform_->set_owner(this);
+    }
+
+    return transform_;
   }
 
 }; /* SLX */

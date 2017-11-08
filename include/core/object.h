@@ -23,8 +23,6 @@ class Object {
   ***                               Attributes                                 ***
   *******************************************************************************/
 
-  /// Transform component.
-  TransformComponent* transform_;
   /// Render3D component.
   Render3DComponent* render3D_;
 
@@ -50,19 +48,14 @@ class Object {
   void init();
 
   ///--------------------------------------------------------------------------
-  /// @fn   void update();
-  ///
-  /// @brief  Updates the component.
-  ///--------------------------------------------------------------------------
-  void update();
-
-  ///--------------------------------------------------------------------------
   /// @fn     void addComponent(ComponentType component);
   ///
   /// @brief Adds a component to the current obj
   /// @param component type of component to be initialized on this object.
+  /// @param mat material to be assigned in case ComponentType is Render3D
+  /// @param geo geometry to be assigned in case ComponentType is Render3D
   ///--------------------------------------------------------------------------
-  void addComponent(ComponentType component);
+  void addComponent(ComponentType component, CoreMaterial *mat, CoreGeometry *geo);
 
   ///--------------------------------------------------------------------------
   /// @fn     void addChild(Object* obj);
@@ -75,12 +68,14 @@ class Object {
   /*******************************************************************************
   ***                           Transform methods                              ***
   *******************************************************************************/
+
   void updateLocalModelAndChildrenMatrices();
 
   /*******************************************************************************
   ***                            Setters & Getters                             ***
   *******************************************************************************/
 
+  TransformComponent* transform();
 
   /*******************************************************************************
   ***                           Private                                        ***
@@ -89,12 +84,17 @@ class Object {
   Object* parent_;
   std::vector<Object*> children_;
 
+  /// Transform component.
+  TransformComponent* transform_;
+
  private:
+
+   Object(const Object& copy);
+   Object& operator=(const Object& copy);
 
   /*******************************************************************************
   ***                               Attributes                                 ***
   *******************************************************************************/
-
 
   /// Whether this object is initialized or not.
   bool initialized_;
