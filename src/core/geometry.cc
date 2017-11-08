@@ -673,7 +673,7 @@ bool CoreGeometry::initFromFile(const char * filename, const DirectX::XMFLOAT4 c
   }
 
   // Save the vertex positions.
-  for (uint32 i = 0; i < num_vertices_; ++i) {
+  for (SLX::int32 i = 0; i < num_vertices_; ++i) {
     std::getline(file, line);
     line_length = line.length();
     number = "";
@@ -724,7 +724,7 @@ bool CoreGeometry::initFromFile(const char * filename, const DirectX::XMFLOAT4 c
   vertex_index_.resize(num_indices_);
 
   // Save the indices or elements.
-  for (uint32 i = 0; i < num_indices_; i += 3) {
+  for (SLX::int32 i = 0; i < num_indices_; i += 3) {
     std::getline(file, line);
     line_length = line.length();
 
@@ -819,7 +819,7 @@ bool CoreGeometry::initFromFile(const char * filename, const DirectX::XMFLOAT4 c
 
   // Save the normals using the indices.
   std::getline(file, line);
-  for (uint32 i = 0; i < num_indices_; i += 3) {
+  for (SLX::int32 i = 0; i < num_indices_; i += 3) {
     std::getline(file, line);
     line_length = line.length();
 
@@ -865,7 +865,7 @@ bool CoreGeometry::initFromFile(const char * filename, const DirectX::XMFLOAT4 c
   }
 
   // Save the vertex uv.
-  for (uint32 i = 0; i < num_vertices_; ++i) {
+  for (SLX::int32 i = 0; i < num_vertices_; ++i) {
     std::getline(file, line);
     line_length = line.length();
     number = "";
