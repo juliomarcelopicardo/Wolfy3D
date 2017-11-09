@@ -277,6 +277,22 @@ void TransformComponent::rotate(const DirectX::XMFLOAT3 rotation) {
   set_rotation(rotation.x + rotation.x, rotation.y + rotation.y, rotation.z + rotation.z);
 }
 
+void TransformComponent::worldRotate(const float32 x, const float32 y, const float32 z) {
+  DirectX::XMFLOAT3 rotation;
+  DirectX::XMStoreFloat3(&rotation, world_rotation_vector());
+  set_world_rotation(rotation.x + x, rotation.y + y, rotation.z + z);
+}
+
+void TransformComponent::worldRotate(const DirectX::XMVECTOR rotation) {
+  DirectX::XMFLOAT3 rot;
+  DirectX::XMStoreFloat3(&rot, rotation);
+  worldRotate(rot);
+}
+
+void TransformComponent::worldRotate(const DirectX::XMFLOAT3 rotation) {
+  worldRotate(rotation.x, rotation.y, rotation.z);
+}
+
 void TransformComponent::rotate(const DirectX::XMVECTOR rotation) {
   DirectX::XMFLOAT3 rot;
   DirectX::XMStoreFloat3(&rot, rotation);

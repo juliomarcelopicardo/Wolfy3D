@@ -318,6 +318,27 @@ public:
   ///--------------------------------------------------------------------------
   void rotate(const DirectX::XMFLOAT3 rotation);
 
+  ///--------------------------------------------------------------------------
+  /// @fn   void worldRotate(float x, float y, float z);
+  ///
+  /// @brief  Add a global rotation to the current one.
+  ///--------------------------------------------------------------------------
+  void worldRotate(const float32 x, const float32 y, const float32 z);
+
+  ///--------------------------------------------------------------------------
+  /// @fn   void worldRotate(const DirectX::XMVECTOR rotation);
+  ///
+  /// @brief  Add a global rotation to the current one.
+  ///--------------------------------------------------------------------------
+  void worldRotate(const DirectX::XMVECTOR rotation);
+
+  ///--------------------------------------------------------------------------
+  /// @fn   void worldRotate(const DirectX::XMFLOAT3 rotation);
+  ///
+  /// @brief  Add a global rotation to the current one.
+  ///--------------------------------------------------------------------------
+  void worldRotate(const DirectX::XMFLOAT3 rotation);
+
 #pragma endregion
 
   
