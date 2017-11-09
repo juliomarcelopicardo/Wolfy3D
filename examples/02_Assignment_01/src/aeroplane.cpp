@@ -59,9 +59,6 @@ void Aeroplane::init(SLX::Object* scene) {
   gun_.transform().set_position(0.0f, 0.5f, 0.0f);
   turret_.addChild(&gun_);
 
-  //gun_node_.addComponent(SLX::ComponentType::Render3D);
-  //gun_node_.render3D_->init(&mat_, &geo_bullet_);
-  //gun_node_.render3D_->init();
   gun_node_.transform().set_position(0.0f, 0.0f, 2.0f);
   gun_node_.transform().set_scale(0.02f, 0.02f, 0.02f);
   gun_.addChild(&gun_node_);
@@ -78,7 +75,7 @@ void Aeroplane::init(SLX::Object* scene) {
     bullets_[i].obj = new SLX::Object();
     bullets_[i].obj->addComponent(SLX::ComponentType::Render3D, &mat_, &geo_bullet_);
     bullets_[i].obj->transform().set_position(-1000.0f, 0.0f, 0.0f);
-    bullets_[i].obj->transform().set_scale(0.02f, 0.02f, 1.0f);
+    bullets_[i].obj->transform().set_scale(0.02f, 0.02f, 0.2f);
     bullets_[i].shot = false;
     scene->addChild(bullets_[i].obj);
   }
