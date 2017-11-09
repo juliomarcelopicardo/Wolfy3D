@@ -101,10 +101,10 @@ int32 main() {
 	uint64 start = Time();
     DirectX::XMFLOAT3 temp;
 
-    DirectX::XMStoreFloat3(&temp, g_plane.camera_node().transform().world_position());
+    DirectX::XMStoreFloat3(&temp, g_plane.camera_node().transform().world_position_vector());
     cam.set_position(temp.x, temp.y, temp.z);
 
-    DirectX::XMStoreFloat3(&temp, g_plane.root().transform().world_position());
+    DirectX::XMStoreFloat3(&temp, g_plane.root().transform().world_position_vector());
     cam.set_target(temp.x, temp.y, temp.z);
 
     ///////////////////////////////////////////

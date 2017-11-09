@@ -47,12 +47,12 @@ public:
 #pragma region POSITION
 
   ///--------------------------------------------------------------------------
-  /// @fn   DirectX::XMVECTOR position() const;
+  /// @fn   DirectX::XMVECTOR position_vector() const;
   ///
   /// @brief  Transform position getter.
   /// @return XMVECTOR containing X,Y,Z Position.
   ///--------------------------------------------------------------------------
-  DirectX::XMVECTOR position() const;
+  DirectX::XMVECTOR position_vector() const;
 
   ///--------------------------------------------------------------------------
   /// @fn   DirectX::XMVECTOR position_float3() const;
@@ -63,12 +63,20 @@ public:
   DirectX::XMFLOAT3 position_float3() const;
 
   ///--------------------------------------------------------------------------
-  /// @fn   DirectX::XMVECTOR worldPosition();
+  /// @fn   DirectX::XMVECTOR world_position_vector();
   ///
   /// @brief  Transform world position getter.
   /// @return XMVECTOR containing X,Y,Z World Position.
   ///--------------------------------------------------------------------------
-  DirectX::XMVECTOR world_position();
+  DirectX::XMVECTOR world_position_vector();
+
+  ///--------------------------------------------------------------------------
+  /// @fn   DirectX::XMVECTOR world_position_float3();
+  ///
+  /// @brief  Transform world position getter.
+  /// @return XMVECTOR containing X,Y,Z World Position.
+  ///--------------------------------------------------------------------------
+  DirectX::XMFLOAT3 world_position_float3();
 
   ///--------------------------------------------------------------------------
   /// @fn   void set_position(const DirectX::XMVECTOR position);

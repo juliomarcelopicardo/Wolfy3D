@@ -92,7 +92,7 @@ void Aeroplane::shoot() {
   }
 
   bullets_[current_bullet_].dir = gun_.transform().forward_vector();
-  bullets_[current_bullet_].obj->transform().set_world_position(gun_node_.transform().world_position());
+  bullets_[current_bullet_].obj->transform().set_world_position(gun_node_.transform().world_position_vector());
   bullets_[current_bullet_].obj->transform().set_rotation(gun_node_.transform().world_rotation_float3());
   
 
