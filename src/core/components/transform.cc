@@ -211,6 +211,21 @@ void TransformComponent::set_scale(const float32 x, const float32 y, const float
   owner_->updateLocalModelAndChildrenMatrices();
 }
 
+void TransformComponent::set_scale(const DirectX::XMVECTOR scale) {
+  DirectX::XMStoreFloat3(&scale_, scale);
+  owner_->updateLocalModelAndChildrenMatrices();
+}
+
+void TransformComponent::set_scale(const DirectX::XMFLOAT3 scale) {
+  scale_ = scale;
+  owner_->updateLocalModelAndChildrenMatrices();
+}
+
+void TransformComponent::set_scale(const float32 uniform_scale) {
+  scale_ = { uniform_scale, uniform_scale, uniform_scale };
+  owner_->updateLocalModelAndChildrenMatrices();
+}
+
 #pragma endregion
 
 

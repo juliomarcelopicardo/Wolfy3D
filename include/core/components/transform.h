@@ -225,6 +225,27 @@ public:
   ///--------------------------------------------------------------------------
   void set_scale(const float32 x, const float32 y, const float32 z);
 
+  ///--------------------------------------------------------------------------
+  /// @fn   void set_scale(DirectX::XMVECTOR scale);
+  ///
+  /// @brief  Transform scale setter.
+  ///--------------------------------------------------------------------------
+  void set_scale(const DirectX::XMVECTOR scale);
+
+  ///--------------------------------------------------------------------------
+  /// @fn   void set_scale(DirectX::XMFLOAT3 scale);
+  ///
+  /// @brief  Transform scale setter.
+  ///--------------------------------------------------------------------------
+  void set_scale(const DirectX::XMFLOAT3 scale);
+
+  ///--------------------------------------------------------------------------
+  /// @fn   void set_scale(float x, float y, float z);
+  ///
+  /// @brief  Transform scale setter.
+  ///--------------------------------------------------------------------------
+  void set_scale(const float32 uniform_scale);
+
 #pragma endregion
 
 
