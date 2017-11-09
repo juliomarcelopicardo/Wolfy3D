@@ -147,7 +147,7 @@ void Aeroplane::move_roll_yaw(SLX::float32 roll_limit_degrees, bool facing_leftw
 void Aeroplane::move_forward() {
   DirectX::XMFLOAT3 forward;
   DirectX::XMStoreFloat3(&forward, DirectX::XMVectorScale(plane_root_.transform().forward_vector(), forward_speed_));
-  plane_root_.transform().localTraslate(forward.x, forward.y, forward.z);
+  plane_root_.transform().traslate(forward.x, forward.y, forward.z);
 }
 
 /*******************************************************************************

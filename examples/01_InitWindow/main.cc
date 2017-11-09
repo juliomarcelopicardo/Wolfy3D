@@ -327,12 +327,12 @@ int32 main() {
     !Input::IsKeyboardButtonDown(Input::kKeyboardButton_Escape)) {
 
     if (Input::IsMouseButtonPressed(Input::kMouseButton_Left)) {
-      cube.transform().localTraslate(0.001f, 0.0f, 0.0f);
-      cube1.transform().localTraslate(-0.001f, 0.0f, 0.0f);
+      cube.transform().traslate(0.001f, 0.0f, 0.0f);
+      cube1.transform().traslate(-0.001f, 0.0f, 0.0f);
     }
     if (Input::IsMouseButtonPressed(Input::kMouseButton_Right)) {
-      cube.transform().localTraslate(-0.001f, 0.0f, 0.0f);
-      cube1.transform().localTraslate(0.001f, 0.0f, 0.0f);
+      cube.transform().traslate(-0.001f, 0.0f, 0.0f);
+      cube1.transform().traslate(0.001f, 0.0f, 0.0f);
     }
 
     cube.transform().rotate(0.0f, 0.0002f, 0.0f);

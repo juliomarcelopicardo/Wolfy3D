@@ -231,19 +231,19 @@ void TransformComponent::set_scale(const float32 uniform_scale) {
 
 #pragma region TRANSLATE
 
-void TransformComponent::localTraslate(const DirectX::XMVECTOR traslation) {
+void TransformComponent::traslate(const DirectX::XMVECTOR traslation) {
   DirectX::XMFLOAT3 offset;
   DirectX::XMStoreFloat3(&offset, traslation);
   set_position(offset);
 }
 
-void TransformComponent::localTraslate(const DirectX::XMFLOAT3 traslation) {
+void TransformComponent::traslate(const DirectX::XMFLOAT3 traslation) {
   set_position(position_.x + traslation.x, 
                 position_.y + traslation.y, 
                 position_.z + traslation.z);
 }
 
-void TransformComponent::localTraslate(const float32 x, const float32 y, const float32 z) {
+void TransformComponent::traslate(const float32 x, const float32 y, const float32 z) {
   set_position(position_.x + x, position_.y + y, position_.z + z);
 }
 
@@ -271,6 +271,16 @@ void TransformComponent::worldTraslate(const float32 x, const float32 y, const f
 
 void TransformComponent::rotate(const float32 x, const float32 y, const float32 z) {
   set_rotation(rotation_.x + x, rotation_.y + y, rotation_.z + z);
+}
+
+void TransformComponent::rotate(const DirectX::XMFLOAT3 rotation) {
+  set_rotation(rotation.x + rotation.x, rotation.y + rotation.y, rotation.z + rotation.z);
+}
+
+void TransformComponent::rotate(const DirectX::XMVECTOR rotation) {
+  DirectX::XMFLOAT3 rot;
+  DirectX::XMStoreFloat3(&rot, rotation);
+  set_rotation(rot.x + rotation_.x, rot.y + rotation_.y, rot.z + rotation_.z);
 }
 
 #pragma endregion

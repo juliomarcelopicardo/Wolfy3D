@@ -256,21 +256,21 @@ public:
   ///
   /// @brief  Traslate the object in its local transform.
   ///--------------------------------------------------------------------------
-  void localTraslate(const DirectX::XMVECTOR traslation);
+  void traslate(const DirectX::XMVECTOR traslation);
 
   ///--------------------------------------------------------------------------
   /// @fn   void localTraslate(const DirectX::XMFLOAT3 traslation);
   ///
   /// @brief  Traslate the object in its local transform.
   ///--------------------------------------------------------------------------
-  void localTraslate(const DirectX::XMFLOAT3 traslation);
+  void traslate(const DirectX::XMFLOAT3 traslation);
 
   ///--------------------------------------------------------------------------
   /// @fn   void localTraslate(float x, float y, float z);
   ///
   /// @brief  Traslate the object in its local transform.
   ///--------------------------------------------------------------------------
-  void localTraslate(const float32 x, const float32 y, const float32 z);
+  void traslate(const float32 x, const float32 y, const float32 z);
 
   ///--------------------------------------------------------------------------
   /// @fn   void traslate(const DirectX::XMVECTOR traslation);
@@ -303,6 +303,20 @@ public:
   /// @brief  Add a rotation to the current one.
   ///--------------------------------------------------------------------------
   void rotate(const float32 x, const float32 y, const float32 z);
+
+  ///--------------------------------------------------------------------------
+  /// @fn   void rotate(const DirectX::XMVECTOR rotation);
+  ///
+  /// @brief  Add a rotation to the current one.
+  ///--------------------------------------------------------------------------
+  void rotate(const DirectX::XMVECTOR rotation);
+
+  ///--------------------------------------------------------------------------
+  /// @fn   void rotate(const DirectX::XMFLOAT3 rotation);
+  ///
+  /// @brief  Add a rotation to the current one.
+  ///--------------------------------------------------------------------------
+  void rotate(const DirectX::XMFLOAT3 rotation);
 
 #pragma endregion
 
