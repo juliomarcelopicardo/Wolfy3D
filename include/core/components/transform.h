@@ -170,6 +170,34 @@ public:
   ///--------------------------------------------------------------------------
   void set_rotation(const DirectX::XMFLOAT3 rotation);
 
+  ///--------------------------------------------------------------------------
+  /// @fn   void set_rotation(const DirectX::XMVECTOR rotation);
+  ///
+  /// @brief  Transform rotation setter.
+  ///--------------------------------------------------------------------------
+  void set_rotation(const DirectX::XMVECTOR rotation);
+
+  ///--------------------------------------------------------------------------
+  /// @fn   void set_world_rotation(float x, float y, float z);
+  ///
+  /// @brief  Transform rotation setter.
+  ///--------------------------------------------------------------------------
+  void set_world_rotation(const float32 x, const float32 y, const float32 z);
+
+  ///--------------------------------------------------------------------------
+  /// @fn   void set_world_rotation(const DirectX::XMFLOAT3 rotation);
+  ///
+  /// @brief  Transform rotation setter.
+  ///--------------------------------------------------------------------------
+  void set_world_rotation(const DirectX::XMFLOAT3 rotation);
+
+  ///--------------------------------------------------------------------------
+  /// @fn   void set_world_rotation(const DirectX::XMVECTOR rotation);
+  ///
+  /// @brief  Transform rotation setter.
+  ///--------------------------------------------------------------------------
+  void set_world_rotation(const DirectX::XMVECTOR rotation);
+
 #pragma endregion
 
 #pragma region SCALE

@@ -169,6 +169,31 @@ void TransformComponent::set_rotation(const DirectX::XMFLOAT3 rotation) {
   owner_->updateLocalModelAndChildrenMatrices();
 }
 
+void TransformComponent::set_rotation(const DirectX::XMVECTOR rotation) {
+  DirectX::XMStoreFloat3(&rotation_, rotation);
+  owner_->updateLocalModelAndChildrenMatrices();
+}
+
+void TransformComponent::set_world_rotation(const float32 x, const float32 y, const float32 z) {
+  if (owner_->parent_) {
+    DirectX::XMFLOAT3 rot = owner_->parent_->transform().world_rotation_float3();
+    set_rotation(x - rot.x, y - rot.y, z - rot.z);
+  }
+  else {
+    set_rotation(x, y, z);
+  }
+}
+
+void TransformComponent::set_world_rotation(const DirectX::XMFLOAT3 rotation) {
+  set_world_rotation(rotation.x, rotation.y, rotation.z);
+}
+
+void TransformComponent::set_world_rotation(const DirectX::XMVECTOR rotation) {
+  DirectX::XMFLOAT3 rot;
+  DirectX::XMStoreFloat3(&rot, rotation);
+  set_world_position(rot);
+}
+
 #pragma endregion
 
 #pragma region SCALE
