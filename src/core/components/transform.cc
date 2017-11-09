@@ -133,6 +133,59 @@ namespace SLX {
     return rotation_;
   }
 
+  DirectX::XMVECTOR TransformComponent::world_rotation_vector() {
+
+    DirectX::XMFLOAT4X4 m;
+    DirectX::XMFLOAT3 euler;
+
+    DirectX::XMStoreFloat4x4(&m, DirectX::XMMatrixTranspose(global_model_matrix()));
+    float sp = -m._32;
+    if (sp <= -1.0f) {
+      euler.x = -1.570796f;
+    }
+    else if (sp >= 1.0f) {
+      euler.x = 1.570796f;
+    }
+    else {
+      euler.x = asin(sp);
+    }
+    if (fabs(sp) > 0.9999f) {
+      euler.z = 0.0f;
+      euler.y = atan2(-m._13, m._11);
+    }
+    else {
+      euler.y = atan2(m._31, m._33);
+      euler.z = atan2(m._12, m._22);
+    }
+    return DirectX::XMLoadFloat3(&euler);
+  }
+
+  DirectX::XMFLOAT3 TransformComponent::world_rotation_float3() {
+    DirectX::XMFLOAT4X4 m;
+    DirectX::XMFLOAT3 euler;
+
+    DirectX::XMStoreFloat4x4(&m, DirectX::XMMatrixTranspose(global_model_matrix()));
+    float sp = -m._32;
+    if (sp <= -1.0f) {
+      euler.x = -1.570796f;
+    }
+    else if (sp >= 1.0f) {
+      euler.x = 1.570796f;
+    }
+    else {
+      euler.x = asin(sp);
+    }
+    if (fabs(sp) > 0.9999f) {
+      euler.z = 0.0f;
+      euler.y = atan2(-m._13, m._11);
+    }
+    else {
+      euler.y = atan2(m._31, m._33);
+      euler.z = atan2(m._12, m._22);
+    }
+    return euler;
+  }
+
   void TransformComponent::set_rotation(const float32 x, const float32 y, const float32 z) {
     rotation_ = DirectX::XMFLOAT3(x, y, z);
     owner_->updateLocalModelAndChildrenMatrices();
@@ -199,13 +252,37 @@ namespace SLX {
 
 
   void TransformComponent::calculateLocalModelMatrix() {
+
+	  DirectX::XMMATRIX ret;
+	  DirectX::XMVECTOR origin;
+	  origin = DirectX::XMVectorSet(0.0f, 0.0f, 0.0f, 1.0f);
+
+
+	/*
     DirectX::XMMATRIX rotation, traslation, scale;
 
     rotation = DirectX::XMMatrixRotationRollPitchYaw(rotation_.x, rotation_.y, rotation_.z);
+	//rotation = DirectX::XMMatrixRotationAxis(DirectX::XMVectorSet(1.0f, 0.0f, 0.0f, 0.0f), rotation_.x);
     traslation = DirectX::XMMatrixTranslation(position_.x, position_.y, position_.z);
     scale = DirectX::XMMatrixScaling(scale_.x, scale_.y, scale_.z);
 
     DirectX::XMStoreFloat4x4(&local_model_matrix_, DirectX::XMMatrixTranspose(scale * rotation * traslation));
+	 */
+
+	DirectX::XMVECTOR quat_x, quat_y, quat_z;
+	quat_x = DirectX::XMQuaternionRotationAxis(DirectX::XMVectorSet(1.0f, 0.0f, 0.0f, 0.0f), rotation_.x);
+	quat_y = DirectX::XMQuaternionRotationAxis(DirectX::XMVectorSet(0.0f, 1.0f, 0.0f, 0.0f), rotation_.y);
+	quat_z = DirectX::XMQuaternionRotationAxis(DirectX::XMVectorSet(0.0f, 0.0f, 1.0f, 0.0f), rotation_.z);
+	
+	ret = DirectX::XMMatrixTransformation(origin,
+	                                      DirectX::XMQuaternionIdentity(),
+											                  DirectX::XMLoadFloat3(&scale_),
+											                  origin,
+											                  DirectX::XMQuaternionNormalize(DirectX::XMQuaternionMultiply(DirectX::XMQuaternionMultiply(quat_z, quat_x), quat_y)),
+											                  DirectX::XMLoadFloat3(&position_));
+	DirectX::XMStoreFloat4x4(&local_model_matrix_, DirectX::XMMatrixTranspose(ret));
+	/*
+	*/
   }
 
 }; /* SLX */

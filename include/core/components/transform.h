@@ -169,6 +169,22 @@ public:
   DirectX::XMFLOAT3 rotation_float3() const;
 
   ///--------------------------------------------------------------------------
+  /// @fn   DirectX::XMVECTOR world_rotation();
+  ///
+  /// @brief  Transform world rotation getter.
+  /// @return XMVECTOR containing X,Y,Z world Rotation.
+  ///--------------------------------------------------------------------------
+  DirectX::XMVECTOR world_rotation_vector();
+
+  ///--------------------------------------------------------------------------
+  /// @fn   DirectX::XMFLOAT3 world_rotation();
+  ///
+  /// @brief  Transform world rotation getter.
+  /// @return XMFLOAT3 containing X,Y,Z world Rotation.
+  ///--------------------------------------------------------------------------
+  DirectX::XMFLOAT3 world_rotation_float3();
+
+  ///--------------------------------------------------------------------------
   /// @fn   void set_rotation(float x, float y, float z);
   ///
   /// @brief  Transform rotation setter.
