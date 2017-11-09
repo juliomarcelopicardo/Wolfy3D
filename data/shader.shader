@@ -71,8 +71,8 @@ float4 PShader(PixelInput pixel_input) : SV_TARGET {
   // Calculamos el color difuso de la luz.
   Light light;
   light.dir = float4(1.0f, 1.0f, 0.0f, 0.0f);
-  light.dir.x = sin(timer * 0.001f);
-  light.dir.y = cos(timer * 0.001f);
+  //light.dir.x = sin(timer * 0.001f);
+  //light.dir.y = cos(timer * 0.001f);
   light.color = float4(1.0f, 1.0f, 0.0f, 1.0f);
   light.intensity = 0.7f;
   float diffuse = max(dot(normalize(pixel_input.Normal), light.dir), 0.0);
