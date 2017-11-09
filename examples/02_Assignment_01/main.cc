@@ -98,6 +98,7 @@ int32 main() {
   while (Window::StartFrame() && Window::IsOpened() && 
          !Input::IsKeyboardButtonDown(Input::kKeyboardButton_Escape)) {
 
+	uint64 start = Time();
     DirectX::XMFLOAT3 temp;
 
     DirectX::XMStoreFloat3(&temp, g_plane.camera_node().transform().world_position());
@@ -121,6 +122,7 @@ int32 main() {
 	  ImGui::ShowTestWindow(0);
 
     Window::EndFrame();
+	Sleep(start + 16 - Time());
   }
 
   Window::Close();

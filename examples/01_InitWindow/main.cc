@@ -18,6 +18,7 @@
 #include "core/camera.h"
 
 namespace SLX {
+  /*
 int32 main() {
   
   Window::Init(1024, 978);
@@ -101,10 +102,10 @@ int32 main() {
   gun.transform().set_position(0.0f, 0.5f, 0.0f);
   turret.addChild(&gun);
 
+  */
   /*
    ROBOTTTTTTTTTTTT
   
-  */
   Robot robot;
   robot.geo_body.initFromFile("./../data/geometries/robot/body.x");
   robot.geo_left_ankle.initFromFile("./../data/geometries/robot/left_ankle.x");
@@ -229,5 +230,130 @@ int32 main() {
   OutputDebugString(textico);
   return 0;
 }
+  */
+
+
+int32 main() {
+
+  Window::Init(1024, 978);
+
+  CoreGeometry geo, geo2;
+  CoreMaterial mat;
+  CoreTexture texture;
+  Object root, cube, cube1;
+
+  mat.init();
+  texture.load("./../data/texture.png");
+  //geo.initQuad();
+  geo.initCube();
+  //geo.initPyramid(50 ,1, 3);
+  //geo.initFromFile("./../data/geometries/plane/plane.x");
+  //geo.initExtruded(100, 2.0f, 1.0f, 4.0f);
+  //geo.initTerrain("./../data/Heightmap.bmp", { 10, 2, 10 });
+  //geo2.initTriangle({ 3.0f, 3.0f });
+
+    char textico[256];
+    sprintf_s(textico, "Iniciando ventana con dimensiones %d x %d", Window::Width(), Window::Height());
+    auto& cam = Core::instance().cam_;
+    cam.set_position(0.0f, 4.5f, -15.0f);
+
+    float speed = 0.1f;
+    float rotation_speed = 0.0001f;
+
+    cube.addComponent(ComponentType::Render3D, &mat, &geo);
+    cube1.addComponent(ComponentType::Render3D, &mat, &geo);
+    cube.transform().set_position(1.0f, 0.0f, 0.0f);
+    cube1.transform().set_position(-2.0f, 0.0f, 0.0f);
+
+    root.addChild(&cube);
+    //root.addChild(&cube1);
+    
+
+
+      DirectX::XMVECTOR quat;
+      DirectX::XMFLOAT4 quatf;
+      DirectX::XMFLOAT3 euler = { 1.9f, 1.2f, 1.3f };
+   
+      //roll pitch yaw
+
+      cube.transform().set_rotation(euler);  
+     
+     
+      /*
+      DirectX::XMFLOAT4X4 m;
+      DirectX::XMStoreFloat4x4(&m, DirectX::XMMatrixTranspose(DirectX::XMLoadFloat4x4(&cube.transform().local_model_matrix_)));
+
+      float sp = -m._32;
+      if(sp <= -1.0f) {
+        euler.x = -1.570796f;
+      } else if(sp >= 1.0f) {
+          euler.x = 1.570796f; 
+        } else{ euler.x = asin(sp);
+          }
+            if(fabs(sp) > 0.9999f) {
+              euler.z = 0.0f;
+            euler.y = atan2(-m._13, m._11);
+          } else{
+            euler.y = atan2(m._31, m._33);
+            euler.z = atan2(m._12, m._22);
+          }
+
+      */
+      /*
+      DirectX::XMVECTOR quat_x, quat_y, quat_z;
+      quat_x = DirectX::XMQuaternionRotationAxis(DirectX::XMVectorSet(1.0f, 0.0f, 0.0f, 0.0f), euler.x);
+      quat_y = DirectX::XMQuaternionRotationAxis(DirectX::XMVectorSet(0.0f, 1.0f, 0.0f, 0.0f), euler.y);
+      quat_z = DirectX::XMQuaternionRotationAxis(DirectX::XMVectorSet(0.0f, 0.0f, 1.0f, 0.0f), euler.z);
+      quat = DirectX::XMQuaternionMultiply(DirectX::XMQuaternionMultiply(quat_z, quat_x), quat_y);
+      quat = DirectX::XMQuaternionNormalize(quat);
+      float32 sp = -2.0f * (quatf.y * quatf.z + quatf.w * quatf.x);
+
+    if(fabs(sp) > 0.9999f) {
+        euler.z = 1.570796f * sp;
+        euler.x = atan2(-quatf.x * quatf.z - quatf.w * quatf.y, 0.5f - quatf.y * quatf.y - quatf.z * quatf.z);
+        euler.y = 0.0f;
+    } else{
+      // Compute ang l e s
+        euler.x = asin(sp);
+        euler.y = atan2(quatf.x * quatf.z - quatf.w * quatf.y , 0.5f - quatf.x * quatf.x * quatf.y * quatf.y);
+        euler.z = atan2(quatf.x * quatf.y - quatf.w * quatf.z , 0.5f - quatf.x * quatf.x - quatf.z * quatf.z);
+    }
+      */
+    
+
+
+    // enter the main loop:
+    while (Window::StartFrame() && Window::IsOpened() &&
+    !Input::IsKeyboardButtonDown(Input::kKeyboardButton_Escape)) {
+
+    if (Input::IsMouseButtonPressed(Input::kMouseButton_Left)) {
+      cube.transform().localTraslate(0.001f, 0.0f, 0.0f);
+      cube1.transform().localTraslate(-0.001f, 0.0f, 0.0f);
+    }
+    if (Input::IsMouseButtonPressed(Input::kMouseButton_Right)) {
+      cube.transform().localTraslate(-0.001f, 0.0f, 0.0f);
+      cube1.transform().localTraslate(0.001f, 0.0f, 0.0f);
+    }
+
+    cube.transform().rotate(0.0f, 0.0002f, 0.0f);
+    root.transform().rotate(0.0001f, 0.0f, 0.0001f);
+    cube1.transform().set_rotation(cube.transform().world_rotation_float3());
+    texture.use();
+    cam.render(&root);
+    cam.render(&cube1);
+    ImGui::SetNextWindowPos(ImVec2(650, 20), ImGuiCond_FirstUseEver);
+    ImGui::ShowTestWindow(0);
+
+    Window::EndFrame();
+    }
+
+    Window::Close();
+
+    // Al usar un winmain, nos vemos obligados a usar una aplicacion de tipo win32 que no
+    // tiene ventana de consola de comandos, asi que con esta funcion sera como hacer
+    // un printf pero los mensajes apareceran en la ventana OUTPUT del VISUAL PREMOH.
+    OutputDebugString(textico);
+    return 0;
+    }
 
 }; /* SLX */
