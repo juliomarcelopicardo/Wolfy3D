@@ -44,6 +44,8 @@ public:
   ///--------------------------------------------------------------------------
   void set_owner(class Object* owner);
 
+#pragma region POSITION
+
   ///--------------------------------------------------------------------------
   /// @fn   DirectX::XMVECTOR position() const;
   ///
@@ -110,47 +112,9 @@ public:
   ///--------------------------------------------------------------------------
   void set_world_position(const float32 x, const float32 y, const float32 z);
 
-  ///--------------------------------------------------------------------------
-  /// @fn   void localTraslate(const DirectX::XMVECTOR traslation);
-  ///
-  /// @brief  Traslate the object in its local transform.
-  ///--------------------------------------------------------------------------
-  void localTraslate(const DirectX::XMVECTOR traslation);
+#pragma endregion
 
-  ///--------------------------------------------------------------------------
-  /// @fn   void localTraslate(const DirectX::XMFLOAT3 traslation);
-  ///
-  /// @brief  Traslate the object in its local transform.
-  ///--------------------------------------------------------------------------
-  void localTraslate(const DirectX::XMFLOAT3 traslation);
-
-  ///--------------------------------------------------------------------------
-  /// @fn   void localTraslate(float x, float y, float z);
-  ///
-  /// @brief  Traslate the object in its local transform.
-  ///--------------------------------------------------------------------------
-  void localTraslate(const float32 x, const float32 y, const float32 z);
-
-  ///--------------------------------------------------------------------------
-  /// @fn   void traslate(const DirectX::XMVECTOR traslation);
-  ///
-  /// @brief  Traslate the object in its world transform.
-  ///--------------------------------------------------------------------------
-  void worldTraslate(const DirectX::XMVECTOR traslation);
-
-  ///--------------------------------------------------------------------------
-  /// @fn   void traslate(const DirectX::XMFLOAT3 traslation);
-  ///
-  /// @brief  Traslate the object in its world transform.
-  ///--------------------------------------------------------------------------
-  void worldTraslate(const DirectX::XMFLOAT3 traslation);
-
-  ///--------------------------------------------------------------------------
-  /// @fn   void traslate(float x, float y, float z);
-  ///
-  /// @brief  Traslate the object in its world transform.
-  ///--------------------------------------------------------------------------
-  void worldTraslate(const float32 x, const float32 y, const float32 z);
+#pragma region ROTATION
 
   ///--------------------------------------------------------------------------
   /// @fn   DirectX::XMVECTOR rotation() const;
@@ -198,12 +162,9 @@ public:
   ///--------------------------------------------------------------------------
   void set_rotation(const DirectX::XMFLOAT3 rotation);
 
-  ///--------------------------------------------------------------------------
-  /// @fn   void rotate(float x, float y, float z);
-  ///
-  /// @brief  Add a rotation to the current one.
-  ///--------------------------------------------------------------------------
-  void rotate(const float32 x, const float32 y, const float32 z);
+#pragma endregion
+
+#pragma region SCALE
 
   ///--------------------------------------------------------------------------
   /// @fn   DirectX::XMVECTOR scale() const;
@@ -228,22 +189,69 @@ public:
   ///--------------------------------------------------------------------------
   void set_scale(const float32 x, const float32 y, const float32 z);
 
-  ///--------------------------------------------------------------------------
-  /// @fn   DirectX::XMMATRIX local_model_matrix() const.
-  ///
-  /// @brief Transform LocalModelMatrix getter. (TRANSPOSED)
-  /// @return XMMATRIX containing LocalModel Transformation Matrix.
-  ///--------------------------------------------------------------------------
-  DirectX::XMMATRIX local_model_matrix();
+#pragma endregion
+
+
+#pragma region TRANSLATE
 
   ///--------------------------------------------------------------------------
-  /// @fn   DirectX::XMMATRIX global_model_matrix() const.
+  /// @fn   void localTraslate(const DirectX::XMVECTOR traslation);
   ///
-  /// @brief Transform GlobalModelMatrix getter. (TRANSPOSED)
-  /// @return XMMATRIX containing GlobalModel Transformation Matrix.
+  /// @brief  Traslate the object in its local transform.
   ///--------------------------------------------------------------------------
-  DirectX::XMMATRIX global_model_matrix();
+  void localTraslate(const DirectX::XMVECTOR traslation);
 
+  ///--------------------------------------------------------------------------
+  /// @fn   void localTraslate(const DirectX::XMFLOAT3 traslation);
+  ///
+  /// @brief  Traslate the object in its local transform.
+  ///--------------------------------------------------------------------------
+  void localTraslate(const DirectX::XMFLOAT3 traslation);
+
+  ///--------------------------------------------------------------------------
+  /// @fn   void localTraslate(float x, float y, float z);
+  ///
+  /// @brief  Traslate the object in its local transform.
+  ///--------------------------------------------------------------------------
+  void localTraslate(const float32 x, const float32 y, const float32 z);
+
+  ///--------------------------------------------------------------------------
+  /// @fn   void traslate(const DirectX::XMVECTOR traslation);
+  ///
+  /// @brief  Traslate the object in its world transform.
+  ///--------------------------------------------------------------------------
+  void worldTraslate(const DirectX::XMVECTOR traslation);
+
+  ///--------------------------------------------------------------------------
+  /// @fn   void traslate(const DirectX::XMFLOAT3 traslation);
+  ///
+  /// @brief  Traslate the object in its world transform.
+  ///--------------------------------------------------------------------------
+  void worldTraslate(const DirectX::XMFLOAT3 traslation);
+
+  ///--------------------------------------------------------------------------
+  /// @fn   void traslate(float x, float y, float z);
+  ///
+  /// @brief  Traslate the object in its world transform.
+  ///--------------------------------------------------------------------------
+  void worldTraslate(const float32 x, const float32 y, const float32 z);
+
+#pragma endregion
+
+#pragma region ROTATE
+
+  ///--------------------------------------------------------------------------
+  /// @fn   void rotate(float x, float y, float z);
+  ///
+  /// @brief  Add a rotation to the current one.
+  ///--------------------------------------------------------------------------
+  void rotate(const float32 x, const float32 y, const float32 z);
+
+#pragma endregion
+
+  
+#pragma region FORWARD
+  
   ///--------------------------------------------------------------------------
   /// @fn   DirectX::XMVECTOR forward();
   ///
@@ -276,8 +284,31 @@ public:
   ///--------------------------------------------------------------------------
   DirectX::XMFLOAT3 forward_local_float3();
 
+#pragma endregion
+  
+#pragma region MATRICES
+  
   /// Recalculates the local matrix.
   void calculateLocalModelMatrix();
+
+  ///--------------------------------------------------------------------------
+  /// @fn   DirectX::XMMATRIX local_model_matrix() const.
+  ///
+  /// @brief Transform LocalModelMatrix getter. (TRANSPOSED)
+  /// @return XMMATRIX containing LocalModel Transformation Matrix.
+  ///--------------------------------------------------------------------------
+  DirectX::XMMATRIX local_model_matrix();
+
+  ///--------------------------------------------------------------------------
+  /// @fn   DirectX::XMMATRIX global_model_matrix() const.
+  ///
+  /// @brief Transform GlobalModelMatrix getter. (TRANSPOSED)
+  /// @return XMMATRIX containing GlobalModel Transformation Matrix.
+  ///--------------------------------------------------------------------------
+  DirectX::XMMATRIX global_model_matrix();
+
+#pragma endregion
+
 
   /// Local Model Transformation Matrix.
   DirectX::XMFLOAT4X4 local_model_matrix_;
