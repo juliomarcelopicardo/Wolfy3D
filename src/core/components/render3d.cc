@@ -7,7 +7,6 @@
 */
 
 #include "core/components/render3d.h"
-#include "core/components/component.h"
 #include "core/components/transform.h"
 #include "core/geometry.h"
 #include "core/material.h"
@@ -20,9 +19,8 @@ namespace SLX {
   ***                        Constructor and destructor                        ***
   *******************************************************************************/
 
-  Render3DComponent::Render3DComponent() : Component() {
-    type_ = ComponentType::Render3D;
-
+  Render3DComponent::Render3DComponent() {
+    initialized_ = false;
   }
 
   Render3DComponent::~Render3DComponent() {
@@ -34,44 +32,19 @@ namespace SLX {
   ***                               Public methods                             ***
   *******************************************************************************/
 
-  void Render3DComponent::init() {
-
-    if (!material_) {
-      material_->init();
-    }
-    
-    if (!geometry_) {
-      geometry_->initTriangle();
-    }
-
-    if (material_ && geometry_) {
-      initialized_ = true;
-    }
-  }
-
-  void Render3DComponent::setup(CoreMaterial* mat, CoreGeometry* geo) {
-    if (!initialized_) {
-      init();
-    }
-
+  void Render3DComponent::init(CoreMaterial* mat, CoreGeometry* geo) {
     if (mat != nullptr) {
       material_ = mat;
+      material_->init();
     }
 
     if (geometry_ != nullptr) {
       geometry_ = geo;
     }
-  }
 
-  void Render3DComponent::update() {
-    if (!initialized_) {
-      init();
+    if (material_ && geometry_) {
+      initialized_ = true;
     }
-  }
-
-  void Render3DComponent::shutdown() {
-    geometry_ = nullptr;
-    material_ = nullptr;
   }
 
   void Render3DComponent::render(TransformComponent* transform) {

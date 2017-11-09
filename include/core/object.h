@@ -20,15 +20,6 @@ class Object {
  public:
 
   /*******************************************************************************
-  ***                               Attributes                                 ***
-  *******************************************************************************/
-
-  /// Transform component.
-  TransformComponent* transform_;
-  /// Render3D component.
-  Render3DComponent* render3D_;
-
-  /*******************************************************************************
   ***                        Constructor and destructor                        ***
   *******************************************************************************/
 
@@ -43,26 +34,14 @@ class Object {
   *******************************************************************************/
 
   ///--------------------------------------------------------------------------
-  /// @fn   void init();
-  ///
-  /// @brief  Initializes the component.
-  ///--------------------------------------------------------------------------
-  void init();
-
-  ///--------------------------------------------------------------------------
-  /// @fn   void update();
-  ///
-  /// @brief  Updates the component.
-  ///--------------------------------------------------------------------------
-  void update();
-
-  ///--------------------------------------------------------------------------
   /// @fn     void addComponent(ComponentType component);
   ///
   /// @brief Adds a component to the current obj
   /// @param component type of component to be initialized on this object.
+  /// @param mat material to be assigned in case ComponentType is Render3D
+  /// @param geo geometry to be assigned in case ComponentType is Render3D
   ///--------------------------------------------------------------------------
-  void addComponent(ComponentType component);
+  void addComponent(ComponentType component, CoreMaterial *mat, CoreGeometry *geo);
 
   ///--------------------------------------------------------------------------
   /// @fn     void addChild(Object* obj);
@@ -75,31 +54,59 @@ class Object {
   /*******************************************************************************
   ***                           Transform methods                              ***
   *******************************************************************************/
+
+  ///--------------------------------------------------------------------------
+  /// @fn       void updateLocalModelAndChildrenMatrices();
+  ///
+  /// @brief Updates the local model of this object and all of its children.
+  ///--------------------------------------------------------------------------
   void updateLocalModelAndChildrenMatrices();
 
   /*******************************************************************************
   ***                            Setters & Getters                             ***
   *******************************************************************************/
 
+  ///--------------------------------------------------------------------------
+  /// @fn     TransformComponent& transform();
+  ///
+  /// @brief Transform component getter
+  /// @return TransformComponent attached to this object.
+  ///--------------------------------------------------------------------------
+  TransformComponent& transform();
+
+  ///--------------------------------------------------------------------------
+  /// @fn     Render3DComponent* render3D();
+  ///
+  /// @brief Render3DComponent getter.
+  /// @return Render3DComponent pointer attached to this object.
+  ///--------------------------------------------------------------------------
+  Render3DComponent* render3D();
 
   /*******************************************************************************
   ***                           Private                                        ***
   *******************************************************************************/
 
+  /// Parent of this object
   Object* parent_;
+  /// Childrens attached to this object
   std::vector<Object*> children_;
 
  private:
+
+   Object(const Object& copy);
+   Object& operator=(const Object& copy);
 
   /*******************************************************************************
   ***                               Attributes                                 ***
   *******************************************************************************/
 
-
   /// Whether this object is initialized or not.
   bool initialized_;
-
-
+  /// Transform component.
+  TransformComponent transform_;
+  /// Render3D component.
+  Render3DComponent* render3D_;
+  
   /*******************************************************************************
   ***                              Private methods                             ***
   *******************************************************************************/

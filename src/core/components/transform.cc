@@ -15,34 +15,28 @@ namespace SLX {
   ***                        Constructor and destructor                        ***
   *******************************************************************************/
 
-  TransformComponent::TransformComponent() : Component() {
-    type_ = ComponentType::Transform;
+  TransformComponent::TransformComponent() {
     position_ = DirectX::XMFLOAT3(0.0f, 0.0f, 0.0f);
     rotation_ = DirectX::XMFLOAT3(0.0f, 0.0f, 0.0f);
     scale_ = DirectX::XMFLOAT3(1.0f, 1.0f, 1.0f);
     DirectX::XMStoreFloat4x4(&local_model_matrix_, DirectX::XMMatrixIdentity());
     parent_model_matrix_ = local_model_matrix_;
-  }
+    owner_ = nullptr;
 
-  TransformComponent::~TransformComponent() {
-
-  }
-
-  void TransformComponent::init() {
     calculateLocalModelMatrix();
   }
 
-  void TransformComponent::update() {
-
-  }
-
-  void TransformComponent::shutdown() {
-
+  TransformComponent::~TransformComponent() {
+    owner_ = nullptr;
   }
 
   /*******************************************************************************
   ***                               Public methods                             ***
   *******************************************************************************/
+
+  void TransformComponent::set_owner(SLX::Object* owner) {
+    owner_ = owner;
+  }
 
   DirectX::XMVECTOR TransformComponent::position() const  {
     return DirectX::XMLoadFloat3(&position_);
@@ -52,7 +46,7 @@ namespace SLX {
     return position_;
   }
 
-  DirectX::XMVECTOR TransformComponent::worldPosition() {
+  DirectX::XMVECTOR TransformComponent::world_position() {
     DirectX::XMFLOAT4X4 matrix;
     DirectX::XMStoreFloat4x4(&matrix, global_model_matrix());
     DirectX::XMFLOAT3 world_position = { matrix.m[0][3], matrix.m[1][3], matrix.m[2][3] };
@@ -114,12 +108,12 @@ namespace SLX {
   }
 
   void TransformComponent::worldTraslate(const DirectX::XMVECTOR traslation) {
-    set_world_position(DirectX::XMVectorAdd(worldPosition(),traslation));
+    set_world_position(DirectX::XMVectorAdd(world_position(),traslation));
   }
 
   void TransformComponent::worldTraslate(const DirectX::XMFLOAT3 traslation) {
     DirectX::XMFLOAT3 position;
-    DirectX::XMStoreFloat3(&position, worldPosition());
+    DirectX::XMStoreFloat3(&position, world_position());
     set_world_position(position.x + traslation.x,
                        position.y + traslation.y,
                        position.z + traslation.z);
@@ -127,7 +121,7 @@ namespace SLX {
 
   void TransformComponent::worldTraslate(const float32 x, const float32 y, const float32 z) {
     DirectX::XMFLOAT3 position;
-    DirectX::XMStoreFloat3(&position, worldPosition());
+    DirectX::XMStoreFloat3(&position, world_position());
     set_world_position(position.x + x, position.y + y, position.z + z);
   }
 
