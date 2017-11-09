@@ -304,23 +304,23 @@ void TransformComponent::rotate(const DirectX::XMVECTOR rotation) {
 
 #pragma region FORWARD
 
-DirectX::XMVECTOR TransformComponent::forward_vector() {
+DirectX::XMVECTOR TransformComponent::world_forward_vector() {
   return DirectX::XMVector4Normalize(DirectX::XMVector4Transform({ 0.0f, 0.0f, 1.0f, 0.0f }, DirectX::XMMatrixTranspose(global_model_matrix())));
 }
 
-DirectX::XMVECTOR TransformComponent::forward_local_vector() {
+DirectX::XMVECTOR TransformComponent::forward_vector() {
   calculateLocalModelMatrix();
   return DirectX::XMVector4Normalize(DirectX::XMVector4Transform({ 0.0f, 0.0f, 1.0f, 0.0f }, DirectX::XMMatrixTranspose(local_model_matrix())));
 }
 
-DirectX::XMFLOAT3 TransformComponent::forward_float3() {
+DirectX::XMFLOAT3 TransformComponent::world_forward_float3() {
   DirectX::XMFLOAT3 fwd_float3;
   DirectX::XMStoreFloat3(&fwd_float3, DirectX::XMVector4Normalize(DirectX::XMVector4Transform({ 0.0f, 0.0f, 1.0f, 0.0f }, 
                                                                   DirectX::XMMatrixTranspose(global_model_matrix()))));
   return fwd_float3;
 }
 
-DirectX::XMFLOAT3 TransformComponent::forward_local_float3() {
+DirectX::XMFLOAT3 TransformComponent::forward_float3() {
   DirectX::XMFLOAT3 fwd_float3;
   DirectX::XMStoreFloat3(&fwd_float3, DirectX::XMVector4Normalize(DirectX::XMVector4Transform({ 0.0f, 0.0f, 1.0f, 0.0f },
     DirectX::XMMatrixTranspose(local_model_matrix()))));

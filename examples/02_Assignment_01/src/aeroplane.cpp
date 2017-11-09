@@ -91,7 +91,7 @@ void Aeroplane::shoot() {
     current_bullet_ = 0;
   }
 
-  bullets_[current_bullet_].dir = gun_.transform().forward_vector();
+  bullets_[current_bullet_].dir = gun_.transform().world_forward_vector();
   bullets_[current_bullet_].obj->transform().set_world_position(gun_node_.transform().world_position_vector());
   bullets_[current_bullet_].obj->transform().set_rotation(gun_node_.transform().world_rotation_float3());
   
@@ -146,7 +146,7 @@ void Aeroplane::move_roll_yaw(SLX::float32 roll_limit_degrees, bool facing_leftw
 
 void Aeroplane::move_forward() {
   DirectX::XMFLOAT3 forward;
-  DirectX::XMStoreFloat3(&forward, DirectX::XMVectorScale(plane_root_.transform().forward_vector(), forward_speed_));
+  DirectX::XMStoreFloat3(&forward, DirectX::XMVectorScale(plane_root_.transform().world_forward_vector(), forward_speed_));
   plane_root_.transform().traslate(forward.x, forward.y, forward.z);
 }
 

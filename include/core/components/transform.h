@@ -345,36 +345,36 @@ public:
 #pragma region FORWARD
   
   ///--------------------------------------------------------------------------
-  /// @fn   DirectX::XMVECTOR forward();
+  /// @fn   DirectX::XMVECTOR world_forward_vector();
   ///
-  /// @brief forward vector getter.
-  /// @return forward vector.
+  /// @brief World object forward vector getter.
+  /// @return World forward vector.
   ///--------------------------------------------------------------------------
-  DirectX::XMVECTOR forward_vector();
+  DirectX::XMVECTOR world_forward_vector();
 
   ///--------------------------------------------------------------------------
-  /// @fn   DirectX::XMVECTOR forward_local_vector();
+  /// @fn   DirectX::XMVECTOR forward_vector();
   ///
   /// @brief forward vector of local matrix getter.
   /// @return forward vector of local matrix.
   ///--------------------------------------------------------------------------
-  DirectX::XMVECTOR forward_local_vector();
+  DirectX::XMVECTOR forward_vector();
 
   ///--------------------------------------------------------------------------
-  /// @fn   DirectX::XMFLOAT3 forward();
+  /// @fn   DirectX::XMFLOAT3 world_forward_float3();
   ///
-  /// @brief forward vector getter.
-  /// @return forward vector.
+  /// @brief World forward vector getter.
+  /// @return World forward vector.
   ///--------------------------------------------------------------------------
-  DirectX::XMFLOAT3 forward_float3();
+  DirectX::XMFLOAT3 world_forward_float3();
 
   ///--------------------------------------------------------------------------
-  /// @fn   DirectX::XMFLOAT3 forward_local_float3()
+  /// @fn   DirectX::XMFLOAT3 forward_float3()
   ///
   /// @brief forward vector of the local matrix getter.
   /// @return forward vector of the local matrix.
   ///--------------------------------------------------------------------------
-  DirectX::XMFLOAT3 forward_local_float3();
+  DirectX::XMFLOAT3 forward_float3();
 
 #pragma endregion
   
