@@ -16,9 +16,9 @@
 
 Aeroplane::Aeroplane() {
 
-  rotation_speed_ = 0.0025f;
-  forward_speed_ = 0.01f;
-  bullet_speed_ = 0.06f;
+  rotation_speed_ = 0.025f;
+  forward_speed_ = 0.1f;
+  bullet_speed_ = 0.6f;
   bullets_.empty();
 
 }
@@ -78,7 +78,7 @@ void Aeroplane::init(SLX::Object* scene) {
     bullets_[i].obj = new SLX::Object();
     bullets_[i].obj->addComponent(SLX::ComponentType::Render3D, &mat_, &geo_bullet_);
     bullets_[i].obj->transform().set_position(-1000.0f, 0.0f, 0.0f);
-    bullets_[i].obj->transform().set_scale(0.02f, 0.02f, 0.02f);
+    bullets_[i].obj->transform().set_scale(0.02f, 0.02f, 1.0f);
     bullets_[i].shot = false;
     scene->addChild(bullets_[i].obj);
   }
@@ -96,7 +96,7 @@ void Aeroplane::shoot() {
 
   bullets_[current_bullet_].dir = gun_.transform().forward_vector();
   bullets_[current_bullet_].obj->transform().set_world_position(gun_node_.transform().world_position());
-  bullets_[current_bullet_].obj->transform().set_rotation(gun_node_.transform().rotation_float3());
+  bullets_[current_bullet_].obj->transform().set_rotation(gun_node_.transform().world_rotation_float3());
   
 
   bullets_[current_bullet_].shot = true;
