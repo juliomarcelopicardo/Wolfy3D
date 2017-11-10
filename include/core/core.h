@@ -16,6 +16,7 @@
 #include "core/camera.h"
 #include "core/material.h"
 #include "core/geometry.h"
+#include "core/texture.h"
 #include "core/input.h"
 
 
@@ -97,10 +98,10 @@ class Core {
   CoreCamera cam_;
   /// Application input module.
   CoreInput input_;
-  /// Default material to be assigned to uninitialized 3DComponents.
-  CoreMaterial default_material_;
+  /// Default texture to be assigned to uninitialized 3DComponents.
+  CoreTexture error_texture_;
   /// Default geometry to be assigned to uninitialized 3DComponents.
-  CoreGeometry default_geometry_;
+  CoreGeometry error_geometry_;
 
 /*******************************************************************************
 ***                         Private Copy Constructor                         ***

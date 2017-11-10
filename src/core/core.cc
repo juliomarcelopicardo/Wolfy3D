@@ -93,8 +93,7 @@ Core::~Core() {}
 
 
 void Core::init() {
-  default_geometry_.initCube();
-  default_material_.init();
+  error_geometry_.initCube();
 }
 
 };/* JI */
