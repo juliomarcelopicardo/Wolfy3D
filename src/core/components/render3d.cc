@@ -33,37 +33,30 @@ namespace SLX {
   *******************************************************************************/
 
   void Render3DComponent::init(CoreMaterial* mat, CoreGeometry* geo) {
-    if (mat != nullptr) {
-      material_ = mat;
-      material_->init();
-    }
-
-    if (geometry_ != nullptr) {
-      geometry_ = geo;
-    }
-
-    if (material_ && geometry_) {
-      initialized_ = true;
-    }
+    material_ = mat;
+    geometry_ = geo;
+    if (!geo) { geometry_ = &Core::instance().error_geometry_; }
+    if (mat) { initialized_ = true; }
   }
 
   void Render3DComponent::render(TransformComponent* transform) {
     if (initialized_) {
       auto* device_context = Core::instance().d3d_.deviceContext();
       auto& cam = Core::instance().cam_;
+      auto& mat_settings = material_->custom_constant_buffer_;
 
-      DirectX::XMStoreFloat4x4(&material_->custom_constant_buffer_.matrices.model, transform->global_model_matrix());
-      DirectX::XMStoreFloat4x4(&material_->custom_constant_buffer_.matrices.view, DirectX::XMMatrixTranspose(Core::instance().cam_.viewMatrix()));
-      DirectX::XMStoreFloat4x4(&material_->custom_constant_buffer_.matrices.projection, DirectX::XMMatrixTranspose(Core::instance().cam_.projectionMatrix()));
-      material_->custom_constant_buffer_.current_time = (float32)Time();
-      material_->custom_constant_buffer_.padding = 0.0f;
-      material_->custom_constant_buffer_.padding2 = 0.3f;
-      material_->custom_constant_buffer_.padding3 = 0.6f;
+      DirectX::XMStoreFloat4x4(&mat_settings.matrices.model, transform->global_model_matrix());
+      DirectX::XMStoreFloat4x4(&mat_settings.matrices.view, DirectX::XMMatrixTranspose(Core::instance().cam_.viewMatrix()));
+      DirectX::XMStoreFloat4x4(&mat_settings.matrices.projection, DirectX::XMMatrixTranspose(Core::instance().cam_.projectionMatrix()));
+      mat_settings.current_time = (float32)Time();
+      mat_settings.padding = 0.0f;
+      mat_settings.padding2 = 0.3f;
+      mat_settings.padding3 = 0.6f;
 
       D3D11_MAPPED_SUBRESOURCE new_buffer;
       ZeroMemory(&new_buffer, sizeof(D3D11_MAPPED_SUBRESOURCE));
       device_context->Map(material_->matrix_buffer_, 0, D3D11_MAP_WRITE_DISCARD, 0, &new_buffer);
-      memcpy(new_buffer.pData, &material_->custom_constant_buffer_, sizeof(CustomConstantBuffer));
+      memcpy(new_buffer.pData, &mat_settings, sizeof(CustomConstantBuffer));
       device_context->Unmap(material_->matrix_buffer_, 0);
 
       uint32 stride = sizeof(VertexData);
