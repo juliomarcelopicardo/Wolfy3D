@@ -192,6 +192,7 @@ int32 main() {
   char textico[256];
   sprintf_s(textico, "Iniciando ventana con dimensiones %d x %d", Window::Width(), Window::Height());
   auto& cam = Core::instance().cam_;
+  cam.is_navigation_enabled_ = true;
   cam.set_position(0.0f, 4.5f, -15.0f);
 
   float speed = 0.1f;

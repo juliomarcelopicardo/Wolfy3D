@@ -24,7 +24,7 @@ CoreCamera::CoreCamera() {
   movement_speed_ = 0.005f;
   rotation_speed_ = 0.005f;
   last_mouse_position_ = { 0.0f, 0.0f };
-  is_navigation_enabled_ = true;
+  is_navigation_enabled_ = false;
   setupPerspective(DirectX::XMConvertToRadians(45.0f), 1024.0f / 978.0f, 0.1f, 100.0f);
   setupView();
 }
