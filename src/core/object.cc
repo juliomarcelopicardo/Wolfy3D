@@ -43,9 +43,7 @@ namespace SLX {
       case SLX::ComponentType::Render3D: {
         if (!render3D_) {
           render3D_ = new Render3DComponent;
-          if (mat && geo) {
-            render3D_->init(mat, geo);
-          }
+          render3D_->init(mat, geo);
         }
         break;
       }
