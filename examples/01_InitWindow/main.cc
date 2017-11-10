@@ -18,7 +18,7 @@
 #include "core/camera.h"
 
 namespace SLX {
-  /*
+  
 int32 main() {
   
   Window::Init(1024, 978);
@@ -102,9 +102,8 @@ int32 main() {
   gun.transform().set_position(0.0f, 0.5f, 0.0f);
   turret.addChild(&gun);
 
-  */
-  /*
-   ROBOTTTTTTTTTTTT
+  
+  
   
   Robot robot;
   robot.geo_body.initFromFile("./../data/geometries/robot/body.x");
@@ -230,8 +229,8 @@ int32 main() {
   OutputDebugString(textico);
   return 0;
 }
-  */
 
+/*
 
 int32 main() {
 
@@ -277,48 +276,12 @@ int32 main() {
       //roll pitch yaw
 
       cube.transform().set_rotation(euler);  
-     
-     
-      /*
-      DirectX::XMFLOAT4X4 m;
-      DirectX::XMStoreFloat4x4(&m, DirectX::XMMatrixTranspose(DirectX::XMLoadFloat4x4(&cube.transform().local_model_matrix_)));
 
-      float sp = -m._32;
-      if(sp <= -1.0f) {
-        euler.x = -1.570796f;
-      } else if(sp >= 1.0f) {
-          euler.x = 1.570796f; 
-        } else{ euler.x = asin(sp);
-          }
-            if(fabs(sp) > 0.9999f) {
-              euler.z = 0.0f;
-            euler.y = atan2(-m._13, m._11);
-          } else{
-            euler.y = atan2(m._31, m._33);
-            euler.z = atan2(m._12, m._22);
-          }
 
-      */
-      /*
-      DirectX::XMVECTOR quat_x, quat_y, quat_z;
-      quat_x = DirectX::XMQuaternionRotationAxis(DirectX::XMVectorSet(1.0f, 0.0f, 0.0f, 0.0f), euler.x);
-      quat_y = DirectX::XMQuaternionRotationAxis(DirectX::XMVectorSet(0.0f, 1.0f, 0.0f, 0.0f), euler.y);
-      quat_z = DirectX::XMQuaternionRotationAxis(DirectX::XMVectorSet(0.0f, 0.0f, 1.0f, 0.0f), euler.z);
-      quat = DirectX::XMQuaternionMultiply(DirectX::XMQuaternionMultiply(quat_z, quat_x), quat_y);
-      quat = DirectX::XMQuaternionNormalize(quat);
-      float32 sp = -2.0f * (quatf.y * quatf.z + quatf.w * quatf.x);
+      
+      
 
-    if(fabs(sp) > 0.9999f) {
-        euler.z = 1.570796f * sp;
-        euler.x = atan2(-quatf.x * quatf.z - quatf.w * quatf.y, 0.5f - quatf.y * quatf.y - quatf.z * quatf.z);
-        euler.y = 0.0f;
-    } else{
-      // Compute ang l e s
-        euler.x = asin(sp);
-        euler.y = atan2(quatf.x * quatf.z - quatf.w * quatf.y , 0.5f - quatf.x * quatf.x * quatf.y * quatf.y);
-        euler.z = atan2(quatf.x * quatf.y - quatf.w * quatf.z , 0.5f - quatf.x * quatf.x - quatf.z * quatf.z);
-    }
-      */
+      
     
 
 
@@ -326,11 +289,11 @@ int32 main() {
     while (Window::StartFrame() && Window::IsOpened() &&
     !Input::IsKeyboardButtonDown(Input::kKeyboardButton_Escape)) {
 
-    if (Input::IsMouseButtonPressed(Input::kMouseButton_Left)) {
+    if (Input::IsKeyboardButtonPressed(Input::kKeyboardButton_Left)) {
       cube.transform().traslate(0.001f, 0.0f, 0.0f);
       cube1.transform().traslate(-0.001f, 0.0f, 0.0f);
     }
-    if (Input::IsMouseButtonPressed(Input::kMouseButton_Right)) {
+    if (Input::IsKeyboardButtonPressed(Input::kKeyboardButton_Right)) {
       cube.transform().traslate(-0.001f, 0.0f, 0.0f);
       cube1.transform().traslate(0.001f, 0.0f, 0.0f);
     }
@@ -355,5 +318,6 @@ int32 main() {
     OutputDebugString(textico);
     return 0;
     }
+*/
 
 }; /* SLX */

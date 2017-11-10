@@ -21,8 +21,8 @@ namespace SLX {
 CoreCamera::CoreCamera() {
   position_ = { 0.0f, 0.0f, 10.0f };
   target_ = { 0.0f, 0.0f, 0.0f };
-  movement_speed_ = 0.001f;
-  rotation_speed_ = 0.001f;
+  movement_speed_ = 0.005f;
+  rotation_speed_ = 0.005f;
   last_mouse_position_ = { 0.0f, 0.0f };
   is_navigation_enabled_ = true;
   setupPerspective(DirectX::XMConvertToRadians(45.0f), 1024.0f / 978.0f, 0.1f, 100.0f);
@@ -199,7 +199,7 @@ bool CoreCamera::translate() {
 }
 
 bool CoreCamera::rotate() {
-  /*
+  
   auto& input = Core::instance().input_;
   DirectX::XMFLOAT2 diff = { 0.0f, 0.0f };
 
@@ -209,47 +209,26 @@ bool CoreCamera::rotate() {
       last_mouse_position_ = input.mouse_position_;
     }
     else {
-      // ROTATION AROUND LOCAL Y AXIS (UP VECTOR)
       // Calculamos la diferencia entre la ultima posicion y la actual.
       diff = { input.mouse_position_.x - last_mouse_position_.x, 
                input.mouse_position_.y - last_mouse_position_.y };
-      glm::vec3 fw = forward();
-      // Rotamos el vector forward alrededor del up.
       
-      DirectX::XMVECTOR dir = DirectX::XMvectorrotate(forward(), diff.x * -rotation_speed_, up());
-      // El nuevo target lo calculamos usando la proporcion de magnitud que tenia el previo.
-      if (fw.x != 0.0f) {
-        target_ = position_ + dir * ((target_.x - position_.x) / fw.x);
-      }
-      else if (fw.y != 0.0f) {
-        target_ = position_ + dir * ((target_.y - position_.y) / fw.y);
-      }
-      else {
-        target_ = position_ + dir * ((target_.z - position_.z) / fw.z);
-      }
-
-      // ROTATION AROUND LOCAL X AXIS (RIGHT VECTOR)
-      fw = forward();
-      dir = glm::rotate(fw, diff.y * -rotation_speed_, right());
-      if (fw.x != 0.0f) {
-        target_ = position_ + dir * ((target_.x - position_.x) / fw.x);
-      }
-      else if (fw.y != 0.0f) {
-        target_ = position_ + dir * ((target_.y - position_.y) / fw.y);
-      }
-      else {
-        target_ = position_ + dir * ((target_.z - position_.z) / fw.z);
-      }
+      DirectX::XMMATRIX rot_mat_horizontal = DirectX::XMMatrixRotationAxis(up(), diff.x * rotation_speed_);
+      DirectX::XMMATRIX rot_mat_vertical = DirectX::XMMatrixRotationAxis(right(), diff.y * rotation_speed_);
+      DirectX::XMMATRIX rot_result = DirectX::XMMatrixMultiply(rot_mat_horizontal, rot_mat_vertical);
+      DirectX::XMFLOAT3 dir;
+      DirectX::XMStoreFloat3(&dir, DirectX::XMVector4Transform(forward(), rot_result));
+      target_ = { position_.x + dir.x, position_.y + dir.y, position_.z + dir.z };
 
       // actualizamos la ultima posicion del raton.
-      last_mouse_position_ = { MousePosX(), MousePosY() };
+      last_mouse_position_ = { Input::MousePosX(), Input::MousePosY() };
       return true;
     }
   }
   if (input.isMouseButtonUp(Input::kMouseButton_Right)) {
     last_mouse_position_ = { 0.0f, 0.0f };
   }
-  */
+  
 
   return false;
 }
