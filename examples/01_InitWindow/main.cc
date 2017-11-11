@@ -25,7 +25,7 @@ int32 main() {
 
   CoreGeometry geo, geo2;
   CoreGeometry geo_plane, geo_prop, geo_turret, geo_gun, geo_terrain;
-  CoreMaterial mat;
+  CoreMaterial mat, mat_normals, mat_texture;
   CoreTexture texture;
 
   struct Robot {
@@ -76,31 +76,37 @@ int32 main() {
   geo_terrain.initTerrain("./../data/Heightmap.bmp", { 100.0f, 10.0f, 100.0f });
 
   mat.init();
+  mat_texture.init();
+  mat_texture.custom_constant_buffer_.type_ = MaterialType::kMaterialType_OneTexture;
+  mat_normals.init();
+  mat_normals.custom_constant_buffer_.type_ = MaterialType::kMaterialType_Normals;
   texture.load("./../data/texture.png");
 
   Object plane_root, plane, prop, turret, gun, cam_node, terrain, root;
 
-  terrain.addComponent(ComponentType::Render3D, &mat, &geo_terrain);
+  terrain.addComponent(ComponentType::Render3D, &mat_normals, &geo_terrain);
   terrain.transform().set_position(-50.0f, -10.0f, -30.0f);
   root.addChild(&terrain);
+  root.addChild(&plane_root);
 
   cam_node.transform().set_position(0.0f, 4.5f, -15.0f);
   plane_root.addChild(&cam_node);
 
-  plane.addComponent(ComponentType::Render3D, &mat, &geo_plane);
+  plane.addComponent(ComponentType::Render3D, &mat_texture, nullptr);
+  plane.transform().set_scale(3.0f);
   plane_root.addChild(&plane);
 
   prop.addComponent(ComponentType::Render3D, &mat, &geo_prop);
   prop.transform().set_position(0.0f, 0.0f, 1.9f);
-  plane.addChild(&prop);
+  //plane.addChild(&prop);
 
   turret.addComponent(ComponentType::Render3D, &mat, &geo_turret);
   turret.transform().set_position(0.0f, 1.05f, -1.3f);
-  plane.addChild(&turret);
+  //plane.addChild(&turret);
 
   gun.addComponent(ComponentType::Render3D, &mat, &geo_gun);
   gun.transform().set_position(0.0f, 0.5f, 0.0f);
-  turret.addChild(&gun);
+  //turret.addChild(&gun);
 
   
   
@@ -127,7 +133,7 @@ int32 main() {
   root.addChild(&robot.root);
   robot.root.transform().set_position(0.0f, 0.0f, 20.0f);
 
-  robot.body.addComponent(ComponentType::Render3D, &mat, &robot.geo_body);
+  robot.body.addComponent(ComponentType::Render3D, &mat, nullptr);
   robot.body.transform().set_position(0.0f, 0.0f, 0.0f);
   robot.root.addChild(&robot.body);
 
