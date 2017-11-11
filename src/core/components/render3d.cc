@@ -51,7 +51,6 @@ namespace SLX {
       mat_settings.current_time = (float32)Time();
       mat_settings.padding = 0.0f;
       mat_settings.padding2 = 0.3f;
-      mat_settings.padding3 = 0.6f;
 
       D3D11_MAPPED_SUBRESOURCE new_buffer;
       ZeroMemory(&new_buffer, sizeof(D3D11_MAPPED_SUBRESOURCE));
