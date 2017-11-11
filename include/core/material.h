@@ -16,6 +16,12 @@
 
 namespace SLX {
 
+enum class MaterialType {
+  kMaterialType_Diffuse = 0,
+  kMaterialType_OneTexture = 1,
+  kMaterialType_Normals = 2, 
+};
+
 struct Matrices {
   DirectX::XMFLOAT4X4 model;
   DirectX::XMFLOAT4X4 view;
@@ -24,9 +30,10 @@ struct Matrices {
 
 struct CustomConstantBuffer {
   Matrices matrices;
+  MaterialType type_;
   float32 current_time;
   // ESTO ES PORQUE LOS CONSTANT BUFFER TIENEN QUE IR EN BLOQUES DE 16Bytes
-  float32 padding, padding2, padding3;
+  float32 padding, padding2;
 };
 
 class CoreMaterial {
