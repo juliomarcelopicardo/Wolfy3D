@@ -28,12 +28,15 @@ struct Matrices {
   DirectX::XMFLOAT4X4 projection;
 };
 
-struct CustomConstantBuffer {
+struct MaterialParams {
   Matrices matrices;
-  MaterialType type_;
-  float32 current_time;
+  MaterialType type;
+  uint32 num_textures;
+  ID3D11ShaderResourceView* texture_handle;
+  float32 time;
   // ESTO ES PORQUE LOS CONSTANT BUFFER TIENEN QUE IR EN BLOQUES DE 16Bytes
-  float32 padding, padding2;
+  //float32 padding;
+  //float32 padding2;
 };
 
 class CoreMaterial {
@@ -75,7 +78,7 @@ class CoreMaterial {
   /// Matrices buffer
   ID3D11Buffer* matrix_buffer_;
 
-  CustomConstantBuffer custom_constant_buffer_;
+  MaterialParams params_;
 
 /*******************************************************************************
 ***                           Private                                        ***
