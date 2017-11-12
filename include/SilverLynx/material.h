@@ -45,7 +45,7 @@ public:
 private:
 
   // Se borrara cuando se cree la capa de usuario para texturas.
-  CoreTexture* texture_;
+  //CoreTexture* texture_;
 
 
   MaterialTextured(const MaterialTextured& copy);
@@ -65,10 +65,6 @@ public:
 
 private:
 
-  // Se borrara cuando se cree la capa de usuario para texturas.
-  CoreTexture* texture_;
-
-
   MaterialDiffuse(const MaterialDiffuse& copy);
   MaterialDiffuse& operator=(const MaterialDiffuse& copy);
 };
@@ -85,10 +81,6 @@ public:
   void setupSuperMaterial() override;
 
 private:
-
-  // Se borrara cuando se cree la capa de usuario para texturas.
-  CoreTexture* texture_;
-
 
   MaterialNormals(const MaterialNormals& copy);
   MaterialNormals& operator=(const MaterialNormals& copy);

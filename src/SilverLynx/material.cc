@@ -28,11 +28,11 @@ Material::~Material() {}
 *******************************************************************************/
 
 MaterialTextured::MaterialTextured() : Material() {
-  texture_ = nullptr;
+  //texture_ = nullptr;
 }
 
 MaterialTextured::~MaterialTextured() {
-  texture_ = nullptr;
+  //texture_ = nullptr;
 }
 
 void MaterialTextured::setupSuperMaterial() {
@@ -41,9 +41,10 @@ void MaterialTextured::setupSuperMaterial() {
   super_mat.params_.type = MaterialType::kMaterialType_OneTexture;
   super_mat.params_.num_textures = 1;
   super_mat.params_.texture_handle = Core::instance().error_texture_.texture_handle_;
-  if (texture_ && texture_->texture_handle_) {
-    super_mat.params_.texture_handle = texture_->texture_handle_;
-  }
+  
+  //if (texture_ && texture_->texture_handle_) {
+  //  super_mat.params_.texture_handle = texture_->texture_handle_;
+  //}
 }
 
 /*******************************************************************************
