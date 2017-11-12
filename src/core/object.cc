@@ -38,7 +38,7 @@ namespace SLX {
   ***                               Public methods                             ***
   *******************************************************************************/
 
-  void Object::addComponent(ComponentType component, CoreMaterial *mat, CoreGeometry *geo) {
+  void Object::addComponent(ComponentType component, Material *mat, CoreGeometry *geo) {
     switch (component) {
       case SLX::ComponentType::Render3D: {
         if (!render3D_) {

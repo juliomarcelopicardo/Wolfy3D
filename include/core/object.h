@@ -11,6 +11,7 @@
 
 #include "core/components/transform.h"
 #include "core/components/render3d.h"
+#include "SilverLynx/material.h"
 #include <vector>
 
 namespace SLX {
@@ -41,7 +42,7 @@ class Object {
   /// @param mat material to be assigned in case ComponentType is Render3D
   /// @param geo geometry to be assigned in case ComponentType is Render3D
   ///--------------------------------------------------------------------------
-  void addComponent(ComponentType component, CoreMaterial *mat, CoreGeometry *geo);
+  void addComponent(ComponentType component, Material *mat, CoreGeometry *geo);
 
   ///--------------------------------------------------------------------------
   /// @fn     void addChild(Object* obj);
