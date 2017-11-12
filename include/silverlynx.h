@@ -13,5 +13,6 @@
 #include "SilverLynx/window.h"
 #include "SilverLynx/input.h"
 #include "SilverLynx/time.h"
+#include "SilverLynx/material.h"
 
 #endif
