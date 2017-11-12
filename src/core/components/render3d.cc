@@ -42,20 +42,19 @@ namespace SLX {
   void Render3DComponent::render(TransformComponent* transform) {
     if (initialized_) {
       auto* device_context = Core::instance().d3d_.deviceContext();
-      auto& cam = Core::instance().cam_;
-      auto& mat_settings = material_->custom_constant_buffer_;
+      auto& camera = Core::instance().cam_;
 
-      DirectX::XMStoreFloat4x4(&mat_settings.matrices.model, transform->global_model_matrix());
-      DirectX::XMStoreFloat4x4(&mat_settings.matrices.view, DirectX::XMMatrixTranspose(Core::instance().cam_.viewMatrix()));
-      DirectX::XMStoreFloat4x4(&mat_settings.matrices.projection, DirectX::XMMatrixTranspose(Core::instance().cam_.projectionMatrix()));
-      mat_settings.current_time = (float32)Time();
-      mat_settings.padding = 0.0f;
-      mat_settings.padding2 = 0.3f;
+      DirectX::XMStoreFloat4x4(&material_->params_.matrices.model, transform->global_model_matrix());
+      DirectX::XMStoreFloat4x4(&material_->params_.matrices.view, DirectX::XMMatrixTranspose(camera.viewMatrix()));
+      DirectX::XMStoreFloat4x4(&material_->params_.matrices.projection, DirectX::XMMatrixTranspose(camera.projectionMatrix()));
+      material_->params_.time = (float32)Time();
+      //material_->params_.padding = 0.0f;
+      //material_->params_.padding2 = 0.3f;
 
       D3D11_MAPPED_SUBRESOURCE new_buffer;
       ZeroMemory(&new_buffer, sizeof(D3D11_MAPPED_SUBRESOURCE));
       device_context->Map(material_->matrix_buffer_, 0, D3D11_MAP_WRITE_DISCARD, 0, &new_buffer);
-      memcpy(new_buffer.pData, &mat_settings, sizeof(CustomConstantBuffer));
+      memcpy(new_buffer.pData, &material_->params_, sizeof(MaterialParams));
       device_context->Unmap(material_->matrix_buffer_, 0);
 
       uint32 stride = sizeof(VertexData);
