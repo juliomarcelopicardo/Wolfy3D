@@ -38,8 +38,6 @@ void Aeroplane::init(SLX::Object* scene) {
 	geo_turret_.initFromFile("./../data/geometries/plane/turret.x");
 	geo_gun_.initFromFile("./../data/geometries/plane/gun.x");
 
-  mat_.init();
-
 	// Initialize Aeroplane components
 	camera_node_.transform().set_position(0.0f, 4.5f, -15.0f);
 	plane_root_.addChild(&camera_node_);

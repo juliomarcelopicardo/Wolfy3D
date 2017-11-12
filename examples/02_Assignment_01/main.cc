@@ -73,11 +73,10 @@ int32 main() {
 
   CoreGeometry geo, geo2;
   CoreGeometry geo_terrain;
-  CoreMaterial mat;
+  MaterialDiffuse mat;
   CoreTexture texture;
 
   geo_terrain.initTerrain("./../data/Heightmap.bmp", { 1000.0f, 50.0f, 1000.0f });
-  mat.init();
   texture.load("./../data/texture.png");
 
   Object terrain;
