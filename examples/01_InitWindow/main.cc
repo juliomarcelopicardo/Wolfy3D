@@ -25,7 +25,9 @@ int32 main() {
 
   CoreGeometry geo, geo2;
   CoreGeometry geo_plane, geo_prop, geo_turret, geo_gun, geo_terrain;
-  CoreMaterial mat, mat_normals, mat_texture;
+  MaterialDiffuse mat; 
+  MaterialNormals mat_normals;
+  MaterialTextured mat_texture;
   CoreTexture texture;
 
   struct Robot {
@@ -75,11 +77,6 @@ int32 main() {
   geo_turret.initFromFile("./../data/geometries/plane/turret.x");
   geo_terrain.initTerrain("./../data/Heightmap.bmp", { 100.0f, 10.0f, 100.0f });
 
-  mat.init();
-  mat_texture.init();
-  mat_texture.custom_constant_buffer_.type_ = MaterialType::kMaterialType_OneTexture;
-  mat_normals.init();
-  mat_normals.custom_constant_buffer_.type_ = MaterialType::kMaterialType_Normals;
   texture.load("./../data/texture.png");
 
   Object plane_root, plane, prop, turret, gun, cam_node, terrain, root;
