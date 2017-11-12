@@ -39,7 +39,7 @@ struct MaterialParams {
   //float32 padding2;
 };
 
-class CoreMaterial {
+class SuperMaterial {
 
  public:
 
@@ -48,10 +48,10 @@ class CoreMaterial {
 *******************************************************************************/
 
   /// Default class constructor.
-  CoreMaterial();
+  SuperMaterial();
 
   /// Default class destructor.
-  ~CoreMaterial();
+  ~SuperMaterial();
 
 /*******************************************************************************
 ***                               Public methods                             ***

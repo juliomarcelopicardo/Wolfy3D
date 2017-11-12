@@ -17,7 +17,7 @@
 
 namespace SLX {
 
-class CoreMaterial; // Forward declaration, DELETE AFTER MAT PARAM IS REMOVED
+class SuperMaterial; // Forward declaration, DELETE AFTER MAT PARAM IS REMOVED
 
 /// Struct to save all the info of the vertices.
 struct VertexData {
