@@ -102,6 +102,8 @@ class Core {
   CoreTexture error_texture_;
   /// Default geometry to be assigned to uninitialized 3DComponents.
   CoreGeometry error_geometry_;
+  /// Super material used to render all the objects.
+  SuperMaterial super_material_;
 
 /*******************************************************************************
 ***                         Private Copy Constructor                         ***

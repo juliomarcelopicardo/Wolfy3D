@@ -94,6 +94,7 @@ Core::~Core() {}
 
 void Core::init() {
   error_geometry_.initCube();
+  super_material_.init();
 }
 
 };/* JI */
