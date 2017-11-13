@@ -64,7 +64,7 @@ PixelInput VShader(VertexInput input) {
 }
 
 Texture2D texture_ : register(t0);
-Texture2D texture_2 : register(t1);
+Texture2D texture_2 : register(t2);
 SamplerState sampler_type;
 
 // EJEMPLO PARA TESTEAR LUCES.

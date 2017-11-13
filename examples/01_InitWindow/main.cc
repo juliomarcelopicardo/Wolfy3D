@@ -216,7 +216,7 @@ int32 main() {
     }
 
     texture.use();
-    texture2.use(1);
+    texture2.use(2);
     cam.render(&root);
     prop.transform().set_rotation(0.0f, 0.0f, (float32)Time() * 0.01f);
     turret.transform().set_rotation(0.0f, (float32)Time() * 0.001f, 0.0f);
