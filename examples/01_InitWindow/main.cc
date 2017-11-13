@@ -28,7 +28,7 @@ int32 main() {
   MaterialDiffuse mat; 
   MaterialNormals mat_normals;
   MaterialTextured mat_texture;
-  CoreTexture texture;
+  CoreTexture texture, texture2;
 
   struct Robot {
     CoreGeometry geo_body;
@@ -78,6 +78,7 @@ int32 main() {
   geo_terrain.initTerrain("./../data/Heightmap.bmp", { 100.0f, 10.0f, 100.0f });
 
   texture.load("./../data/texture.png");
+  texture2.load("./../data/turtle.png");
 
   Object plane_root, plane, prop, turret, gun, cam_node, terrain, root;
 
@@ -215,6 +216,7 @@ int32 main() {
     }
 
     texture.use();
+    texture2.use(1);
     cam.render(&root);
     prop.transform().set_rotation(0.0f, 0.0f, (float32)Time() * 0.01f);
     turret.transform().set_rotation(0.0f, (float32)Time() * 0.001f, 0.0f);
