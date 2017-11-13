@@ -1,3 +1,7 @@
+/*
+  CONSTANT BUFFERS
+*/
+
 cbuffer CustomConstantBuffer {
 	matrix model_matrix;
 	matrix view_matrix;
@@ -8,6 +12,9 @@ cbuffer CustomConstantBuffer {
   float time3;
 };
 
+/* 
+  INPUT OUTPUT STRUCTS
+*/
 struct VertexInput {
 	float4 vPosition : POSITION; 
 	float4 vNormal : NORMAL;
@@ -26,6 +33,10 @@ struct PixelInput {
 	float2 TexCoord : TEXCOORD;
 	float4 Color : COLOR;
 };
+
+/*
+  VERTEX SHADER
+*/
 
 PixelInput VShader(VertexInput input) {
 	PixelInput output;
@@ -52,7 +63,8 @@ PixelInput VShader(VertexInput input) {
 	return output;
 }
 
-Texture2D texture_shader;
+Texture2D texture_ : register(t0);
+Texture2D texture_2 : register(t1);
 SamplerState sampler_type;
 
 // EJEMPLO PARA TESTEAR LUCES.
@@ -83,13 +95,23 @@ float4 PShader(PixelInput pixel_input) : SV_TARGET {
   float4 color_result = pixel_input.Color * CalculateLightColor(pixel_input.Normal);
 
   switch (type) {
-  case DIFFUSE:{}break;
-  case ONE_TEXTURE: {
-    color_result *= texture_shader.Sample(sampler_type, pixel_input.TexCoord);
-  }break;
-  case NORMALS: {
-    color_result = pixel_input.Normal;
-  }break;
+
+    case DIFFUSE:{}break;
+  
+    case ONE_TEXTURE: {
+      /* TESTEANDO PONER DOS TEXTURAS A LA VEZ*/
+      if (pixel_input.TexCoord.x > 0.5f) {
+        color_result *= texture_2.Sample(sampler_type, pixel_input.TexCoord);
+      }
+      else {
+        color_result *= texture_.Sample(sampler_type, pixel_input.TexCoord);
+      }
+    }break;
+  
+    case NORMALS: {
+      color_result = pixel_input.Normal;
+    }break;
+
   }
 
   return color_result;
