@@ -9,7 +9,7 @@
 #define __OBJECT_H__ 1
 
 #include "core/components/transform.h"
-#include "core/components/render3d.h"
+#include "core/components/render.h"
 #include "Wolfy3D/material.h"
 #include <vector>
 
@@ -80,7 +80,7 @@ class Object {
   /// @brief Render3DComponent getter.
   /// @return Render3DComponent pointer attached to this object.
   ///--------------------------------------------------------------------------
-  Render3DComponent* render3D();
+  RenderComponent* render3D();
 
   /*******************************************************************************
   ***                           Private                                        ***
@@ -105,7 +105,7 @@ class Object {
   /// Transform component.
   TransformComponent transform_;
   /// Render3D component.
-  Render3DComponent* render3D_;
+  RenderComponent* render3D_;
   
   /*******************************************************************************
   ***                              Private methods                             ***

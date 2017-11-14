@@ -41,7 +41,7 @@ namespace W3D {
     switch (component) {
       case W3D::ComponentType::Render3D: {
         if (!render3D_) {
-          render3D_ = new Render3DComponent;
+          render3D_ = new RenderComponent;
           render3D_->init(mat, geo);
         }
         break;
@@ -86,7 +86,7 @@ namespace W3D {
     return transform_;
   }
 
-  W3D::Render3DComponent* Object::render3D() {
+  W3D::RenderComponent* Object::render3D() {
     return render3D_;
   }
 
