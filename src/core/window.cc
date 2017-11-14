@@ -53,6 +53,7 @@ namespace SLX {
     }
     Core::instance().cam_.update();
     Core::instance().d3d_.startRenderFrame();
+    setupCameraIntoImguiMenu();
     return true;
   }
 
@@ -139,6 +140,23 @@ namespace SLX {
     ShowWindow(window_handle_, nCmdShow);
     SetForegroundWindow(window_handle_);
     SetFocus(window_handle_);
+  }
+
+  void CoreWindow::setupCameraIntoImguiMenu() {
+    
+    auto& camera = Core::instance().cam_;
+    
+    ImGui::PushID(&camera);
+
+    if(ImGui::TreeNode("GoPro")) {
+      DirectX::XMFLOAT3 temp;
+      DirectX::XMStoreFloat3(&temp, camera.position());
+      camera.set_position(temp.x, temp.y, temp.z);
+      DirectX::XMStoreFloat3(&temp, camera.target());
+      camera.set_target(temp.x, temp.y, temp.z);
+    }
+
+    ImGui::PopID();
   }
 
   /*******************************************************************************

@@ -235,7 +235,7 @@ int32 main() {
     prop.transform().set_rotation(0.0f, 0.0f, (float32)Time() * 0.01f);
     turret.transform().set_rotation(0.0f, (float32)Time() * 0.001f, 0.0f);
 
-	ImGui::SetNextWindowPos(ImVec2(650, 20), ImGuiCond_FirstUseEver);
+	//ImGui::SetNextWindowPos(ImVec2(650, 20), ImGuiCond_FirstUseEver);
 	ImGui::ShowTestWindow(0);
 
     Window::EndFrame();
