@@ -29,6 +29,18 @@ int32 main() {
   MaterialNormals mat_normals;
   MaterialTextured mat_texture;
   CoreTexture texture, texture2;
+  
+
+  CoreTexture assesment[4];
+  assesment[0].load("./../data/materialmap.dds");
+  assesment[1].load("./../data/grass.dds");
+  assesment[2].load("./../data/moss.dds");
+  assesment[3].load("./../data/asphalt.dds");
+  MaterialAssesment matass;
+  matass.texture_materialmap_ = &assesment[0];
+  matass.texture_grass_ = &assesment[1];
+  matass.texture_moss_ = &assesment[2];
+  matass.texture_asphalt_ = &assesment[3];
 
   struct Robot {
     CoreGeometry geo_body;
@@ -75,17 +87,19 @@ int32 main() {
   geo_prop.initFromFile("./../data/geometries/plane/prop.x");
   geo_gun.initFromFile("./../data/geometries/plane/gun.x");
   geo_turret.initFromFile("./../data/geometries/plane/turret.x");
-  geo_terrain.initTerrain("./../data/Heightmap.bmp", { 100.0f, 10.0f, 100.0f });
+  geo_terrain.initTerrain("./../data/Heightmap.bmp", { 100.0f, 7.0f, 100.0f });
 
   texture.load("./../data/texture.png");
   texture2.load("./../data/turtle.png");
+  mat_texture.set_texture(&texture);
 
   Object plane_root, plane, prop, turret, gun, cam_node, terrain, root;
 
-  terrain.addComponent(ComponentType::Render3D, &mat_normals, &geo_terrain);
+  
+  terrain.addComponent(ComponentType::Render3D, &matass, &geo_terrain);
   terrain.transform().set_position(-50.0f, -10.0f, -30.0f);
   root.addChild(&terrain);
-  root.addChild(&plane_root);
+  //root.addChild(&plane_root);
 
   cam_node.transform().set_position(0.0f, 4.5f, -15.0f);
   plane_root.addChild(&cam_node);
@@ -128,7 +142,7 @@ int32 main() {
 
 
 
-  root.addChild(&robot.root);
+  //root.addChild(&robot.root);
   robot.root.transform().set_position(0.0f, 0.0f, 20.0f);
 
   robot.body.addComponent(ComponentType::Render3D, &mat, nullptr);
@@ -202,6 +216,8 @@ int32 main() {
   float speed = 0.1f;
   float rotation_speed = 0.0001f;
 
+
+
   // enter the main loop:
   while (Window::StartFrame() && Window::IsOpened() && 
          !Input::IsKeyboardButtonDown(Input::kKeyboardButton_Escape)) {
@@ -215,8 +231,6 @@ int32 main() {
       robot.neck.transform().worldTraslate(1.0f, 0.0f, 0.0f);
     }
 
-    texture.use();
-    texture2.use(2);
     cam.render(&root);
     prop.transform().set_rotation(0.0f, 0.0f, (float32)Time() * 0.01f);
     turret.transform().set_rotation(0.0f, (float32)Time() * 0.001f, 0.0f);
@@ -236,94 +250,5 @@ int32 main() {
   return 0;
 }
 
-/*
-
-int32 main() {
-
-  Window::Init(1024, 978);
-
-  CoreGeometry geo, geo2;
-  CoreMaterial mat;
-  CoreTexture texture;
-  Object root, cube, cube1;
-
-  mat.init();
-  texture.load("./../data/texture.png");
-  //geo.initQuad();
-  geo.initCube();
-  //geo.initPyramid(50 ,1, 3);
-  //geo.initFromFile("./../data/geometries/plane/plane.x");
-  //geo.initExtruded(100, 2.0f, 1.0f, 4.0f);
-  //geo.initTerrain("./../data/Heightmap.bmp", { 10, 2, 10 });
-  //geo2.initTriangle({ 3.0f, 3.0f });
-
-    char textico[256];
-    sprintf_s(textico, "Iniciando ventana con dimensiones %d x %d", Window::Width(), Window::Height());
-    auto& cam = Core::instance().cam_;
-    cam.set_position(0.0f, 4.5f, -15.0f);
-
-    float speed = 0.1f;
-    float rotation_speed = 0.0001f;
-
-    cube.addComponent(ComponentType::Render3D, &mat, &geo);
-    cube1.addComponent(ComponentType::Render3D, &mat, &geo);
-    cube.transform().set_position(1.0f, 0.0f, 0.0f);
-    cube1.transform().set_position(-2.0f, 0.0f, 0.0f);
-
-    root.addChild(&cube);
-    //root.addChild(&cube1);
-    
-
-
-      DirectX::XMVECTOR quat;
-      DirectX::XMFLOAT4 quatf;
-      DirectX::XMFLOAT3 euler = { 1.9f, 1.2f, 1.3f };
-   
-      //roll pitch yaw
-
-      cube.transform().set_rotation(euler);  
-
-
-      
-      
-
-      
-    
-
-
-    // enter the main loop:
-    while (Window::StartFrame() && Window::IsOpened() &&
-    !Input::IsKeyboardButtonDown(Input::kKeyboardButton_Escape)) {
-
-    if (Input::IsKeyboardButtonPressed(Input::kKeyboardButton_Left)) {
-      cube.transform().traslate(0.001f, 0.0f, 0.0f);
-      cube1.transform().traslate(-0.001f, 0.0f, 0.0f);
-    }
-    if (Input::IsKeyboardButtonPressed(Input::kKeyboardButton_Right)) {
-      cube.transform().traslate(-0.001f, 0.0f, 0.0f);
-      cube1.transform().traslate(0.001f, 0.0f, 0.0f);
-    }
-
-    cube.transform().rotate(0.0f, 0.0002f, 0.0f);
-    root.transform().rotate(0.0001f, 0.0f, 0.0001f);
-    cube1.transform().set_rotation(cube.transform().world_rotation_float3());
-    texture.use();
-    cam.render(&root);
-    cam.render(&cube1);
-    ImGui::SetNextWindowPos(ImVec2(650, 20), ImGuiCond_FirstUseEver);
-    ImGui::ShowTestWindow(0);
-
-    Window::EndFrame();
-    }
-
-    Window::Close();
-
-    // Al usar un winmain, nos vemos obligados a usar una aplicacion de tipo win32 que no
-    // tiene ventana de consola de comandos, asi que con esta funcion sera como hacer
-    // un printf pero los mensajes apareceran en la ventana OUTPUT del VISUAL PREMOH.
-    OutputDebugString(textico);
-    return 0;
-    }
-*/
 
 }; /* SLX */

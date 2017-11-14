@@ -73,11 +73,18 @@ int32 main() {
 
   CoreGeometry geo, geo2;
   CoreGeometry geo_terrain;
-  MaterialDiffuse mat;
-  CoreTexture texture;
-
+  CoreTexture texture[4];
+  texture[0].load("./../data/materialmap.dds");
+  texture[1].load("./../data/grass.dds");
+  texture[2].load("./../data/moss.dds");
+  texture[3].load("./../data/asphalt.dds");
+  MaterialAssesment mat;
+  mat.texture_materialmap_ = &texture[0];
+  mat.texture_grass_ = &texture[1];
+  mat.texture_moss_ = &texture[2];
+  mat.texture_asphalt_ = &texture[3];
   geo_terrain.initTerrain("./../data/Heightmap.bmp", { 1000.0f, 50.0f, 1000.0f });
-  texture.load("./../data/texture.png");
+
 
   Object terrain;
 
@@ -112,7 +119,7 @@ int32 main() {
     
     g_plane.update();
 
-    texture.use();
+
     cam.render(&root);
     g_plane.prop().transform().set_rotation(0.0f, 0.0f, (float32)Time() * 0.01f);
     g_plane.turret().transform().set_rotation(0.0f, (float32)Time() * 0.001f, 0.0f);
