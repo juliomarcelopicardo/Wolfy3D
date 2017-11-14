@@ -87,6 +87,31 @@ private:
   MaterialNormals& operator=(const MaterialNormals& copy);
 };
 
+
+/*
+MATERIAL ASSESMENT SUBCLASS
+*/
+class MaterialAssesment : public Material {
+
+public:
+  MaterialAssesment();
+  ~MaterialAssesment();
+
+  void setupSuperMaterial() override;
+
+  class CoreTexture* texture_materialmap_;
+  class CoreTexture* texture_grass_;
+  class CoreTexture* texture_moss_;
+  class CoreTexture* texture_asphalt_;
+
+private:
+
+
+
+  MaterialAssesment(const MaterialAssesment& copy);
+  MaterialAssesment& operator=(const MaterialAssesment& copy);
+};
+
 }; /* SLX */
 
 #endif

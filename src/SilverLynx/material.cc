@@ -87,4 +87,25 @@ void MaterialNormals::setupSuperMaterial() {
 }
 
 
+/*******************************************************************************
+***                       MATERIAL ASSESMENT SUB CLASS                       ***
+*******************************************************************************/
+
+MaterialAssesment::MaterialAssesment() : Material() {}
+
+MaterialAssesment::~MaterialAssesment() {}
+
+void MaterialAssesment::setupSuperMaterial() {
+  auto& super_mat = Core::instance().super_material_;
+
+  super_mat.params_.type = MaterialType::kMaterialType_OneTexture;
+  super_mat.params_.num_textures = 1;
+
+  texture_materialmap_->use(1);
+  texture_grass_->use(2);
+  texture_moss_->use(3);
+  texture_asphalt_->use(4);
+}
+
+
 }; /* SLX */

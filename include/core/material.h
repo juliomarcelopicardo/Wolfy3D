@@ -19,7 +19,8 @@ namespace SLX {
 enum class MaterialType {
   kMaterialType_Diffuse = 0,
   kMaterialType_OneTexture = 1,
-  kMaterialType_Normals = 2, 
+  kMaterialType_Normals = 2,
+  kMaterialType_Assesment = 3,
 };
 
 struct Matrices {
