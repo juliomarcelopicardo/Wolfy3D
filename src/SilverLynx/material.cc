@@ -98,8 +98,8 @@ MaterialAssesment::~MaterialAssesment() {}
 void MaterialAssesment::setupSuperMaterial() {
   auto& super_mat = Core::instance().super_material_;
 
-  super_mat.params_.type = MaterialType::kMaterialType_OneTexture;
-  super_mat.params_.num_textures = 1;
+  super_mat.params_.type = MaterialType::kMaterialType_Assesment;
+  super_mat.params_.num_textures = 4;
 
   texture_materialmap_->use(1);
   texture_grass_->use(2);
