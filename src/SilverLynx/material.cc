@@ -6,6 +6,7 @@
 *
 */
 
+#include "core/texture.h"
 #include "SilverLynx/material.h"
 #include "core/material.h"
 #include "core/core.h"
@@ -28,11 +29,11 @@ Material::~Material() {}
 *******************************************************************************/
 
 MaterialTextured::MaterialTextured() : Material() {
-  //texture_ = nullptr;
+  texture_ = nullptr;
 }
 
 MaterialTextured::~MaterialTextured() {
-  //texture_ = nullptr;
+  texture_ = nullptr;
 }
 
 void MaterialTextured::setupSuperMaterial() {
@@ -40,11 +41,19 @@ void MaterialTextured::setupSuperMaterial() {
 
   super_mat.params_.type = MaterialType::kMaterialType_OneTexture;
   super_mat.params_.num_textures = 1;
-  super_mat.params_.texture_handle = Core::instance().error_texture_.texture_handle_;
   
-  //if (texture_ && texture_->texture_handle_) {
-  //  super_mat.params_.texture_handle = texture_->texture_handle_;
-  //}
+  if (texture_ && texture_->texture_handle_) {
+    texture_->use();
+  }
+  else {
+    Core::instance().error_texture_.use();
+  }
+}
+
+void MaterialTextured::set_texture(CoreTexture* texture) {
+  if (texture) {
+    texture_ = texture;
+  }
 }
 
 /*******************************************************************************
@@ -60,7 +69,6 @@ void MaterialDiffuse::setupSuperMaterial() {
 
   super_mat.params_.type = MaterialType::kMaterialType_Diffuse;
   super_mat.params_.num_textures = 0;
-  super_mat.params_.texture_handle = Core::instance().error_texture_.texture_handle_;
 }
 
 /*******************************************************************************
@@ -76,7 +84,6 @@ void MaterialNormals::setupSuperMaterial() {
 
   super_mat.params_.type = MaterialType::kMaterialType_Normals;
   super_mat.params_.num_textures = 0;
-  super_mat.params_.texture_handle = Core::instance().error_texture_.texture_handle_;
 }
 
 

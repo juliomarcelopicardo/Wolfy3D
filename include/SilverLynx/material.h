@@ -41,11 +41,12 @@ public:
   ~MaterialTextured();
 
   void setupSuperMaterial() override;
+  void set_texture(class CoreTexture* texture);
 
 private:
 
   // Se borrara cuando se cree la capa de usuario para texturas.
-  //CoreTexture* texture_;
+  class CoreTexture* texture_;
 
 
   MaterialTextured(const MaterialTextured& copy);

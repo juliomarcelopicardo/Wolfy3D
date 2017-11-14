@@ -32,10 +32,9 @@ struct MaterialParams {
   Matrices matrices;
   MaterialType type;
   uint32 num_textures;
-  ID3D11ShaderResourceView* texture_handle;
   float32 time;
   // ESTO ES PORQUE LOS CONSTANT BUFFER TIENEN QUE IR EN BLOQUES DE 16Bytes
-  //float32 padding;
+  float32 padding;
   //float32 padding2;
 };
 
