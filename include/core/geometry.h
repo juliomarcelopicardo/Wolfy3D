@@ -1,21 +1,20 @@
-/** Copyright Julio Picardo and Antonio Diaz. SouthBros 2017-18, all rights reserved.
+/** Copyright Julio Picardo 2017-18, all rights reserved.
 *
-*  @project SilverLynx
-*  @authors Julio Marcelo Picardo <picardope@esat-alumni.com>
-*           Antonio Diaz <antoniozero@outlook.com>
+*  @project Wolfy3D
+*  @authors Julio Marcelo Picardo <juliomarcelopicardo@gmail.com>
 *
 */
 
 #ifndef __GEOMETRY_H__
 #define __GEOMETRY_H__ 1
 
-#include "silverlynx.h"
+#include "Wolfy3D.h"
 #include "DirectXMath.h"
 #include "D3D11.h"
 #include <vector>
 #include "core/object.h"
 
-namespace SLX {
+namespace W3D {
 
 class SuperMaterial; // Forward declaration, DELETE AFTER MAT PARAM IS REMOVED
 
@@ -212,6 +211,6 @@ class CoreGeometry {
 
 }; /* CoreGeometry */
 
-}; /* SLX */
+}; /* W3D */
 
 #endif

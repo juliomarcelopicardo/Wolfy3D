@@ -1,22 +1,21 @@
-/** Copyright Julio Picardo and Antonio Diaz. SouthBros 2017-18, all rights reserved.
+/** Copyright Julio Picardo 2017-18, all rights reserved.
 *
-*  @project SilverLynx
-*  @authors Julio Marcelo Picardo <picardope@esat-alumni.com>
-*           Antonio Diaz <antoniozero@outlook.com>
+*  @project Wolfy3D
+*  @authors Julio Marcelo Picardo <juliomarcelopicardo@gmail.com>
 *
 */
 
 #ifndef __D3DFRAMEWORK_H__
 #define __D3DFRAMEWORK_H__ 1
 
-#include "silverlynx.h"
+#include "Wolfy3D.h"
 #include <d3d11.h>
 #include <d3dx11.h>
 #include <d3dx10.h>
 #include <Windows.h>
 
 
-namespace SLX {
+namespace W3D {
 
 class DirectXFramework {
 
@@ -33,7 +32,7 @@ class DirectXFramework {
    /// Orthographic matrix for 2D rendering.
    D3DXMATRIX ortho_matrix_;
    /// Video card memory in megabytes.
-   SLX::int32 video_card_memory_;
+   W3D::int32 video_card_memory_;
    /// Video card name.
    char video_card_description_[128];
 
@@ -213,6 +212,6 @@ class DirectXFramework {
 
 }; /* DirectXFramework */
 
-}; /* SLX */
+}; /* W3D */
 
 #endif

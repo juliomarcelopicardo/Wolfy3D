@@ -1,17 +1,16 @@
-/** Copyright Julio Picardo and Antonio Diaz. SouthBros 2017-18, all rights reserved.
+/** Copyright Julio Picardo 2017-18, all rights reserved.
 *
-*  @project SilverLynx
-*  @authors Julio Marcelo Picardo <picardope@esat-alumni.com>
-*           Antonio Diaz <antoniozero@outlook.com>
+*  @project Wolfy3D
+*  @authors Julio Marcelo Picardo <juliomarcelopicardo@gmail.com>
 *
 */
 
-#include "SilverLynx/input.h"
+#include "Wolfy3D/input.h"
 #include "core/core.h"
 #include "core/input.h"
 
 
-namespace SLX {
+namespace W3D {
 namespace Input {
 
 
@@ -45,4 +44,4 @@ const bool IsKeyboardButtonPressed(KeyboardButton button) {
 
 
 }; /* Input */
-}; /* SLX */
+}; /* W3D */

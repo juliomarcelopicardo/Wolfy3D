@@ -1,18 +1,17 @@
-﻿/** Copyright Julio Picardo and Antonio Diaz. SouthBros 2017-18, all rights reserved.
+﻿/** Copyright Julio Picardo 2017-18, all rights reserved.
 *
-*  @project SilverLynx
-*  @authors Julio Marcelo Picardo <picardope@esat-alumni.com>
-*           Antonio Diaz <antoniozero@outlook.com>
+*  @project Wolfy3D
+*  @authors Julio Marcelo Picardo <juliomarcelopicardo@gmail.com>
 *
 */
 
-#include "SilverLynx/globals.h"
+#include "Wolfy3D/globals.h"
 #include "core/geometry.h"
 #include "core/core.h"
 #include <string>
 #include <fstream>
 
-namespace SLX {
+namespace W3D {
 
   
 /*******************************************************************************
@@ -674,7 +673,7 @@ bool CoreGeometry::initFromFile(const char * filename, const DirectX::XMFLOAT4 c
   }
 
   // Save the vertex positions.
-  for (SLX::int32 i = 0; i < num_vertices_; ++i) {
+  for (W3D::int32 i = 0; i < num_vertices_; ++i) {
     std::getline(file, line);
     line_length = line.length();
     number = "";
@@ -725,7 +724,7 @@ bool CoreGeometry::initFromFile(const char * filename, const DirectX::XMFLOAT4 c
   vertex_index_.resize(num_indices_);
 
   // Save the indices or elements.
-  for (SLX::int32 i = 0; i < num_indices_; i += 3) {
+  for (W3D::int32 i = 0; i < num_indices_; i += 3) {
     std::getline(file, line);
     line_length = line.length();
 
@@ -820,7 +819,7 @@ bool CoreGeometry::initFromFile(const char * filename, const DirectX::XMFLOAT4 c
 
   // Save the normals using the indices.
   std::getline(file, line);
-  for (SLX::int32 i = 0; i < num_indices_; i += 3) {
+  for (W3D::int32 i = 0; i < num_indices_; i += 3) {
     std::getline(file, line);
     line_length = line.length();
 
@@ -866,7 +865,7 @@ bool CoreGeometry::initFromFile(const char * filename, const DirectX::XMFLOAT4 c
   }
 
   // Save the vertex uv.
-  for (SLX::int32 i = 0; i < num_vertices_; ++i) {
+  for (W3D::int32 i = 0; i < num_vertices_; ++i) {
     std::getline(file, line);
     line_length = line.length();
     number = "";
@@ -1050,4 +1049,4 @@ bool CoreGeometry::parseTerrainImage(const DirectX::XMFLOAT3 terrain_size,
 
 
 
-}; /* SLX */
+}; /* W3D */

@@ -1,15 +1,14 @@
-﻿/** Copyright Julio Picardo and Antonio Diaz. SouthBros 2017-18, all rights reserved.
+﻿/** Copyright Julio Picardo 2017-18, all rights reserved.
 *
-*  @project SilverLynx
-*  @authors Julio Marcelo Picardo <picardope@esat-alumni.com>
-*           Antonio Diaz <antoniozero@outlook.com>
+*  @project Wolfy3D
+*  @authors Julio Marcelo Picardo <juliomarcelopicardo@gmail.com>
 *
 */
 
 #include "core/components/transform.h"
 #include "core/object.h"
 
-namespace SLX {
+namespace W3D {
 
 /*******************************************************************************
 ***                        Constructor and destructor                        ***
@@ -34,7 +33,7 @@ TransformComponent::~TransformComponent() {
 ***                                 Methods                                  ***
 *******************************************************************************/
 
-void TransformComponent::set_owner(SLX::Object* owner) {
+void TransformComponent::set_owner(W3D::Object* owner) {
   owner_ = owner;
 }
 
@@ -363,4 +362,4 @@ DirectX::XMStoreFloat4x4(&local_model_matrix_, DirectX::XMMatrixTranspose(ret));
 
 #pragma endregion
 
-}; /* SLX */
+}; /* W3D */

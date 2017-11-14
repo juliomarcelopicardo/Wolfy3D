@@ -1,18 +1,17 @@
-/** Copyright Julio Picardo and Antonio Diaz. SouthBros 2017-18, all rights reserved.
+/** Copyright Julio Picardo 2017-18, all rights reserved.
 *
-*  @project SilverLynx
-*  @authors Julio Marcelo Picardo <picardope@esat-alumni.com>
-*           Antonio Diaz <antoniozero@outlook.com>
+*  @project Wolfy3D
+*  @authors Julio Marcelo Picardo <juliomarcelopicardo@gmail.com>
 *
 */
 
 #ifndef __WINDOW_H__
 #define __WINDOW_H__ 1
 
-#include "silverlynx.h"
+#include "Wolfy3D.h"
 #include <Windows.h>
 
-namespace SLX {
+namespace W3D {
 
 class CoreWindow {
 
@@ -57,14 +56,14 @@ class CoreWindow {
   *******************************************************************************/
 
   ///--------------------------------------------------------------------------
-  /// @fn   init(const int32 width, const int32 height, const char* name = "SilverLynx Engine");
+  /// @fn   init(const int32 width, const int32 height, const char* name = "Wolfy3D Engine");
   ///
   /// @brief  Initializes the window with the specified width, height and window name.
   /// @param  width width of the window.
   /// @param  height height of the window.
   /// @param  name name of the window.
   ///--------------------------------------------------------------------------
-  void init(const int32 width, const int32 height, const char* name = "SilverLynx Engine");
+  void init(const int32 width, const int32 height, const char* name = "Wolfy3D Engine");
 
   ///--------------------------------------------------------------------------
   /// @fn   bool updateMessages();
@@ -115,6 +114,6 @@ class CoreWindow {
 
 }; /* WINDOW */
 
-}; /* SLX */
+}; /* W3D */
 
 #endif

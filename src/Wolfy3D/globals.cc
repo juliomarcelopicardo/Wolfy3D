@@ -1,8 +1,7 @@
-/** Copyright Julio Picardo and Antonio Diaz. SouthBros 2017-18, all rights reserved.
+/** Copyright Julio Picardo 2017-18, all rights reserved.
 *
-*  @project SilverLynx
-*  @authors Julio Marcelo Picardo <picardope@esat-alumni.com>
-*           Antonio Diaz <antoniozero@outlook.com>
+*  @project Wolfy3D
+*  @authors Julio Marcelo Picardo <juliomarcelopicardo@gmail.com>
 *
 */
 
@@ -26,12 +25,12 @@
 
 #pragma region MAIN
 
-SLX::int32 WINAPI WinMain(HINSTANCE hInstance,
+W3D::int32 WINAPI WinMain(HINSTANCE hInstance,
                           HINSTANCE hPrevInstance,
                           LPSTR lpCmdLine,
-                          SLX::int32 nCmdShow) {
+                          W3D::int32 nCmdShow) {
 
-  auto& core = SLX::Core::instance();
+  auto& core = W3D::Core::instance();
 
   // Determinamos el tiempo inicial y abrimos el fichero del debugger.
   core.start_time_ = std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::steady_clock::now().time_since_epoch()).count();
@@ -42,9 +41,9 @@ SLX::int32 WINAPI WinMain(HINSTANCE hInstance,
   core.window_.nCmdShow = nCmdShow;
 
   // Ejemplo absurdo para ver cuanto dura el main.
-  core.debugger_.GenerateTextChromeDebuggerFile(SLX::kDebuggerFileState_Start, "Categoria", "Hilo principal");
-  SLX::int32 main_return = SLX::main();
-  core.debugger_.GenerateTextChromeDebuggerFile(SLX::kDebuggerFileState_End, "Categoria", "Hilo principal");
+  core.debugger_.GenerateTextChromeDebuggerFile(W3D::kDebuggerFileState_Start, "Categoria", "Hilo principal");
+  W3D::int32 main_return = W3D::main();
+  core.debugger_.GenerateTextChromeDebuggerFile(W3D::kDebuggerFileState_End, "Categoria", "Hilo principal");
 
   core.debugger_.CloseChromeDebuggerFile(); // Cerramos el fichero del debugger.
   return main_return;

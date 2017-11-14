@@ -1,19 +1,18 @@
-﻿/** Copyright Julio Picardo and Antonio Diaz. SouthBros 2017-18, all rights reserved.
+﻿/** Copyright Julio Picardo 2017-18, all rights reserved.
 *
-*  @project SilverLynx
-*  @authors Julio Marcelo Picardo <picardope@esat-alumni.com>
-*           Antonio Diaz <antoniozero@outlook.com>
+*  @project Wolfy3D
+*  @authors Julio Marcelo Picardo <juliomarcelopicardo@gmail.com>
 *
 */
 
-#include "SilverLynx/globals.h"
+#include "Wolfy3D/globals.h"
 #include "core/object.h"
 #include "core/core.h"
 #include "core/window.h"
 #include "core/geometry.h"
 
 
-namespace SLX {
+namespace W3D {
 
   /*******************************************************************************
   ***                        Constructor and destructor                        ***
@@ -40,7 +39,7 @@ namespace SLX {
 
   void Object::addComponent(ComponentType component, Material *mat, CoreGeometry *geo) {
     switch (component) {
-      case SLX::ComponentType::Render3D: {
+      case W3D::ComponentType::Render3D: {
         if (!render3D_) {
           render3D_ = new Render3DComponent;
           render3D_->init(mat, geo);
@@ -83,12 +82,12 @@ namespace SLX {
   ***                            Setters & Getters                             ***
   *******************************************************************************/
 
-  SLX::TransformComponent& Object::transform() {
+  W3D::TransformComponent& Object::transform() {
     return transform_;
   }
 
-  SLX::Render3DComponent* Object::render3D() {
+  W3D::Render3DComponent* Object::render3D() {
     return render3D_;
   }
 
-}; /* SLX */
+}; /* W3D */

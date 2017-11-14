@@ -1,20 +1,19 @@
-/** Copyright Julio Picardo and Antonio Diaz. SouthBros 2017-18, all rights reserved.
+/** Copyright Julio Picardo 2017-18, all rights reserved.
 *
-*  @project SilverLynx
-*  @authors Julio Marcelo Picardo <picardope@esat-alumni.com>
-*           Antonio Diaz <antoniozero@outlook.com>
+*  @project Wolfy3D
+*  @authors Julio Marcelo Picardo <juliomarcelopicardo@gmail.com>
 *
 */
 
 #ifndef __MATERIAL_H__
 #define __MATERIAL_H__ 1
 
-#include "silverlynx.h"
+#include "Wolfy3D.h"
 #include "D3DX11.h"
 #include "DirectXMath.h"
 #include <vector>
 
-namespace SLX {
+namespace W3D {
 
 enum class MaterialType {
   kMaterialType_Diffuse = 0,
@@ -106,6 +105,6 @@ class SuperMaterial {
 
 }; /* CoreMaterial */
 
-}; /* SLX */
+}; /* W3D */
 
 #endif

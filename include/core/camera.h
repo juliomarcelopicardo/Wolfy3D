@@ -1,19 +1,18 @@
-/** Copyright Julio Picardo and Antonio Diaz. SouthBros 2017-18, all rights reserved.
+/** Copyright Julio Picardo 2017-18, all rights reserved.
 *
-*  @project SilverLynx
-*  @authors Julio Marcelo Picardo <picardope@esat-alumni.com>
-*           Antonio Diaz <antoniozero@outlook.com>
+*  @project Wolfy3D
+*  @authors Julio Marcelo Picardo <juliomarcelopicardo@gmail.com>
 *
 */
 
 #ifndef __CAMERA_H__
 #define __CAMERA_H__ 1
 
-#include "silverlynx.h"
+#include "Wolfy3D.h"
 #include "DirectXMath.h"
 #include <vector>
 
-namespace SLX {
+namespace W3D {
   
   class Object;
 
@@ -272,6 +271,6 @@ class CoreCamera {
 
 }; /* CoreCamera */
 
-}; /* SLX */
+}; /* W3D */
 
 #endif

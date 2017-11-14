@@ -1,8 +1,7 @@
-/** Copyright Julio Picardo and Antonio Diaz. SouthBros 2017-18, all rights reserved.
+/** Copyright Julio Picardo 2017-18, all rights reserved.
 *
-*  @project SilverLynx
-*  @authors Julio Marcelo Picardo <picardope@esat-alumni.com>
-*           Antonio Diaz <antoniozero@outlook.com>
+*  @project Wolfy3D
+*  @authors Julio Marcelo Picardo <juliomarcelopicardo@gmail.com>
 *
 */
 
@@ -10,9 +9,9 @@
 #define __RENDER3D_H__ 1
 
 #include <DirectXMath.h>
-#include "SilverLynx/material.h"
+#include "Wolfy3D/material.h"
 
-namespace SLX {
+namespace W3D {
 
 class Render3DComponent {
 
@@ -73,6 +72,6 @@ class Render3DComponent {
 
   };
 
-}; /* SLX */
+}; /* W3D */
 
 #endif

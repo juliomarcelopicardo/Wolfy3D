@@ -8,7 +8,7 @@
 //*********************************************************************************************
 
 #include "aeroplane.h"
-#include "SilverLynx/globals.h"
+#include "Wolfy3D/globals.h"
 
 /*******************************************************************************
 ***                        Constructor and destructor                        ***
@@ -31,7 +31,7 @@ Aeroplane::~Aeroplane() {
 ***                               Public methods                             ***
 *******************************************************************************/
 
-void Aeroplane::init(SLX::Object* scene) {
+void Aeroplane::init(W3D::Object* scene) {
 	// Init geometry resources
 	geo_plane_.initFromFile("./../data/geometries/plane/plane.x");
 	geo_prop_.initFromFile("./../data/geometries/plane/prop.x");
@@ -42,18 +42,18 @@ void Aeroplane::init(SLX::Object* scene) {
 	camera_node_.transform().set_position(0.0f, 4.5f, -15.0f);
 	plane_root_.addChild(&camera_node_);
 
-	plane_.addComponent(SLX::ComponentType::Render3D, &mat_, &geo_plane_);
+	plane_.addComponent(W3D::ComponentType::Render3D, &mat_, &geo_plane_);
 	plane_root_.addChild(&plane_);
 
-  prop_.addComponent(SLX::ComponentType::Render3D, &mat_, &geo_prop_);
+  prop_.addComponent(W3D::ComponentType::Render3D, &mat_, &geo_prop_);
   prop_.transform().set_position(0.0f, 0.0f, 1.9f);
   plane_.addChild(&prop_);
 
-  turret_.addComponent(SLX::ComponentType::Render3D, &mat_, &geo_turret_);
+  turret_.addComponent(W3D::ComponentType::Render3D, &mat_, &geo_turret_);
   turret_.transform().set_position(0.0f, 1.05f, -1.3f);
   plane_.addChild(&turret_);
 
-  gun_.addComponent(SLX::ComponentType::Render3D, &mat_, &geo_gun_);
+  gun_.addComponent(W3D::ComponentType::Render3D, &mat_, &geo_gun_);
   gun_.transform().set_position(0.0f, 0.5f, 0.0f);
   turret_.addChild(&gun_);
 
@@ -68,10 +68,10 @@ void Aeroplane::init(SLX::Object* scene) {
 
   bullets_.resize(kNumberOfBullets);
   
-  SLX::int32 loops = bullets_.size();
-  for (SLX::int32 i = 0; i < loops; i++) {
-    bullets_[i].obj = new SLX::Object();
-    bullets_[i].obj->addComponent(SLX::ComponentType::Render3D, &mat_, &geo_bullet_);
+  W3D::int32 loops = bullets_.size();
+  for (W3D::int32 i = 0; i < loops; i++) {
+    bullets_[i].obj = new W3D::Object();
+    bullets_[i].obj->addComponent(W3D::ComponentType::Render3D, &mat_, &geo_bullet_);
     bullets_[i].obj->transform().set_position(-1000.0f, 0.0f, 0.0f);
     bullets_[i].obj->transform().set_scale(0.02f, 0.02f, 0.2f);
     bullets_[i].shot = false;
@@ -109,7 +109,7 @@ void Aeroplane::update() {
   }
 }
 
-void Aeroplane::move_pitch(SLX::float32 pitch_limit_degrees, bool facing_upwards) {
+void Aeroplane::move_pitch(W3D::float32 pitch_limit_degrees, bool facing_upwards) {
 
   if (facing_upwards) {
     if (plane_root_.transform().rotation_float3().x > DirectX::XMConvertToRadians(pitch_limit_degrees)) {
@@ -123,7 +123,7 @@ void Aeroplane::move_pitch(SLX::float32 pitch_limit_degrees, bool facing_upwards
   }
 }
 
-void Aeroplane::move_roll_yaw(SLX::float32 roll_limit_degrees, bool facing_leftwards, bool enable_yaw) {
+void Aeroplane::move_roll_yaw(W3D::float32 roll_limit_degrees, bool facing_leftwards, bool enable_yaw) {
   if (facing_leftwards) {
     if (plane_root_.transform().rotation_float3().z < DirectX::XMConvertToRadians(roll_limit_degrees)) {
       plane_root_.transform().rotate(0.0f, 0.0f, rotation_speed_);
@@ -152,24 +152,24 @@ void Aeroplane::move_forward() {
 ***                          Setters and Getters                             ***
 *******************************************************************************/
 
-void Aeroplane::set_speed(SLX::float32 forward_speed, SLX::float32 rotation_speed_radians) {
+void Aeroplane::set_speed(W3D::float32 forward_speed, W3D::float32 rotation_speed_radians) {
   forward_speed_ = forward_speed;
   rotation_speed_ = rotation_speed_radians;
 }
 
-SLX::Object& Aeroplane::root() {
+W3D::Object& Aeroplane::root() {
   return plane_root_;
 }
 
-SLX::Object& Aeroplane::camera_node() {
+W3D::Object& Aeroplane::camera_node() {
   return camera_node_;
 }
 
-SLX::Object& Aeroplane::prop() {
+W3D::Object& Aeroplane::prop() {
   return prop_;
 }
 
-SLX::Object& Aeroplane::turret() {
+W3D::Object& Aeroplane::turret() {
   return turret_;
 }
 

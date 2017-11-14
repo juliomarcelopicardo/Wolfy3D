@@ -1,8 +1,7 @@
-/** Copyright Julio Picardo and Antonio Diaz. SouthBros 2017-18, all rights reserved.
+/** Copyright Julio Picardo 2017-18, all rights reserved.
 *
-*  @project SilverLynx
-*  @authors Julio Marcelo Picardo <picardope@esat-alumni.com>
-*           Antonio Diaz <antoniozero@outlook.com>
+*  @project Wolfy3D
+*  @authors Julio Marcelo Picardo <juliomarcelopicardo@gmail.com>
 *
 */
 
@@ -10,9 +9,9 @@
 #define __TRANSFORM_H__ 1
 
 #include <DirectXMath.h>
-#include "SilverLynx/globals.h"
+#include "Wolfy3D/globals.h"
 
-namespace SLX {
+namespace W3D {
 
 class TransformComponent {
 
@@ -425,6 +424,6 @@ private:
 
 };
 
-}; /* SLX */
+}; /* W3D */
 
 #endif

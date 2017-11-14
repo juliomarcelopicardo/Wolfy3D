@@ -1,14 +1,13 @@
-/** Copyright Julio Picardo and Antonio Diaz. SouthBros 2017-18, all rights reserved.
+/** Copyright Julio Picardo 2017-18, all rights reserved.
 *
-*  @project SilverLynx
-*  @authors Julio Marcelo Picardo <picardope@esat-alumni.com>
-*           Antonio Diaz <antoniozero@outlook.com>
+*  @project Wolfy3D
+*  @authors Julio Marcelo Picardo <juliomarcelopicardo@gmail.com>
 *
 */
 
  
 #include <string>
-#include "silverlynx.h"
+#include "Wolfy3D.h"
 #include "core/geometry.h"
 #include "core/material.h"
 #include "core/core.h"
@@ -18,7 +17,7 @@
 #include "core/camera.h"
 #include "aeroplane.h"
 
-namespace SLX {
+namespace W3D {
 
 // Aeroplane we are going to control
 Aeroplane g_plane;
@@ -28,7 +27,7 @@ void AirplaneInput() {
   // Movement on forward is automatic
   g_plane.move_forward();
 
-  if (Input::IsMouseButtonUp(SLX::Input::kMouseButton_Left)) {
+  if (Input::IsMouseButtonUp(W3D::Input::kMouseButton_Left)) {
     g_plane.shoot();
   }
 
@@ -136,4 +135,4 @@ int32 main() {
   return 0;
 }
 
-}; /* SLX */
+}; /* W3D */

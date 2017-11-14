@@ -1,18 +1,17 @@
-﻿/** Copyright Julio Picardo and Antonio Diaz. SouthBros 2017-18, all rights reserved.
+﻿/** Copyright Julio Picardo 2017-18, all rights reserved.
 *
-*  @project SilverLynx
-*  @authors Julio Marcelo Picardo <picardope@esat-alumni.com>
-*           Antonio Diaz <antoniozero@outlook.com>
+*  @project Wolfy3D
+*  @authors Julio Marcelo Picardo <juliomarcelopicardo@gmail.com>
 *
 */
 
-#include "SilverLynx/globals.h"
+#include "Wolfy3D/globals.h"
 #include "core/texture.h"
 #include "core/d3d.h"
 #include "core/core.h"
 #include "D3D11.h"
 
-namespace SLX {
+namespace W3D {
 
   
 /*******************************************************************************
@@ -70,4 +69,4 @@ void CoreTexture::use(const uint32 texture_slot, const bool pixel_shader_access)
 
 
 
-}; /* SLX */
+}; /* W3D */

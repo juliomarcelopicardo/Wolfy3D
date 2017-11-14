@@ -1,12 +1,11 @@
-﻿/** Copyright Julio Picardo and Antonio Diaz. SouthBros 2017-18, all rights reserved.
+﻿/** Copyright Julio Picardo 2017-18, all rights reserved.
 *
-*  @project SilverLynx
-*  @authors Julio Marcelo Picardo <picardope@esat-alumni.com>
-*           Antonio Diaz <antoniozero@outlook.com>
+*  @project Wolfy3D
+*  @authors Julio Marcelo Picardo <juliomarcelopicardo@gmail.com>
 *
 */
 
-#include "SilverLynx/globals.h"
+#include "Wolfy3D/globals.h"
 #include "core/d3d.h"
 #include "core/core.h"
 #include <string>
@@ -14,7 +13,7 @@
 #include "imgui/imgui.h"
 #include "imgui/imgui_impl_dx11.h"
 
-namespace SLX {
+namespace W3D {
 
   
   /*******************************************************************************
@@ -92,8 +91,8 @@ namespace SLX {
     viewport.TopLeftY = 0;
     viewport.MinDepth = 0.0f;
     viewport.MaxDepth = 1.0f;
-    viewport.Width = (float32)SLX::Core::instance().window_.width_;
-    viewport.Height = (float32)SLX::Core::instance().window_.height_;
+    viewport.Width = (float32)W3D::Core::instance().window_.width_;
+    viewport.Height = (float32)W3D::Core::instance().window_.height_;
 
     // RSSetViewports() is a function that activates viewport structs.
     // The first parameter is the number of viewports being used, 
@@ -105,7 +104,7 @@ namespace SLX {
 
     // Setup the projection matrix.
     float32 fov = (float32)D3DX_PI / 4.0f;
-    float32 aspect = (float32)SLX::Core::instance().window_.width_ / (float32)SLX::Core::instance().window_.height_;
+    float32 aspect = (float32)W3D::Core::instance().window_.width_ / (float32)W3D::Core::instance().window_.height_;
 
     // Create the projection matrix for 3D rendering.
     D3DXMatrixPerspectiveFovLH(&projection_matrix_, fov, aspect, SCREEN_NEAR, SCREEN_DEPTH);
@@ -114,13 +113,13 @@ namespace SLX {
     D3DXMatrixIdentity(&world_matrix_);
 
     // Create an orthographic projection matrix for 2D rendering.
-    D3DXMatrixOrthoLH(&ortho_matrix_, (float32)SLX::Core::instance().window_.width_,
-      (float32)SLX::Core::instance().window_.height_, SCREEN_NEAR, SCREEN_DEPTH);
+    D3DXMatrixOrthoLH(&ortho_matrix_, (float32)W3D::Core::instance().window_.width_,
+      (float32)W3D::Core::instance().window_.height_, SCREEN_NEAR, SCREEN_DEPTH);
 
 	
 	//////////////////////////////////////////////
 	// Setup the ImGui binding
-	ImGui_ImplDX11_Init(SLX::Core::instance().window_.window_handle_, device_, device_context_);
+	ImGui_ImplDX11_Init(W3D::Core::instance().window_.window_handle_, device_, device_context_);
 
     return true;
 
@@ -291,7 +290,7 @@ namespace SLX {
     }
 
     // Store the dedicated video card memory in megabytes.
-    video_card_memory_ = (SLX::int32)(adapterDesc.DedicatedVideoMemory / 1024 / 1024);
+    video_card_memory_ = (W3D::int32)(adapterDesc.DedicatedVideoMemory / 1024 / 1024);
 
     // Convert the name of the video card to a charactver array and store it.
     error = wcstombs_s(&stringLength, video_card_description_, 128, adapterDesc.Description, 128);
@@ -562,4 +561,4 @@ namespace SLX {
     return true;
   }
 
-}; /* SLX */
+}; /* W3D */

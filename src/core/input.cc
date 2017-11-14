@@ -1,8 +1,7 @@
-/** Copyright Julio Picardo and Antonio Diaz. SouthBros 2017-18, all rights reserved.
+/** Copyright Julio Picardo 2017-18, all rights reserved.
 *
-*  @project SilverLynx
-*  @authors Julio Marcelo Picardo <picardope@esat-alumni.com>
-*           Antonio Diaz <antoniozero@outlook.com>
+*  @project Wolfy3D
+*  @authors Julio Marcelo Picardo <juliomarcelopicardo@gmail.com>
 *
 */
 
@@ -10,7 +9,7 @@
 #include "core/core.h"
 #include "core/window.h"
 
-namespace SLX {
+namespace W3D {
 
 
 
@@ -44,19 +43,19 @@ CoreInput::~CoreInput() {}
 ButtonStatus* CoreInput::getButton(const int32 key_id) {
 
   switch (key_id) {
-    case SLX::Input::kKeyboardButton_W: return &keyboard_W_button_; break;
-    case SLX::Input::kKeyboardButton_A: return &keyboard_A_button_; break;
-    case SLX::Input::kKeyboardButton_S: return &keyboard_S_button_; break;
-    case SLX::Input::kKeyboardButton_D: return &keyboard_D_button_; break;
-    case SLX::Input::kKeyboardButton_Q: return &keyboard_Q_button_; break;
-    case SLX::Input::kKeyboardButton_E: return &keyboard_E_button_; break;
-    case SLX::Input::kKeyboardButton_Tab: return &keyboard_Tab_button_; break;
-    case SLX::Input::kKeyboardButton_Escape: return &keyboard_Escape_button_; break;
-    case SLX::Input::kKeyboardButton_SpaceBar: return &keyboard_SpaceBar_button_; break;
-    case SLX::Input::kKeyboardButton_Up: return &keyboard_Up_button_; break;
-    case SLX::Input::kKeyboardButton_Down: return &keyboard_Down_button_; break;
-    case SLX::Input::kKeyboardButton_Left: return &keyboard_Left_button_; break;
-    case SLX::Input::kKeyboardButton_Right: return &keyboard_Right_button_; break;
+    case W3D::Input::kKeyboardButton_W: return &keyboard_W_button_; break;
+    case W3D::Input::kKeyboardButton_A: return &keyboard_A_button_; break;
+    case W3D::Input::kKeyboardButton_S: return &keyboard_S_button_; break;
+    case W3D::Input::kKeyboardButton_D: return &keyboard_D_button_; break;
+    case W3D::Input::kKeyboardButton_Q: return &keyboard_Q_button_; break;
+    case W3D::Input::kKeyboardButton_E: return &keyboard_E_button_; break;
+    case W3D::Input::kKeyboardButton_Tab: return &keyboard_Tab_button_; break;
+    case W3D::Input::kKeyboardButton_Escape: return &keyboard_Escape_button_; break;
+    case W3D::Input::kKeyboardButton_SpaceBar: return &keyboard_SpaceBar_button_; break;
+    case W3D::Input::kKeyboardButton_Up: return &keyboard_Up_button_; break;
+    case W3D::Input::kKeyboardButton_Down: return &keyboard_Down_button_; break;
+    case W3D::Input::kKeyboardButton_Left: return &keyboard_Left_button_; break;
+    case W3D::Input::kKeyboardButton_Right: return &keyboard_Right_button_; break;
   }
   return nullptr;
 }
@@ -259,4 +258,4 @@ void CoreInput::checkCursorPosition() {
 
 #pragma endregion
   
-}; /* SLX */
+}; /* W3D */

@@ -1,19 +1,18 @@
-/** Copyright Julio Picardo and Antonio Diaz. SouthBros 2017-18, all rights reserved.
+/** Copyright Julio Picardo 2017-18, all rights reserved.
 *
-*  @project SilverLynx
-*  @authors Julio Marcelo Picardo <picardope@esat-alumni.com>
-*           Antonio Diaz <antoniozero@outlook.com>
+*  @project Wolfy3D
+*  @authors Julio Marcelo Picardo <juliomarcelopicardo@gmail.com>
 *
 */
 
 #include "core/texture.h"
-#include "SilverLynx/material.h"
+#include "Wolfy3D/material.h"
 #include "core/material.h"
 #include "core/core.h"
 #include <chrono>
 #include <thread>
 
-namespace SLX {
+namespace W3D {
 
 
 /*******************************************************************************
@@ -108,4 +107,4 @@ void MaterialAssesment::setupSuperMaterial() {
 }
 
 
-}; /* SLX */
+}; /* W3D */

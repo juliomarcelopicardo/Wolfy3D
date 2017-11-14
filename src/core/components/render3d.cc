@@ -1,8 +1,7 @@
-﻿/** Copyright Julio Picardo and Antonio Diaz. SouthBros 2017-18, all rights reserved.
+﻿/** Copyright Julio Picardo 2017-18, all rights reserved.
 *
-*  @project SilverLynx
-*  @authors Julio Marcelo Picardo <picardope@esat-alumni.com>
-*           Antonio Diaz <antoniozero@outlook.com>
+*  @project Wolfy3D
+*  @authors Julio Marcelo Picardo <juliomarcelopicardo@gmail.com>
 *
 */
 
@@ -14,7 +13,7 @@
 #include "core/core.h"
 
 
-namespace SLX {
+namespace W3D {
 
   /*******************************************************************************
   ***                        Constructor and destructor                        ***
@@ -82,4 +81,4 @@ namespace SLX {
   *******************************************************************************/
 
 
-}; /* SLX */
+}; /* W3D */

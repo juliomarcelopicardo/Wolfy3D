@@ -1,17 +1,16 @@
-/** Copyright Julio Picardo and Antonio Diaz. SouthBros 2017-18, all rights reserved.
+/** Copyright Julio Picardo 2017-18, all rights reserved.
 *
-*  @project SilverLynx
-*  @authors Julio Marcelo Picardo <picardope@esat-alumni.com>
-*           Antonio Diaz <antoniozero@outlook.com>
+*  @project Wolfy3D
+*  @authors Julio Marcelo Picardo <juliomarcelopicardo@gmail.com>
 *
 */
 
-#include "SilverLynx/time.h"
+#include "Wolfy3D/time.h"
 #include "core/core.h"
 #include <chrono>
 #include <thread>
 
-namespace SLX {
+namespace W3D {
 
 
 uint64 Time() {
@@ -56,4 +55,4 @@ uint64 Chronometer::average() {
 }
 
 
-}; /* SLX */
+}; /* W3D */

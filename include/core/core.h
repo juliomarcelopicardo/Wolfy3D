@@ -1,15 +1,14 @@
-/** Copyright Julio Picardo and Antonio Diaz. SouthBros 2017-18, all rights reserved.
- *
- *  @project SilverLynx
- *  @authors Julio Marcelo Picardo <picardope@esat-alumni.com>
- *           Antonio Diaz <antoniozero@outlook.com>
- *
- */
+/** Copyright Julio Picardo 2017-18, all rights reserved.
+*
+*  @project Wolfy3D
+*  @authors Julio Marcelo Picardo <juliomarcelopicardo@gmail.com>
+*
+*/
 
-#ifndef __SILVERLYNX_CORE_H__
-#define __SILVERLYNX_CORE_H__ 1
+#ifndef __WOLFY3D_CORE_H__
+#define __WOLFY3D_CORE_H__ 1
 
-#include "silverlynx.h"
+#include "Wolfy3D.h"
 #include "window.h"
 #include "d3d.h"
 #include <stdio.h>
@@ -20,7 +19,7 @@
 #include "core/input.h"
 
 
-namespace SLX {
+namespace W3D {
 
 
 /*******************************************************************************
@@ -52,7 +51,7 @@ struct ChromeDebugger {
 /*******************************************************************************
 ********************************************************************************
 ***                                                                          ***
-***                         SILVERLYNX CORE CLASS                            ***
+***                         WOLFY3D CORE CLASS                            ***
 ***                                                                          ***
 ********************************************************************************
 *******************************************************************************/
@@ -114,6 +113,6 @@ class Core {
 
 }; /* CORE */
 
-}; /* SLX */
+}; /* W3D */
 
 #endif

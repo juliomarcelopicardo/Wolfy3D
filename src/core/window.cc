@@ -1,19 +1,18 @@
-/** Copyright Julio Picardo and Antonio Diaz. SouthBros 2017-18, all rights reserved.
+/** Copyright Julio Picardo 2017-18, all rights reserved.
 *
-*  @project SilverLynx
-*  @authors Julio Marcelo Picardo <picardope@esat-alumni.com>
-*           Antonio Diaz <antoniozero@outlook.com>
+*  @project Wolfy3D
+*  @authors Julio Marcelo Picardo <juliomarcelopicardo@gmail.com>
 *
 */
 
-#include "SilverLynx/globals.h"
+#include "Wolfy3D/globals.h"
 #include "core/window.h"
 #include "core/core.h"
 #include "core/input.h"
 #include "imgui/imgui.h"
 #include "imgui/imgui_impl_dx11.h"
 
-namespace SLX {
+namespace W3D {
 
   /*******************************************************************************
   ***                        Constructor and destructor                        ***
@@ -106,7 +105,7 @@ namespace SLX {
     window_class_info_.lpszMenuName = NULL;
 
     // Assign window class name to be redirected to the instance
-    window_class_info_.lpszClassName = "SilverLynxWindowClass";
+    window_class_info_.lpszClassName = "Wolfy3DWindowClass";
 
     //-------------- Register class in the system -----------------//
     if (!RegisterClassEx(&window_class_info_)) {
@@ -167,7 +166,7 @@ namespace SLX {
     PAINTSTRUCT ps;
     HDC hdc;
 
-  auto& input = SLX::Core::instance().input_;
+  auto& input = W3D::Core::instance().input_;
 	ImGuiIO& io = ImGui::GetIO();
 
 	switch (message) {
@@ -182,7 +181,7 @@ namespace SLX {
 		}
 		case WM_DESTROY: {
 			PostQuitMessage(0);
-			SLX::Core::instance().window_.is_opened_ = false;
+			W3D::Core::instance().window_.is_opened_ = false;
 			break;
 		}
 		/* @TODO case WM_SIZE
@@ -284,4 +283,4 @@ namespace SLX {
     return DefWindowProc(hWnd, message, wParam, lParam);
   }
 
-}; /* SLX */
+}; /* W3D */
