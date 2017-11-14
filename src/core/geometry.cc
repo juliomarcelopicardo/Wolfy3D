@@ -301,7 +301,8 @@ bool CoreGeometry::initTerrain(const char * height_map_filename,
 
 		  vertex_data_[idx].position = height_map_data[idx];
 		  vertex_data_[idx].normal = normal;
-		  vertex_data_[idx].uv = { 1.0f, 1.0f };
+		  vertex_data_[idx].uv = { (float32)x / (float32)(num_points_per_row - 1), 
+                               1.0f - (float32)y / (float32)(num_points_per_col - 1) };
 		  vertex_data_[idx].color = color;
 	  }
   }
