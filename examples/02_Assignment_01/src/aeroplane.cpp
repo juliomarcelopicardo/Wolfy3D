@@ -16,9 +16,9 @@
 
 Aeroplane::Aeroplane() {
 
-  rotation_speed_ = 0.0025f;
-  forward_speed_ = 0.01f;
-  bullet_speed_ = 0.06f;
+  rotation_speed_ = 0.025f;
+  forward_speed_ = 0.1f;
+  bullet_speed_ = 0.6f;
   bullets_.empty();
 
 }
@@ -37,8 +37,6 @@ void Aeroplane::init(SLX::Object* scene) {
 	geo_prop_.initFromFile("./../data/geometries/plane/prop.x");
 	geo_turret_.initFromFile("./../data/geometries/plane/turret.x");
 	geo_gun_.initFromFile("./../data/geometries/plane/gun.x");
-
-  mat_.init();
 
 	// Initialize Aeroplane components
 	camera_node_.transform().set_position(0.0f, 4.5f, -15.0f);
@@ -59,9 +57,6 @@ void Aeroplane::init(SLX::Object* scene) {
   gun_.transform().set_position(0.0f, 0.5f, 0.0f);
   turret_.addChild(&gun_);
 
-  //gun_node_.addComponent(SLX::ComponentType::Render3D);
-  //gun_node_.render3D_->init(&mat_, &geo_bullet_);
-  //gun_node_.render3D_->init();
   gun_node_.transform().set_position(0.0f, 0.0f, 2.0f);
   gun_node_.transform().set_scale(0.02f, 0.02f, 0.02f);
   gun_.addChild(&gun_node_);
@@ -78,7 +73,7 @@ void Aeroplane::init(SLX::Object* scene) {
     bullets_[i].obj = new SLX::Object();
     bullets_[i].obj->addComponent(SLX::ComponentType::Render3D, &mat_, &geo_bullet_);
     bullets_[i].obj->transform().set_position(-1000.0f, 0.0f, 0.0f);
-    bullets_[i].obj->transform().set_scale(0.02f, 0.02f, 0.02f);
+    bullets_[i].obj->transform().set_scale(0.02f, 0.02f, 0.2f);
     bullets_[i].shot = false;
     scene->addChild(bullets_[i].obj);
   }
@@ -94,9 +89,9 @@ void Aeroplane::shoot() {
     current_bullet_ = 0;
   }
 
-  bullets_[current_bullet_].dir = gun_.transform().forward_vector();
-  bullets_[current_bullet_].obj->transform().set_world_position(gun_node_.transform().world_position());
-  bullets_[current_bullet_].obj->transform().set_rotation(gun_node_.transform().rotation_float3());
+  bullets_[current_bullet_].dir = gun_.transform().world_forward_vector();
+  bullets_[current_bullet_].obj->transform().set_world_position(gun_node_.transform().world_position_vector());
+  bullets_[current_bullet_].obj->transform().set_rotation(gun_node_.transform().world_rotation_float3());
   
 
   bullets_[current_bullet_].shot = true;
@@ -149,8 +144,8 @@ void Aeroplane::move_roll_yaw(SLX::float32 roll_limit_degrees, bool facing_leftw
 
 void Aeroplane::move_forward() {
   DirectX::XMFLOAT3 forward;
-  DirectX::XMStoreFloat3(&forward, DirectX::XMVectorScale(plane_root_.transform().forward_vector(), forward_speed_));
-  plane_root_.transform().localTraslate(forward.x, forward.y, forward.z);
+  DirectX::XMStoreFloat3(&forward, DirectX::XMVectorScale(plane_root_.transform().world_forward_vector(), forward_speed_));
+  plane_root_.transform().traslate(forward.x, forward.y, forward.z);
 }
 
 /*******************************************************************************

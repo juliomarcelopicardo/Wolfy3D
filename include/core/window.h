@@ -109,6 +109,9 @@ class CoreWindow {
    ///--------------------------------------------------------------------------
    void setupWindowHandle(const char* window_display_name);
 
+   /// TODO: Imgui temp function for the camera.
+   void setupCameraIntoImguiMenu();
+
 
 }; /* WINDOW */
 

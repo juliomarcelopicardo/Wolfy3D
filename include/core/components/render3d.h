@@ -10,6 +10,7 @@
 #define __RENDER3D_H__ 1
 
 #include <DirectXMath.h>
+#include "SilverLynx/material.h"
 
 namespace SLX {
 
@@ -32,13 +33,13 @@ class Render3DComponent {
     *******************************************************************************/
 
     ///--------------------------------------------------------------------------
-    /// @fn   void init(CoreMaterial* mat, CoreGeometry* geo);
+    /// @fn   void init(Material* mat, CoreGeometry* geo);
     ///
     /// @brief  Setups the material and geometry for this component.
-    /// @param  mat CoreMaterial to assign to this component.
+    /// @param  mat Material to assign to this component.
     /// @param  geo CoreGeometry to assign to this component.
     ///--------------------------------------------------------------------------
-    void init(class CoreMaterial* mat, class CoreGeometry* geo);
+    void init(class Material* mat, class CoreGeometry* geo);
 
     ///--------------------------------------------------------------------------
     /// @fn   void render(TransformComponent* transform);
@@ -61,7 +62,7 @@ class Render3DComponent {
     /// Whether this component have been initialized or not
     bool initialized_;
     /// Material of the component.
-    class CoreMaterial* material_;
+    class Material* material_;
     /// Geometry of the component.
     class CoreGeometry* geometry_;
 

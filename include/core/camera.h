@@ -116,19 +116,7 @@ class CoreCamera {
   ///--------------------------------------------------------------------------
   void update();
 
-  ///--------------------------------------------------------------------------
-  /// @fn   void translate();
-  ///
-  /// @brief Update the camera position when movement is active
-  ///--------------------------------------------------------------------------
-  bool translate();
 
-  ///--------------------------------------------------------------------------
-  /// @fn   void rotate();
-  ///
-  /// @brief Update the camera rotation when movement is active
-  ///--------------------------------------------------------------------------
-  bool rotate();
 
   /*******************************************************************************
   ***                            Setters & Getters                             ***
@@ -267,6 +255,20 @@ class CoreCamera {
 
   CoreCamera(const CoreCamera& copy);
   CoreCamera& operator=(const CoreCamera& copy);
+
+  ///--------------------------------------------------------------------------
+  /// @fn   void translate();
+  ///
+  /// @brief Update the camera position when movement is active
+  ///--------------------------------------------------------------------------
+  bool translate();
+
+  ///--------------------------------------------------------------------------
+  /// @fn   void rotate();
+  ///
+  /// @brief Update the camera rotation when movement is active
+  ///--------------------------------------------------------------------------
+  bool rotate();
 
 }; /* CoreCamera */
 

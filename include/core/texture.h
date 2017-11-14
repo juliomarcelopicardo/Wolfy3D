@@ -41,12 +41,13 @@ class CoreTexture {
   bool load(const char* texture_path);
 
   ///--------------------------------------------------------------------------
-  /// @fn   use(const uint32 texture_channel);
+  /// @fn   use(const uint32 texture_slot);
   ///
   /// @brief  Use the existing texture.
-  /// @param texture_channel sets the channel number of the texture in the shader.
+  /// @param texture_slot sets the slot number of the texture in the shader.
+  /// @param pixel_shader_access Texture to be accesed in vertex or pixel shader.
   ///--------------------------------------------------------------------------
-  void use(const uint32 texture_channel = 1);
+  void use(const uint32 texture_slot = 0, const bool pixel_shader_access = true);
 
 /*******************************************************************************
 ***                               Attributes                                 ***

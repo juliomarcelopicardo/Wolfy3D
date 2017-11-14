@@ -153,7 +153,7 @@ private:
 *******************************************************************************/
 
   /// Material 
-  SLX::CoreMaterial mat_;
+  SLX::MaterialDiffuse mat_;
   /// Geometry of the main aeroplane
   SLX::CoreGeometry geo_plane_;
   /// Geometry of the propeller

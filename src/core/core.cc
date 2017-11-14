@@ -93,8 +93,9 @@ Core::~Core() {}
 
 
 void Core::init() {
-  default_geometry_.initCube();
-  default_material_.init();
+  error_geometry_.initCube();
+  error_texture_.load("../data/error_texture.jpg");
+  super_material_.init();
 }
 
 };/* JI */

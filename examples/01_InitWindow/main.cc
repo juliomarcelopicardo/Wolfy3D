@@ -18,14 +18,29 @@
 #include "core/camera.h"
 
 namespace SLX {
+  
 int32 main() {
   
   Window::Init(1024, 978);
 
   CoreGeometry geo, geo2;
   CoreGeometry geo_plane, geo_prop, geo_turret, geo_gun, geo_terrain;
-  CoreMaterial mat;
-  CoreTexture texture;
+  MaterialDiffuse mat; 
+  MaterialNormals mat_normals;
+  MaterialTextured mat_texture;
+  CoreTexture texture, texture2;
+  
+
+  CoreTexture assesment[4];
+  assesment[0].load("./../data/materialmap.dds");
+  assesment[1].load("./../data/grass.dds");
+  assesment[2].load("./../data/moss.dds");
+  assesment[3].load("./../data/asphalt.dds");
+  MaterialAssesment matass;
+  matass.texture_materialmap_ = &assesment[0];
+  matass.texture_grass_ = &assesment[1];
+  matass.texture_moss_ = &assesment[2];
+  matass.texture_asphalt_ = &assesment[3];
 
   struct Robot {
     CoreGeometry geo_body;
@@ -72,39 +87,42 @@ int32 main() {
   geo_prop.initFromFile("./../data/geometries/plane/prop.x");
   geo_gun.initFromFile("./../data/geometries/plane/gun.x");
   geo_turret.initFromFile("./../data/geometries/plane/turret.x");
-  geo_terrain.initTerrain("./../data/Heightmap.bmp", { 100.0f, 10.0f, 100.0f });
+  geo_terrain.initTerrain("./../data/Heightmap.bmp", { 100.0f, 7.0f, 100.0f });
 
-  mat.init();
   texture.load("./../data/texture.png");
+  texture2.load("./../data/turtle.png");
+  mat_texture.set_texture(&texture);
 
   Object plane_root, plane, prop, turret, gun, cam_node, terrain, root;
 
-  terrain.addComponent(ComponentType::Render3D, &mat, &geo_terrain);
+  
+  terrain.addComponent(ComponentType::Render3D, &matass, &geo_terrain);
   terrain.transform().set_position(-50.0f, -10.0f, -30.0f);
   root.addChild(&terrain);
+  //root.addChild(&plane_root);
 
   cam_node.transform().set_position(0.0f, 4.5f, -15.0f);
   plane_root.addChild(&cam_node);
 
-  plane.addComponent(ComponentType::Render3D, &mat, &geo_plane);
+  plane.addComponent(ComponentType::Render3D, &mat_texture, nullptr);
+  plane.transform().set_scale(3.0f);
   plane_root.addChild(&plane);
 
   prop.addComponent(ComponentType::Render3D, &mat, &geo_prop);
   prop.transform().set_position(0.0f, 0.0f, 1.9f);
-  plane.addChild(&prop);
+  //plane.addChild(&prop);
 
   turret.addComponent(ComponentType::Render3D, &mat, &geo_turret);
   turret.transform().set_position(0.0f, 1.05f, -1.3f);
-  plane.addChild(&turret);
+  //plane.addChild(&turret);
 
   gun.addComponent(ComponentType::Render3D, &mat, &geo_gun);
   gun.transform().set_position(0.0f, 0.5f, 0.0f);
-  turret.addChild(&gun);
+  //turret.addChild(&gun);
 
-  /*
-   ROBOTTTTTTTTTTTT
   
-  */
+  
+  
   Robot robot;
   robot.geo_body.initFromFile("./../data/geometries/robot/body.x");
   robot.geo_left_ankle.initFromFile("./../data/geometries/robot/left_ankle.x");
@@ -124,10 +142,10 @@ int32 main() {
 
 
 
-  root.addChild(&robot.root);
+  //root.addChild(&robot.root);
   robot.root.transform().set_position(0.0f, 0.0f, 20.0f);
 
-  robot.body.addComponent(ComponentType::Render3D, &mat, &robot.geo_body);
+  robot.body.addComponent(ComponentType::Render3D, &mat, nullptr);
   robot.body.transform().set_position(0.0f, 0.0f, 0.0f);
   robot.root.addChild(&robot.body);
 
@@ -192,10 +210,13 @@ int32 main() {
   char textico[256];
   sprintf_s(textico, "Iniciando ventana con dimensiones %d x %d", Window::Width(), Window::Height());
   auto& cam = Core::instance().cam_;
+  cam.is_navigation_enabled_ = true;
   cam.set_position(0.0f, 4.5f, -15.0f);
 
   float speed = 0.1f;
   float rotation_speed = 0.0001f;
+
+
 
   // enter the main loop:
   while (Window::StartFrame() && Window::IsOpened() && 
@@ -210,12 +231,11 @@ int32 main() {
       robot.neck.transform().worldTraslate(1.0f, 0.0f, 0.0f);
     }
 
-    texture.use();
     cam.render(&root);
     prop.transform().set_rotation(0.0f, 0.0f, (float32)Time() * 0.01f);
     turret.transform().set_rotation(0.0f, (float32)Time() * 0.001f, 0.0f);
 
-	ImGui::SetNextWindowPos(ImVec2(650, 20), ImGuiCond_FirstUseEver);
+	//ImGui::SetNextWindowPos(ImVec2(650, 20), ImGuiCond_FirstUseEver);
 	ImGui::ShowTestWindow(0);
 
     Window::EndFrame();
@@ -229,5 +249,6 @@ int32 main() {
   OutputDebugString(textico);
   return 0;
 }
+
 
 }; /* SLX */

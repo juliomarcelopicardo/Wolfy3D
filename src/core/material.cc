@@ -18,11 +18,11 @@ namespace SLX {
 ***                        Constructor and destructor                        ***
 *******************************************************************************/
 
-CoreMaterial::CoreMaterial() {
+SuperMaterial::SuperMaterial() {
     
 }
 
-CoreMaterial::~CoreMaterial() {
+SuperMaterial::~SuperMaterial() {
   if (vertex_shader_) { vertex_shader_->Release(); }
   if (pixel_shader_) { pixel_shader_->Release(); }
   if (input_layout_) { input_layout_->Release(); }
@@ -33,7 +33,7 @@ CoreMaterial::~CoreMaterial() {
 ***                               Public methods                             ***
 *******************************************************************************/
 
-bool CoreMaterial::init() {
+bool SuperMaterial::init() {
 
   ID3D10Blob* vertex_shader;
   ID3D10Blob* pixel_shader;
@@ -108,13 +108,13 @@ bool CoreMaterial::init() {
   return true;
 }
 
-bool CoreMaterial::createMatrixBuffer() {
+bool SuperMaterial::createMatrixBuffer() {
   // Creamos un buffer para almacenar las matrices.
   D3D11_BUFFER_DESC matrix_description;
   ZeroMemory(&matrix_description, sizeof(D3D11_BUFFER_DESC));
 
   matrix_description.Usage = D3D11_USAGE_DYNAMIC;
-  matrix_description.ByteWidth = sizeof(CustomConstantBuffer);
+  matrix_description.ByteWidth = sizeof(MaterialParams);
   matrix_description.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
   matrix_description.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
 

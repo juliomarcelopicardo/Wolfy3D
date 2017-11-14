@@ -53,9 +53,14 @@ bool CoreTexture::load(const char* texture_path) {
   return true;
 }
 
-void CoreTexture::use(const uint32 texture_channel) {
+void CoreTexture::use(const uint32 texture_slot, const bool pixel_shader_access) {
   if (texture_handle_) {
-    Core::instance().d3d_.deviceContext()->PSSetShaderResources(0, texture_channel, &texture_handle_);
+    if (pixel_shader_access) {
+      Core::instance().d3d_.deviceContext()->PSSetShaderResources(texture_slot, 1, &texture_handle_);
+    }
+    else {
+      Core::instance().d3d_.deviceContext()->VSSetShaderResources(texture_slot, 1, &texture_handle_);
+    }
   }
   else {
     MessageBox(NULL, "Error using texture", "ERROR", MB_OK);
