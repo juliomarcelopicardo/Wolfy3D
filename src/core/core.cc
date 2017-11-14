@@ -94,6 +94,7 @@ Core::~Core() {}
 
 void Core::init() {
   error_geometry_.initCube();
+  error_texture_.load("../data/error_texture.jpg");
   super_material_.init();
 }
 
