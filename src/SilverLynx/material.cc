@@ -101,7 +101,7 @@ void MaterialAssesment::setupSuperMaterial() {
   super_mat.params_.type = MaterialType::kMaterialType_Assesment;
   super_mat.params_.num_textures = 4;
 
-  texture_materialmap_->use(1);
+  texture_materialmap_->use(1, false);
   texture_grass_->use(2);
   texture_moss_->use(3);
   texture_asphalt_->use(4);
