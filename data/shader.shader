@@ -85,7 +85,7 @@ struct Light {
 float4 CalculateLightColor(float4 normal) {
   // Calculamos el color difuso de la luz.
   Light light;
-  light.dir = float4(1.0f, 1.0f, -1.0f, 0.0f);
+  light.dir = float4(1.0f, 1.0f, 1.0f, 0.0f);
   //light.dir.x = sin(timer * 0.001f);
   //light.dir.y = cos(timer * 0.001f);
   light.color = float4(1.0f, 1.0f, 1.0f, 1.0f);
@@ -111,7 +111,16 @@ float4 PShader(PixelInput pixel_input) : SV_TARGET {
     }break;
 
     case ASSESMENT: {
-      color_result = pixel_input.Normal;
+      float4 matmap_color = texture_materialmap.Sample(sampler_type, pixel_input.TexCoord);
+      float4 grass_color = texture_grass.Sample(sampler_type, pixel_input.TexCoord);
+      float4 moss_color = texture_moss.Sample(sampler_type, pixel_input.TexCoord);
+      float4 asphalt_color = texture_asphalt.Sample(sampler_type, pixel_input.TexCoord);
+
+      grass_color *= matmap_color.g;
+      moss_color *= matmap_color.r;
+      asphalt_color *= matmap_color.b;
+      
+      color_result *= (grass_color + moss_color + asphalt_color);
     }break;
   }
 
