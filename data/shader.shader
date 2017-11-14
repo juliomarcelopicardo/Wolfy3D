@@ -64,7 +64,10 @@ PixelInput VShader(VertexInput input) {
 }
 
 Texture2D texture_ : register(t0);
-Texture2D texture_2 : register(t2);
+Texture2D texture_materialmap : register(t1);
+Texture2D texture_grass : register(t2);
+Texture2D texture_moss : register(t3);
+Texture2D texture_asphalt : register(t4);
 SamplerState sampler_type;
 
 // EJEMPLO PARA TESTEAR LUCES.
@@ -77,6 +80,7 @@ struct Light {
 #define DIFFUSE 0
 #define ONE_TEXTURE 1
 #define NORMALS 2
+#define ASSESMENT 3
 
 float4 CalculateLightColor(float4 normal) {
   // Calculamos el color difuso de la luz.
@@ -99,19 +103,16 @@ float4 PShader(PixelInput pixel_input) : SV_TARGET {
     case DIFFUSE:{}break;
   
     case ONE_TEXTURE: {
-      /* TESTEANDO PONER DOS TEXTURAS A LA VEZ*/
-      if (pixel_input.TexCoord.x > 0.5f) {
-        color_result *= texture_2.Sample(sampler_type, pixel_input.TexCoord);
-      }
-      else {
-        color_result *= texture_.Sample(sampler_type, pixel_input.TexCoord);
-      }
+      color_result *= texture_.Sample(sampler_type, pixel_input.TexCoord);
     }break;
   
     case NORMALS: {
       color_result = pixel_input.Normal;
     }break;
 
+    case ASSESMENT: {
+      color_result = pixel_input.Normal;
+    }break;
   }
 
   return color_result;
