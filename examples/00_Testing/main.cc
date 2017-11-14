@@ -9,7 +9,7 @@
 #include <string>
 #include "Wolfy3D.h"
 #include "core/geometry.h"
-#include "core/material.h"
+#include "core/super_material.h"
 #include "core/core.h"
 #include "core/object.h"
 #include "core/texture.h"

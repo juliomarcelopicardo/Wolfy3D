@@ -7,7 +7,7 @@
 
 #include "core/texture.h"
 #include "Wolfy3D/material.h"
-#include "core/material.h"
+#include "core/super_material.h"
 #include "core/core.h"
 #include <chrono>
 #include <thread>

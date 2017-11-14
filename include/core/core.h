@@ -13,7 +13,7 @@
 #include "d3d.h"
 #include <stdio.h>
 #include "core/camera.h"
-#include "core/material.h"
+#include "core/super_material.h"
 #include "core/geometry.h"
 #include "core/texture.h"
 #include "core/input.h"

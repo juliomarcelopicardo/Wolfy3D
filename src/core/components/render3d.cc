@@ -8,7 +8,7 @@
 #include "core/components/render3d.h"
 #include "core/components/transform.h"
 #include "core/geometry.h"
-#include "core/material.h"
+#include "core/super_material.h"
 #include "core/object.h"
 #include "core/core.h"
 
