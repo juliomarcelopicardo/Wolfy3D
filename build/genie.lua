@@ -136,4 +136,4 @@ end
 
 -- PROJECTS
 GenerateProject("00_Testing")
-GenerateProject("02_Assignment_01")
+GenerateProject("01_Assignment")
