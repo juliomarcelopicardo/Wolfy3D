@@ -31,10 +31,10 @@ int32 main() {
   
 
   CoreTexture assesment[4];
-  assesment[0].load("./../data/materialmap.dds");
-  assesment[1].load("./../data/grass.dds");
-  assesment[2].load("./../data/moss.dds");
-  assesment[3].load("./../data/asphalt.dds");
+  assesment[0].load("./../data/textures/materialmap.dds");
+  assesment[1].load("./../data/textures/grass.dds");
+  assesment[2].load("./../data/textures/moss.dds");
+  assesment[3].load("./../data/textures/asphalt.dds");
   MaterialAssesment matass;
   matass.texture_materialmap_ = &assesment[0];
   matass.texture_grass_ = &assesment[1];
@@ -86,10 +86,10 @@ int32 main() {
   geo_prop.initFromFile("./../data/geometries/plane/prop.x");
   geo_gun.initFromFile("./../data/geometries/plane/gun.x");
   geo_turret.initFromFile("./../data/geometries/plane/turret.x");
-  geo_terrain.initTerrain("./../data/Heightmap.bmp", { 100.0f, 7.0f, 100.0f });
+  geo_terrain.initTerrain("./../data/textures/Heightmap.bmp", { 100.0f, 7.0f, 100.0f });
 
-  texture.load("./../data/texture.png");
-  texture2.load("./../data/turtle.png");
+  texture.load("./../data/textures/texture.png");
+  texture2.load("./../data/textures/turtle.png");
   mat_texture.set_texture(&texture);
 
   Object plane_root, plane, prop, turret, gun, cam_node, terrain, root;
@@ -235,7 +235,7 @@ int32 main() {
     turret.transform().set_rotation(0.0f, (float32)Time() * 0.001f, 0.0f);
 
 	//ImGui::SetNextWindowPos(ImVec2(650, 20), ImGuiCond_FirstUseEver);
-	ImGui::ShowTestWindow(0);
+	//ImGui::ShowTestWindow(0);
 
     Window::EndFrame();
   }
