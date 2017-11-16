@@ -5,7 +5,7 @@
 *
 */
 
-#include "core/window.h"
+#include "core/wnd.h"
 #include "core/core.h"
 
 namespace W3D {

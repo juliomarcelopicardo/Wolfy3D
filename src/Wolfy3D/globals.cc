@@ -11,7 +11,7 @@
 #include <thread>
 #include <chrono>
 #include <time.h>
-#include "core/window.h"
+#include "core/wnd.h"
 #include "core/core.h"
 
 

@@ -7,7 +7,7 @@
 
 #include "core/input.h"
 #include "core/core.h"
-#include "core/window.h"
+#include "core/wnd.h"
 
 namespace W3D {
 

@@ -49,7 +49,7 @@ void MaterialTextured::setupSuperMaterial() {
   }
 }
 
-void MaterialTextured::set_texture(CoreTexture* texture) {
+void MaterialTextured::set_texture(Texture* texture) {
   if (texture) {
     texture_ = texture;
   }

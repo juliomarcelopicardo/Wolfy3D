@@ -14,9 +14,7 @@
 
 namespace W3D {
   
-  class Object;
-
-class CoreCamera {
+class Cam {
 
  public:
 
@@ -25,10 +23,10 @@ class CoreCamera {
   *******************************************************************************/
 
   /// Default class constructor.
-  CoreCamera();
+  Cam();
 
   /// Default class destructor.
-  ~CoreCamera();
+  ~Cam();
 
   /*******************************************************************************
   ***                          Public setup methods                            ***
@@ -106,7 +104,7 @@ class CoreCamera {
   /// @brief Renders an object into the window.
   /// @param obj object to be rendered.
   ///--------------------------------------------------------------------------
-  void render(Object* obj);
+  void render(class Entity* obj);
 
   ///--------------------------------------------------------------------------
   /// @fn   void update();
@@ -252,8 +250,8 @@ class CoreCamera {
 ***                              Private methods                             ***
 *******************************************************************************/
 
-  CoreCamera(const CoreCamera& copy);
-  CoreCamera& operator=(const CoreCamera& copy);
+  Cam(const Cam& copy);
+  Cam& operator=(const Cam& copy);
 
   ///--------------------------------------------------------------------------
   /// @fn   void translate();
@@ -269,7 +267,7 @@ class CoreCamera {
   ///--------------------------------------------------------------------------
   bool rotate();
 
-}; /* CoreCamera */
+}; /* Cam */
 
 }; /* W3D */
 

@@ -11,7 +11,7 @@
 //*********************************************************************************************
 
 #include <vector>
-#include "core/geometry.h"
+#include "core/geo.h"
 #include "Wolfy3D.h"
 #include "core/core.h"
 
@@ -20,7 +20,7 @@ __declspec(align(16)) class Aeroplane {
 public:
    
   struct Bullet {
-    W3D::Object* obj;
+    W3D::Entity* obj;
     bool shot;
     DirectX::XMVECTOR dir;
   };
@@ -45,7 +45,7 @@ public:
   ///
   /// @brief  Initializes the airplane resources, geometries and matrices.
   ///--------------------------------------------------------------------------
-  void init(W3D::Object* scene);
+  void init(W3D::Entity* scene);
 
 
   void shoot();
@@ -97,7 +97,7 @@ public:
   /// @brief Aeroplane root getter.
   /// @return SLX::Object root of the aeroplane.
   ///--------------------------------------------------------------------------
-  W3D::Object& root();
+  W3D::Entity& root();
 
   ///--------------------------------------------------------------------------
   /// @fn   SLX::Object& camera_node()
@@ -105,7 +105,7 @@ public:
   /// @brief Aeroplane main camera position node getter.
   /// @return SLX::Object camera node to place the camera.
   ///--------------------------------------------------------------------------
-  W3D::Object& camera_node();
+  W3D::Entity& camera_node();
 
   ///--------------------------------------------------------------------------
   /// @fn   SLX::Object& prop()
@@ -113,7 +113,7 @@ public:
   /// @brief Aeroplane propeller component object getter.
   /// @return SLX::Object aeroplane propeller.
   ///--------------------------------------------------------------------------
-  W3D::Object& prop();
+  W3D::Entity& prop();
 
   ///--------------------------------------------------------------------------
   /// @fn   SLX::Object& turret()
@@ -121,7 +121,7 @@ public:
   /// @brief Turret component object getter.
   /// @return SLX::Object aeroplane turret.
   ///--------------------------------------------------------------------------
-  W3D::Object& turret();
+  W3D::Entity& turret();
 
 /*******************************************************************************
 ***                       Public  Attributes                                 ***
@@ -155,31 +155,31 @@ private:
   /// Material 
   W3D::MaterialDiffuse mat_;
   /// Geometry of the main aeroplane
-  W3D::CoreGeometry geo_plane_;
+  W3D::Geo geo_plane_;
   /// Geometry of the propeller
-  W3D::CoreGeometry geo_prop_;
+  W3D::Geo geo_prop_;
   /// Geometry of the turret
-  W3D::CoreGeometry geo_turret_;
+  W3D::Geo geo_turret_;
   /// Geometry of the gun
-  W3D::CoreGeometry geo_gun_;
+  W3D::Geo geo_gun_;
   /// Root of the aeroplane
-  W3D::Object plane_root_;
+  W3D::Entity plane_root_;
   /// Plane body object
-  W3D::Object plane_;
+  W3D::Entity plane_;
   /// Plane propeller object
-  W3D::Object prop_;
+  W3D::Entity prop_;
   /// Plane turret object
-  W3D::Object turret_;
+  W3D::Entity turret_;
   ///  Plane gun object
-  W3D::Object gun_;
+  W3D::Entity gun_;
   /// Plane camera node to assign camera position
-  W3D::Object camera_node_;
+  W3D::Entity camera_node_;
   /// Plane bullets pool
   std::vector<Bullet> bullets_;
 
-  W3D::Object gun_node_;
+  W3D::Entity gun_node_;
 
-  W3D::CoreGeometry geo_bullet_;
+  W3D::Geo geo_bullet_;
 
   int current_bullet_;
 };

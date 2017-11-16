@@ -8,10 +8,10 @@
  
 #include <string>
 #include "Wolfy3D.h"
-#include "core/geometry.h"
+#include "core/geo.h"
 #include "core/super_material.h"
 #include "core/core.h"
-#include "core/object.h"
+#include "core/entity.h"
 #include "core/texture.h"
 #include "imgui/imgui.h"
 #include "core/camera.h"
@@ -21,7 +21,7 @@ namespace W3D {
 
 // Aeroplane we are going to control
 Aeroplane g_plane;
-Object root;
+Entity root;
 
 void AirplaneInput() {
   // Movement on forward is automatic
@@ -70,9 +70,9 @@ int32 main() {
   
   Window::Init(1024, 978);
 
-  CoreGeometry geo, geo2;
-  CoreGeometry geo_terrain;
-  CoreTexture texture[4];
+  Geo geo, geo2;
+  Geo geo_terrain;
+  Texture texture[4];
   texture[0].load("./../data/materialmap.dds");
   texture[1].load("./../data/grass.dds");
   texture[2].load("./../data/moss.dds");
@@ -85,7 +85,7 @@ int32 main() {
   geo_terrain.initTerrain("./../data/Heightmap.bmp", { 1000.0f, 50.0f, 1000.0f });
 
 
-  Object terrain;
+  Entity terrain;
 
   g_plane.init(&root);
 

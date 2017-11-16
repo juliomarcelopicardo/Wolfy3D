@@ -37,7 +37,7 @@ public:
   /// @brief  Owner of this component setter
   /// @param  Object owner pointer of this component to be set.
   ///--------------------------------------------------------------------------
-  void set_owner(class Object* owner);
+  void set_owner(class Entity* owner);
 
 #pragma region POSITION
 
@@ -415,7 +415,7 @@ private:
   /// Transform Scale.
   DirectX::XMFLOAT3 scale_;
   /// Object who possess the component.
-  class Object* owner_;
+  class Entity* owner_;
  
   /*******************************************************************************
   ***                              Private methods                             ***

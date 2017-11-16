@@ -11,11 +11,12 @@
 #include "core/components/transform.h"
 #include "core/components/render.h"
 #include "Wolfy3D/material.h"
+#include "core/geo.h"
 #include <vector>
 
 namespace W3D {
 
-class Object {
+class Entity {
 
  public:
 
@@ -24,10 +25,10 @@ class Object {
   *******************************************************************************/
 
   /// Default class constructor.
-  Object();
+  Entity();
 
   /// Default class destructor.
-  ~Object();
+  ~Entity();
 
   /*******************************************************************************
   ***                               Public methods                             ***
@@ -36,20 +37,20 @@ class Object {
   ///--------------------------------------------------------------------------
   /// @fn     void addComponent(ComponentType component);
   ///
-  /// @brief Adds a component to the current obj
-  /// @param component type of component to be initialized on this object.
+  /// @brief Adds a component to the current entity.  
+  /// @param component type of component to be initialized on this entity.
   /// @param mat material to be assigned in case ComponentType is Render3D
   /// @param geo geometry to be assigned in case ComponentType is Render3D
   ///--------------------------------------------------------------------------
-  void addComponent(ComponentType component, Material *mat, CoreGeometry *geo);
+  void addComponent(ComponentType component, Material* mat, Geo* geo);
 
   ///--------------------------------------------------------------------------
-  /// @fn     void addChild(Object* obj);
+  /// @fn     void addChild(Entity* entity);
   ///
-  /// @brief Adds or attaches another object as a children
-  /// @param obj Object that will be attached as a children.
+  /// @brief Adds or attaches another entity as a children
+  /// @param entity Entity that will be attached as a children.
   ///--------------------------------------------------------------------------
-  void addChild(Object* obj);
+  void addChild(Entity* entity);
 
   /*******************************************************************************
   ***                           Transform methods                              ***
@@ -58,7 +59,7 @@ class Object {
   ///--------------------------------------------------------------------------
   /// @fn       void updateLocalModelAndChildrenMatrices();
   ///
-  /// @brief Updates the local model of this object and all of its children.
+  /// @brief Updates the local model of this entity and all of its children.
   ///--------------------------------------------------------------------------
   void updateLocalModelAndChildrenMatrices();
 
@@ -70,7 +71,7 @@ class Object {
   /// @fn     TransformComponent& transform();
   ///
   /// @brief Transform component getter
-  /// @return TransformComponent attached to this object.
+  /// @return TransformComponent attached to this entity.
   ///--------------------------------------------------------------------------
   TransformComponent& transform();
 
@@ -78,7 +79,7 @@ class Object {
   /// @fn     Render3DComponent* render3D();
   ///
   /// @brief Render3DComponent getter.
-  /// @return Render3DComponent pointer attached to this object.
+  /// @return Render3DComponent pointer attached to this entity.
   ///--------------------------------------------------------------------------
   RenderComponent* render3D();
 
@@ -86,21 +87,21 @@ class Object {
   ***                           Private                                        ***
   *******************************************************************************/
 
-  /// Parent of this object
-  Object* parent_;
-  /// Childrens attached to this object
-  std::vector<Object*> children_;
+  /// Parent of this entity  
+  Entity* parent_;
+  /// Childrens attached to this entity  
+  std::vector<Entity*> children_;
 
  private:
 
-   Object(const Object& copy);
-   Object& operator=(const Object& copy);
+   Entity(const Entity& copy);
+   Entity& operator=(const Entity& copy);
 
   /*******************************************************************************
   ***                               Attributes                                 ***
   *******************************************************************************/
 
-  /// Whether this object is initialized or not.
+  /// Whether this entity is initialized or not.
   bool initialized_;
   /// Transform component.
   TransformComponent transform_;
@@ -113,7 +114,7 @@ class Object {
 
 
 
-}; /* Object */
+}; /* Entity */
 
 }; /* W3D */
 

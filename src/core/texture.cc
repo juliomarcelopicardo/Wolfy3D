@@ -7,7 +7,7 @@
 
 #include "Wolfy3D/globals.h"
 #include "core/texture.h"
-#include "core/d3d.h"
+#include "core/directx.h"
 #include "core/core.h"
 #include "D3D11.h"
 
@@ -18,11 +18,11 @@ namespace W3D {
 ***                        Constructor and destructor                        ***
 *******************************************************************************/
 
-CoreTexture::CoreTexture() {
+Texture::Texture() {
   texture_handle_ = nullptr;
 }
 
-CoreTexture::~CoreTexture() {
+Texture::~Texture() {
   if (texture_handle_) {
     texture_handle_->Release();
     texture_handle_ = nullptr;
@@ -33,7 +33,7 @@ CoreTexture::~CoreTexture() {
 ***                               Public methods                             ***
 *******************************************************************************/
 
-bool CoreTexture::load(const char* texture_path) {
+bool Texture::load(const char* texture_path) {
 
   HRESULT result;
 
@@ -52,7 +52,7 @@ bool CoreTexture::load(const char* texture_path) {
   return true;
 }
 
-void CoreTexture::use(const uint32 texture_slot, const bool pixel_shader_access) {
+void Texture::use(const uint32 texture_slot, const bool pixel_shader_access) {
   if (texture_handle_) {
     if (pixel_shader_access) {
       Core::instance().d3d_.deviceContext()->PSSetShaderResources(texture_slot, 1, &texture_handle_);

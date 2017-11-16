@@ -6,9 +6,11 @@
 */
 
 #include "Wolfy3D/globals.h"
-#include "core/camera.h"
+#include "core/entity.h"
+#include "core/cam.h"
 #include "core/core.h"
 #include "core/input.h"
+#include "core/entity.h"
 
 namespace W3D {
 
@@ -17,7 +19,7 @@ namespace W3D {
 *******************************************************************************/
 
   /// Default class constructor.
-CoreCamera::CoreCamera() {
+Cam::Cam() {
   position_ = { 0.0f, 0.0f, 10.0f };
   target_ = { 0.0f, 0.0f, 0.0f };
   movement_speed_ = 0.005f;
@@ -29,14 +31,14 @@ CoreCamera::CoreCamera() {
 }
 
 /// Default class destructor.
-CoreCamera::~CoreCamera() {}
+Cam::~Cam() {}
 
 
 /*******************************************************************************
 ***                          Public setup methods                            ***
 *******************************************************************************/
 
-void CoreCamera::setupPerspective(const float field_of_view,
+void Cam::setupPerspective(const float field_of_view,
                                   const float aspect_ratio,
                                   const float z_near,
                                   const float z_far) {
@@ -46,7 +48,7 @@ void CoreCamera::setupPerspective(const float field_of_view,
 }
 
 
-void CoreCamera::setupOrthographic(const float left, const float right, 
+void Cam::setupOrthographic(const float left, const float right, 
                                     const float bottom, const float top, 
                                     const float z_near, const float z_far) {
   
@@ -55,7 +57,7 @@ void CoreCamera::setupOrthographic(const float left, const float right,
 }
 
 
-void CoreCamera::setupView() {
+void Cam::setupView() {
   DirectX::XMVECTOR position = DirectX::XMLoadFloat3(&position_);
   DirectX::XMVECTOR target = DirectX::XMLoadFloat3(&target_);
   DirectX::XMVECTOR inverse_dir = DirectX::XMVector3Normalize(DirectX::XMVectorSubtract(position, target));
@@ -72,14 +74,14 @@ void CoreCamera::setupView() {
 ***                          Public methods                                  ***
 *******************************************************************************/
 
-void CoreCamera::render(Object* obj) {
+void Cam::render(Entity* entity) {
 
-  if (obj->render3D()) {
-    obj->render3D()->render(&obj->transform());
+  if (entity->render3D()) {
+    entity->render3D()->render(&entity->transform());
   }
-  uint32 num_children = obj->children_.size();
+  uint32 num_children = entity->children_.size();
   for (uint32 i = 0; i < num_children; i++) {
-    render(obj->children_[i]);
+    render(entity->children_[i]);
   }
 }
 
@@ -87,25 +89,25 @@ void CoreCamera::render(Object* obj) {
 ***                            Setters & Getters                             ***
 *******************************************************************************/
 
-void CoreCamera::set_position(const float x, const float y, const float z) {
+void Cam::set_position(const float x, const float y, const float z) {
   position_ = { x, y, z };
   setupView();
 }
 
-void CoreCamera::set_target(const float x, const float y, const float z) {
+void Cam::set_target(const float x, const float y, const float z) {
   target_ = { x, y, z };
   setupView();
 }
 
-DirectX::XMVECTOR CoreCamera::position() {
+DirectX::XMVECTOR Cam::position() {
   return DirectX::XMLoadFloat3(&position_);
 }
 
-DirectX::XMVECTOR CoreCamera::target() {
+DirectX::XMVECTOR Cam::target() {
   return DirectX::XMLoadFloat3(&target_);
 }
 
-DirectX::XMVECTOR CoreCamera::up() {
+DirectX::XMVECTOR Cam::up() {
   DirectX::XMVECTOR position = DirectX::XMLoadFloat3(&position_);
   DirectX::XMVECTOR target = DirectX::XMLoadFloat3(&target_);
   DirectX::XMVECTOR inverse_dir = DirectX::XMVector3Normalize(DirectX::XMVectorSubtract(position, target));
@@ -115,13 +117,13 @@ DirectX::XMVECTOR CoreCamera::up() {
   return up;
 }
 
-DirectX::XMVECTOR CoreCamera::forward() {
+DirectX::XMVECTOR Cam::forward() {
   DirectX::XMVECTOR position = DirectX::XMLoadFloat3(&position_);
   DirectX::XMVECTOR target = DirectX::XMLoadFloat3(&target_);
   return DirectX::XMVector3Normalize(DirectX::XMVectorSubtract(target, position));
 }
 
-DirectX::XMVECTOR CoreCamera::right() {
+DirectX::XMVECTOR Cam::right() {
   DirectX::XMVECTOR position = DirectX::XMLoadFloat3(&position_);
   DirectX::XMVECTOR target = DirectX::XMLoadFloat3(&target_);
   DirectX::XMVECTOR inverse_dir = DirectX::XMVector3Normalize(DirectX::XMVectorSubtract(position, target));
@@ -129,15 +131,15 @@ DirectX::XMVECTOR CoreCamera::right() {
   return DirectX::XMVector3Normalize(DirectX::XMVector3Cross(inverse_dir, up));
 }
 
-DirectX::XMMATRIX CoreCamera::projectionMatrix() {
+DirectX::XMMATRIX Cam::projectionMatrix() {
   return DirectX::XMLoadFloat4x4(&projection_matrix_);
 }
 
-DirectX::XMMATRIX CoreCamera::viewMatrix() {
+DirectX::XMMATRIX Cam::viewMatrix() {
   return DirectX::XMLoadFloat4x4(&view_matrix_);
 }
 
-void CoreCamera::update() {
+void Cam::update() {
   if (is_navigation_enabled_) {
     if (translate()) {
       setupView();
@@ -149,7 +151,7 @@ void CoreCamera::update() {
 
 }
 
-bool CoreCamera::translate() {
+bool Cam::translate() {
   auto& input = Core::instance().input_;
 
   if (input.isMouseButtonPressed(Input::kMouseButton_Right)) {
@@ -197,7 +199,7 @@ bool CoreCamera::translate() {
   return false;
 }
 
-bool CoreCamera::rotate() {
+bool Cam::rotate() {
   
   auto& input = Core::instance().input_;
   DirectX::XMFLOAT2 diff = { 0.0f, 0.0f };

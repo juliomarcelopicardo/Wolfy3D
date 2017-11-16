@@ -31,7 +31,7 @@ Aeroplane::~Aeroplane() {
 ***                               Public methods                             ***
 *******************************************************************************/
 
-void Aeroplane::init(W3D::Object* scene) {
+void Aeroplane::init(W3D::Entity* scene) {
 	// Init geometry resources
 	geo_plane_.initFromFile("./../data/geometries/plane/plane.x");
 	geo_prop_.initFromFile("./../data/geometries/plane/prop.x");
@@ -70,7 +70,7 @@ void Aeroplane::init(W3D::Object* scene) {
   
   W3D::int32 loops = bullets_.size();
   for (W3D::int32 i = 0; i < loops; i++) {
-    bullets_[i].obj = new W3D::Object();
+    bullets_[i].obj = new W3D::Entity();
     bullets_[i].obj->addComponent(W3D::ComponentType::Render3D, &mat_, &geo_bullet_);
     bullets_[i].obj->transform().set_position(-1000.0f, 0.0f, 0.0f);
     bullets_[i].obj->transform().set_scale(0.02f, 0.02f, 0.2f);
@@ -157,19 +157,19 @@ void Aeroplane::set_speed(W3D::float32 forward_speed, W3D::float32 rotation_spee
   rotation_speed_ = rotation_speed_radians;
 }
 
-W3D::Object& Aeroplane::root() {
+W3D::Entity& Aeroplane::root() {
   return plane_root_;
 }
 
-W3D::Object& Aeroplane::camera_node() {
+W3D::Entity& Aeroplane::camera_node() {
   return camera_node_;
 }
 
-W3D::Object& Aeroplane::prop() {
+W3D::Entity& Aeroplane::prop() {
   return prop_;
 }
 
-W3D::Object& Aeroplane::turret() {
+W3D::Entity& Aeroplane::turret() {
   return turret_;
 }
 

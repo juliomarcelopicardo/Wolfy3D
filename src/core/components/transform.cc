@@ -6,7 +6,7 @@
 */
 
 #include "core/components/transform.h"
-#include "core/object.h"
+#include "core/entity.h"
 
 namespace W3D {
 
@@ -33,7 +33,7 @@ TransformComponent::~TransformComponent() {
 ***                                 Methods                                  ***
 *******************************************************************************/
 
-void TransformComponent::set_owner(W3D::Object* owner) {
+void TransformComponent::set_owner(W3D::Entity* owner) {
   owner_ = owner;
 }
 

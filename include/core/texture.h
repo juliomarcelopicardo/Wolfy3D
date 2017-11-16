@@ -13,7 +13,7 @@
 
 namespace W3D {
 
-class CoreTexture {
+class Texture {
 
  public:
 
@@ -22,10 +22,10 @@ class CoreTexture {
 *******************************************************************************/
 
   /// Default class constructor.
-  CoreTexture();
+  Texture();
 
   /// Default class destructor.
-  ~CoreTexture();
+  ~Texture();
 
 /*******************************************************************************
 ***                               Public methods                             ***
@@ -71,7 +71,7 @@ class CoreTexture {
 
 
 
-}; /* CoreTexture */
+}; /* Texture */
 
 }; /* W3D */
 

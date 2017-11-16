@@ -9,12 +9,12 @@
 #define __WOLFY3D_CORE_H__ 1
 
 #include "Wolfy3D.h"
-#include "window.h"
-#include "d3d.h"
+#include "directx.h"
 #include <stdio.h>
-#include "core/camera.h"
+#include "core/cam.h"
+#include "core/wnd.h"
 #include "core/super_material.h"
-#include "core/geometry.h"
+#include "core/geo.h"
 #include "core/texture.h"
 #include "core/input.h"
 
@@ -86,7 +86,7 @@ class Core {
 *******************************************************************************/
 
   /// Core Window containing the main application window.
-  CoreWindow window_;
+  Wnd window_;
   /// DirectX11 Framework.
   DirectXFramework d3d_;
   /// Chrome debugger.
@@ -94,13 +94,13 @@ class Core {
   /// Application start time. Used for timestamp purposes.
   uint64 start_time_;
   /// Main application camera.
-  CoreCamera cam_;
+  Cam cam_;
   /// Application input module.
   CoreInput input_;
   /// Default texture to be assigned to uninitialized 3DComponents.
-  CoreTexture error_texture_;
+  Texture error_texture_;
   /// Default geometry to be assigned to uninitialized 3DComponents.
-  CoreGeometry error_geometry_;
+  Geo error_geometry_;
   /// Super material used to render all the objects.
   SuperMaterial super_material_;
 

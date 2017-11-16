@@ -12,11 +12,9 @@
 #include "DirectXMath.h"
 #include "D3D11.h"
 #include <vector>
-#include "core/object.h"
 
 namespace W3D {
 
-class SuperMaterial; // Forward declaration, DELETE AFTER MAT PARAM IS REMOVED
 
 /// Struct to save all the info of the vertices.
 struct VertexData {
@@ -26,7 +24,7 @@ struct VertexData {
   DirectX::XMFLOAT4 color;
 };
 
-class CoreGeometry {
+class Geo {
   
  public:
 
@@ -35,10 +33,10 @@ class CoreGeometry {
 *******************************************************************************/
 
   /// Default class constructor.
-  CoreGeometry();
+  Geo();
 
   /// Default class destructor.
-  ~CoreGeometry();
+  ~Geo();
 
 /*******************************************************************************
 ***                               Public methods                             ***
@@ -209,7 +207,7 @@ class CoreGeometry {
                           DirectX::XMINT2& grid_rows_cols_output);
 
 
-}; /* CoreGeometry */
+}; /* Geo */
 
 }; /* W3D */
 

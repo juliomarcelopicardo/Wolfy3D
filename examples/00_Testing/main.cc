@@ -8,13 +8,13 @@
  
 #include <string>
 #include "Wolfy3D.h"
-#include "core/geometry.h"
+#include "core/geo.h"
 #include "core/super_material.h"
 #include "core/core.h"
-#include "core/object.h"
+#include "core/entity.h"
 #include "core/texture.h"
 #include "imgui/imgui.h"
-#include "core/camera.h"
+#include "core/cam.h"
 
 namespace W3D {
   
@@ -22,15 +22,15 @@ int32 main() {
   
   Window::Init(1024, 978);
 
-  CoreGeometry geo, geo2;
-  CoreGeometry geo_plane, geo_prop, geo_turret, geo_gun, geo_terrain;
+  Geo geo, geo2;
+  Geo geo_plane, geo_prop, geo_turret, geo_gun, geo_terrain;
   MaterialDiffuse mat; 
   MaterialNormals mat_normals;
   MaterialTextured mat_texture;
-  CoreTexture texture, texture2;
+  Texture texture, texture2;
   
 
-  CoreTexture assesment[4];
+  Texture assesment[4];
   assesment[0].load("./../data/textures/materialmap.dds");
   assesment[1].load("./../data/textures/grass.dds");
   assesment[2].load("./../data/textures/moss.dds");
@@ -42,37 +42,37 @@ int32 main() {
   matass.texture_asphalt_ = &assesment[3];
 
   struct Robot {
-    CoreGeometry geo_body;
-    CoreGeometry geo_left_ankle;
-    CoreGeometry geo_left_elbow;
-    CoreGeometry geo_left_hip;
-    CoreGeometry geo_left_knee;
-    CoreGeometry geo_left_shoulder;
-    CoreGeometry geo_left_wrist;
-    CoreGeometry geo_right_ankle;
-    CoreGeometry geo_right_elbow;
-    CoreGeometry geo_right_hip;
-    CoreGeometry geo_right_knee;
-    CoreGeometry geo_right_shoulder;
-    CoreGeometry geo_right_wrist;
-    CoreGeometry geo_neck;
-    CoreGeometry geo_pelvis_presley;
-    Object root;
-    Object body;
-    Object left_ankle;
-    Object left_elbow;
-    Object left_hip;
-    Object left_knee;
-    Object left_shoulder;
-    Object left_wrist;
-    Object right_ankle;
-    Object right_elbow;
-    Object right_hip;
-    Object right_knee;
-    Object right_shoulder;
-    Object right_wrist;
-    Object neck;
-    Object pelvis_presley;
+    Geo geo_body;
+    Geo geo_left_ankle;
+    Geo geo_left_elbow;
+    Geo geo_left_hip;
+    Geo geo_left_knee;
+    Geo geo_left_shoulder;
+    Geo geo_left_wrist;
+    Geo geo_right_ankle;
+    Geo geo_right_elbow;
+    Geo geo_right_hip;
+    Geo geo_right_knee;
+    Geo geo_right_shoulder;
+    Geo geo_right_wrist;
+    Geo geo_neck;
+    Geo geo_pelvis_presley;
+    Entity root;
+    Entity body;
+    Entity left_ankle;
+    Entity left_elbow;
+    Entity left_hip;
+    Entity left_knee;
+    Entity left_shoulder;
+    Entity left_wrist;
+    Entity right_ankle;
+    Entity right_elbow;
+    Entity right_hip;
+    Entity right_knee;
+    Entity right_shoulder;
+    Entity right_wrist;
+    Entity neck;
+    Entity pelvis_presley;
   };
 
   //geo.initQuad();
@@ -92,7 +92,7 @@ int32 main() {
   texture2.load("./../data/textures/turtle.png");
   mat_texture.set_texture(&texture);
 
-  Object plane_root, plane, prop, turret, gun, cam_node, terrain, root;
+  Entity plane_root, plane, prop, turret, gun, cam_node, terrain, root;
 
   
   terrain.addComponent(ComponentType::Render3D, &matass, &geo_terrain);

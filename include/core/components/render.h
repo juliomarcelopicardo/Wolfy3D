@@ -38,7 +38,7 @@ class RenderComponent {
     /// @param  mat Material to assign to this component.
     /// @param  geo CoreGeometry to assign to this component.
     ///--------------------------------------------------------------------------
-    void init(class Material* mat, class CoreGeometry* geo);
+    void init(class Material* mat, class Geo* geo);
 
     ///--------------------------------------------------------------------------
     /// @fn   void render(TransformComponent* transform);
@@ -63,7 +63,7 @@ class RenderComponent {
     /// Material of the component.
     class Material* material_;
     /// Geometry of the component.
-    class CoreGeometry* geometry_;
+    class Geo* geometry_;
 
     /*******************************************************************************
     ***                              Private methods                             ***

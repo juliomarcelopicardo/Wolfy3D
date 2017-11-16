@@ -7,9 +7,9 @@
 
 #include "core/components/render.h"
 #include "core/components/transform.h"
-#include "core/geometry.h"
+#include "core/geo.h"
 #include "core/super_material.h"
-#include "core/object.h"
+#include "core/entity.h"
 #include "core/core.h"
 
 
@@ -32,7 +32,7 @@ namespace W3D {
   ***                               Public methods                             ***
   *******************************************************************************/
 
-  void RenderComponent::init(Material* mat, CoreGeometry* geo) {
+  void RenderComponent::init(Material* mat, Geo* geo) {
     material_ = mat;
     geometry_ = geo;
     if (!geo) { geometry_ = &Core::instance().error_geometry_; }

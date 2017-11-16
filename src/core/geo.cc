@@ -6,7 +6,7 @@
 */
 
 #include "Wolfy3D/globals.h"
-#include "core/geometry.h"
+#include "core/geo.h"
 #include "core/core.h"
 #include <string>
 #include <fstream>
@@ -18,13 +18,13 @@ namespace W3D {
 ***                        Constructor and destructor                        ***
 *******************************************************************************/
 
-CoreGeometry::CoreGeometry() {
+Geo::Geo() {
   topology_ = D3D10_PRIMITIVE_TOPOLOGY_TRIANGLELIST;
   vertex_buffer_ = nullptr;
   vertex_index_buffer_ = nullptr;
 }
 
-CoreGeometry::~CoreGeometry() {
+Geo::~Geo() {
   vertex_index_.clear();
   vertex_data_.clear();
   if (vertex_buffer_) { vertex_buffer_->Release(); }
@@ -35,7 +35,7 @@ CoreGeometry::~CoreGeometry() {
 ***                               Public methods                             ***
 *******************************************************************************/
 
-bool CoreGeometry::initTriangle(const DirectX::XMFLOAT2 size,
+bool Geo::initTriangle(const DirectX::XMFLOAT2 size,
                                 const DirectX::XMFLOAT4 color) {
 
   // CUBO de ejemplo
@@ -74,7 +74,7 @@ bool CoreGeometry::initTriangle(const DirectX::XMFLOAT2 size,
   return true;
 }
 
-bool CoreGeometry::initQuad(const DirectX::XMFLOAT2 size,
+bool Geo::initQuad(const DirectX::XMFLOAT2 size,
                             const DirectX::XMFLOAT4 color) {
 
   // CUBO de ejemplo
@@ -129,7 +129,7 @@ bool CoreGeometry::initQuad(const DirectX::XMFLOAT2 size,
   return true;
 }
 
-bool CoreGeometry::initCube(const DirectX::XMFLOAT3 size, 
+bool Geo::initCube(const DirectX::XMFLOAT3 size, 
                             const DirectX::XMFLOAT4 color) {
 
   // CUBO de ejemplo
@@ -238,7 +238,7 @@ bool CoreGeometry::initCube(const DirectX::XMFLOAT3 size,
   return true;
 }
 
-bool CoreGeometry::initTerrain(const char * height_map_filename, 
+bool Geo::initTerrain(const char * height_map_filename, 
                                const DirectX::XMFLOAT3 grid_size, 
                                const DirectX::XMFLOAT4 color) {
 
@@ -349,7 +349,7 @@ bool CoreGeometry::initTerrain(const char * height_map_filename,
   return true;
 }
 
-bool CoreGeometry::initExtruded(const uint32 num_polygon_vertex,
+bool Geo::initExtruded(const uint32 num_polygon_vertex,
                                 const float32 base_radius,
                                 const float32 top_radius,
                                 const float32 height,
@@ -531,7 +531,7 @@ bool CoreGeometry::initExtruded(const uint32 num_polygon_vertex,
   return true;
 }
 
-bool CoreGeometry::initPyramid(const uint32 num_base_vertex, 
+bool Geo::initPyramid(const uint32 num_base_vertex, 
                                const float32 base_radius, 
                                const float32 height, 
                                const DirectX::XMFLOAT4 color) {
@@ -634,7 +634,7 @@ bool CoreGeometry::initPyramid(const uint32 num_base_vertex,
   return false;
 }
 
-bool CoreGeometry::initFromFile(const char * filename, const DirectX::XMFLOAT4 color) {
+bool Geo::initFromFile(const char * filename, const DirectX::XMFLOAT4 color) {
 
   std::ifstream file;
   file.open(filename);
@@ -904,7 +904,7 @@ bool CoreGeometry::initFromFile(const char * filename, const DirectX::XMFLOAT4 c
 ***                              Private methods                             ***
 *******************************************************************************/
 
-bool CoreGeometry::createVertexBuffer() {
+bool Geo::createVertexBuffer() {
   // Creamos un buffer para subir la informacion de los vertices a la grafica.
   D3D11_BUFFER_DESC vertex_description;
   ZeroMemory(&vertex_description, sizeof(D3D11_BUFFER_DESC));
@@ -927,7 +927,7 @@ bool CoreGeometry::createVertexBuffer() {
 }
 
 
-bool CoreGeometry::createIndexBuffer() {
+bool Geo::createIndexBuffer() {
   // Creamos un buffer para subir la informacion de los indices a la grafica.
   D3D11_BUFFER_DESC index_description;
   ZeroMemory(&index_description, sizeof(D3D11_BUFFER_DESC));
@@ -951,7 +951,7 @@ bool CoreGeometry::createIndexBuffer() {
 
 
 
-bool CoreGeometry::parseTerrainImage(const DirectX::XMFLOAT3 terrain_size, 
+bool Geo::parseTerrainImage(const DirectX::XMFLOAT3 terrain_size, 
                                      const char * filename, 
                                      std::vector<DirectX::XMFLOAT3>& vertices_output, 
                                      DirectX::XMINT2 & grid_rows_cols_output) {

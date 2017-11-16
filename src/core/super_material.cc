@@ -8,7 +8,7 @@
 #include "Wolfy3D/globals.h"
 #include "core/super_material.h"
 #include "core/core.h"
-#include "core/window.h"
+#include "core/wnd.h"
 
 namespace W3D {
 
