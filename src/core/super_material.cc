@@ -39,10 +39,10 @@ bool SuperMaterial::init() {
   ID3D10Blob* error;
 
   // Vertex Shader
-  HRESULT result = D3DX11CompileFromFile("../data/shader.shader", 
+  HRESULT result = D3DX11CompileFromFile("../data/materials/super_material.shader", 
                                           NULL, 
                                           NULL, 
-                                          "VShader", 
+                                          "VertexShaderFunction", 
                                           "vs_4_0", 
                                           0, 
                                           0, 
@@ -64,10 +64,10 @@ bool SuperMaterial::init() {
   if (error) { error->Release(); } // To clean vertex shader errors.
 
   // Pixel Shader
-  HRESULT pixel_result = D3DX11CompileFromFile("../data/shader.shader", 
+  HRESULT pixel_result = D3DX11CompileFromFile("../data/materials/super_material.shader",
                                                 NULL, 
                                                 NULL, 
-                                                "PShader", 
+                                                "PixelShaderFunction", 
                                                 "ps_4_0", 
                                                 0, 
                                                 0, 
