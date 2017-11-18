@@ -70,7 +70,7 @@ class Cam {
   ///  These values are negative if the plane is to be behind the viewer.
   ///--------------------------------------------------------------------------
   void setupOrthographic(const float left,
-                         const float right,
+                         const float right_vector,
                          const float bottom,
                          const float top,
                          const float z_near,
@@ -131,61 +131,134 @@ class Cam {
   void set_position(const float x, const float y, const float z);
 
   ///--------------------------------------------------------------------------
+  /// @fn   void set_position(const DirectX::XMVECTOR position);
+  ///
+  /// @brief  Transform position setter.
+  ///--------------------------------------------------------------------------
+  void set_position(const DirectX::XMVECTOR position);
+
+  ///--------------------------------------------------------------------------
+  /// @fn   void set_position(const DirectX::XMFLOAT3 position);
+  ///
+  /// @brief  Transform position setter.
+  ///--------------------------------------------------------------------------
+  void set_position(const DirectX::XMFLOAT3 position);
+
+  ///--------------------------------------------------------------------------
   /// @fn   set_target(const float x, const float y, const float z)
   ///
   /// @brief Sets the target of the camera.
   ///
-  /// @param X position in the world X axis.
-  /// @param Y position in the world Y axis.
-  /// @param Z position in the world Z axis.
+  /// @param X target position in the world X axis.
+  /// @param Y target position in the world Y axis.
+  /// @param Z target position in the world Z axis.
   ///--------------------------------------------------------------------------
   void set_target(const float x, const float y, const float z);
 
   ///--------------------------------------------------------------------------
-  /// @fn   DirectX::XMVECTOR position()
+  /// @fn   void set_position(const DirectX::XMVECTOR target);
+  ///
+  /// @brief  Transform target setter.
+  ///--------------------------------------------------------------------------
+  void set_target(const DirectX::XMVECTOR target_vector);
+
+  ///--------------------------------------------------------------------------
+  /// @fn   void set_target(const DirectX::XMFLOAT3 target);
+  ///
+  /// @brief  Transform target setter.
+  ///--------------------------------------------------------------------------
+  void set_target(const DirectX::XMFLOAT3 target_vector);
+
+  ///--------------------------------------------------------------------------
+  /// @fn   DirectX::XMVECTOR position_vector()
   ///
   /// @brief Position getter.
   ///
   /// @return a XMVECTOR with the camera position in the world
   ///--------------------------------------------------------------------------
-  DirectX::XMVECTOR position();
+  DirectX::XMVECTOR position_vector();
 
   ///--------------------------------------------------------------------------
-  /// @fn   DirectX::XMVECTOR target()
+  /// @fn   DirectX::XMFLOAT3 position_float3()
+  ///
+  /// @brief Position getter.
+  ///
+  /// @return a XMFLOAT3 with the camera position in the world
+  ///--------------------------------------------------------------------------
+  DirectX::XMFLOAT3 position_float3();
+
+  ///--------------------------------------------------------------------------
+  /// @fn   DirectX::XMVECTOR target_vector()
   ///
   /// @brief Target getter.
   ///
   /// @return a XMVECTOR with the position of the camera target in the world
   ///--------------------------------------------------------------------------
-  DirectX::XMVECTOR target();
+  DirectX::XMVECTOR target_vector();
 
   ///--------------------------------------------------------------------------
-  /// @fn   DirectX::XMVECTOR up()
+  /// @fn   DirectX::XMFLOAT3 target_float3()
+  ///
+  /// @brief Target getter.
+  ///
+  /// @return a XMFLOAT3 with the position of the camera target in the world
+  ///--------------------------------------------------------------------------
+  DirectX::XMFLOAT3 target_float3();
+
+  ///--------------------------------------------------------------------------
+  /// @fn   DirectX::XMVECTOR up_vector()
   ///
   /// @brief Vector Up getter.
   ///
   /// @return a XMVECTOR with the global up vector of the camera
   ///--------------------------------------------------------------------------
-  DirectX::XMVECTOR up();
+  DirectX::XMVECTOR up_vector();
 
   ///--------------------------------------------------------------------------
-  /// @fn   DirectX::XMVECTOR forward()
+  /// @fn   DirectX::XMFLOAT3 up_float3()
+  ///
+  /// @brief Vector Up getter.
+  ///
+  /// @return a XMFLOAT3 with the global up vector of the camera
+  ///--------------------------------------------------------------------------
+  DirectX::XMFLOAT3 up_float3();
+
+  ///--------------------------------------------------------------------------
+  /// @fn   DirectX::XMVECTOR forward_vector()
   ///
   /// @brief Vector Forward getter.
   ///
   /// @return a XMVECTOR with the global forward vector of the camera
   ///--------------------------------------------------------------------------
-  DirectX::XMVECTOR forward();
+  DirectX::XMVECTOR forward_vector();
 
   ///--------------------------------------------------------------------------
-  /// @fn   DirectX::XMVECTOR right()
+  /// @fn   DirectX::XMFLOAT3 forward_float3()
+  ///
+  /// @brief Vector Forward getter.
+  ///
+  /// @return a XMFLOAT3 with the global forward float3 of the camera
+  ///--------------------------------------------------------------------------
+  DirectX::XMFLOAT3 forward_float3();
+
+  ///--------------------------------------------------------------------------
+  /// @fn   DirectX::XMVECTOR right_vector()
   ///
   /// @brief Vector Right getter.
   ///
   /// @return a XMVECTOR with the global right vector of the camera
   ///--------------------------------------------------------------------------
-  DirectX::XMVECTOR right();
+  DirectX::XMVECTOR right_vector();
   
+  ///--------------------------------------------------------------------------
+  /// @fn   DirectX::XMFLOAT3 right_float3()
+  ///
+  /// @brief Vector Right getter.
+  ///
+  /// @return a XMFLOAT3 with the global right float3 of the camera
+  ///--------------------------------------------------------------------------
+  DirectX::XMFLOAT3 right_float3();
+
   ///--------------------------------------------------------------------------
   /// @fn   DirectX::XMMATRIX projectionMatrix()
   ///

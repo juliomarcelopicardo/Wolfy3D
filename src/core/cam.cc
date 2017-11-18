@@ -48,24 +48,24 @@ void Cam::setupPerspective(const float field_of_view,
 }
 
 
-void Cam::setupOrthographic(const float left, const float right, 
+void Cam::setupOrthographic(const float left, const float right_vector, 
                                     const float bottom, const float top, 
                                     const float z_near, const float z_far) {
   
-  DirectX::XMMATRIX projection = DirectX::XMMatrixOrthographicOffCenterLH(left, right, bottom, top, z_near, z_far);
+  DirectX::XMMATRIX projection = DirectX::XMMatrixOrthographicOffCenterLH(left, right_vector, bottom, top, z_near, z_far);
   DirectX::XMStoreFloat4x4(&projection_matrix_, projection);
 }
 
 
 void Cam::setupView() {
-  DirectX::XMVECTOR position = DirectX::XMLoadFloat3(&position_);
-  DirectX::XMVECTOR target = DirectX::XMLoadFloat3(&target_);
-  DirectX::XMVECTOR inverse_dir = DirectX::XMVector3Normalize(DirectX::XMVectorSubtract(position, target));
-  DirectX::XMVECTOR up = DirectX::XMVectorSet(0.0f, 1.0f, 0.0f, 0.0f);
-  DirectX::XMVECTOR right = DirectX::XMVector3Normalize(DirectX::XMVector3Cross(up, inverse_dir));
-  up = DirectX::XMVector3Cross(inverse_dir, right);
+  DirectX::XMVECTOR position_vector = DirectX::XMLoadFloat3(&position_);
+  DirectX::XMVECTOR target_vector = DirectX::XMLoadFloat3(&target_);
+  DirectX::XMVECTOR inverse_dir = DirectX::XMVector3Normalize(DirectX::XMVectorSubtract(position_vector, target_vector));
+  DirectX::XMVECTOR up_vector = DirectX::XMVectorSet(0.0f, 1.0f, 0.0f, 0.0f);
+  DirectX::XMVECTOR right_vector = DirectX::XMVector3Normalize(DirectX::XMVector3Cross(up_vector, inverse_dir));
+  up_vector = DirectX::XMVector3Cross(inverse_dir, right_vector);
 
-  DirectX::XMMATRIX view = DirectX::XMMatrixLookAtLH(position, target, up);
+  DirectX::XMMATRIX view = DirectX::XMMatrixLookAtLH(position_vector, target_vector, up_vector);
 
   DirectX::XMStoreFloat4x4(&view_matrix_, view);
 }
@@ -94,41 +94,87 @@ void Cam::set_position(const float x, const float y, const float z) {
   setupView();
 }
 
+void Cam::set_position(const DirectX::XMVECTOR position) {
+  DirectX::XMStoreFloat3(&position_, position);
+  setupView();
+}
+
+void Cam::set_position(const DirectX::XMFLOAT3 position) {
+  position_ = position;
+  setupView();
+}
+
 void Cam::set_target(const float x, const float y, const float z) {
   target_ = { x, y, z };
   setupView();
 }
 
-DirectX::XMVECTOR Cam::position() {
+void Cam::set_target(const DirectX::XMVECTOR target_vector) {
+  DirectX::XMStoreFloat3(&target_, target_vector);
+  setupView();
+}
+
+void Cam::set_target(const DirectX::XMFLOAT3 target_vector) {
+  target_ = target_vector;
+  setupView();
+}
+
+DirectX::XMVECTOR Cam::position_vector() {
   return DirectX::XMLoadFloat3(&position_);
 }
 
-DirectX::XMVECTOR Cam::target() {
+DirectX::XMFLOAT3 Cam::position_float3() {
+  return position_;
+}
+
+DirectX::XMVECTOR Cam::target_vector() {
   return DirectX::XMLoadFloat3(&target_);
 }
 
-DirectX::XMVECTOR Cam::up() {
-  DirectX::XMVECTOR position = DirectX::XMLoadFloat3(&position_);
-  DirectX::XMVECTOR target = DirectX::XMLoadFloat3(&target_);
-  DirectX::XMVECTOR inverse_dir = DirectX::XMVector3Normalize(DirectX::XMVectorSubtract(position, target));
-  DirectX::XMVECTOR up = DirectX::XMVectorSet(0.0f, 1.0f, 0.0f, 0.0f);
-  DirectX::XMVECTOR right = DirectX::XMVector3Normalize(DirectX::XMVector3Cross(inverse_dir, up));
-  up = DirectX::XMVector3Cross(right, inverse_dir);
+DirectX::XMFLOAT3 Cam::target_float3() {
+  return target_;
+}
+
+DirectX::XMVECTOR Cam::up_vector() {
+  DirectX::XMVECTOR position_vector = DirectX::XMLoadFloat3(&position_);
+  DirectX::XMVECTOR target_vector = DirectX::XMLoadFloat3(&target_);
+  DirectX::XMVECTOR inverse_dir = DirectX::XMVector3Normalize(DirectX::XMVectorSubtract(position_vector, target_vector));
+  DirectX::XMVECTOR up_vector = DirectX::XMVectorSet(0.0f, 1.0f, 0.0f, 0.0f);
+  DirectX::XMVECTOR right_vector = DirectX::XMVector3Normalize(DirectX::XMVector3Cross(inverse_dir, up_vector));
+  up_vector = DirectX::XMVector3Cross(right_vector, inverse_dir);
+  return up_vector;
+}
+
+DirectX::XMFLOAT3 Cam::up_float3() {
+  DirectX::XMFLOAT3 up;
+  DirectX::XMStoreFloat3(&up, up_vector());
   return up;
 }
 
-DirectX::XMVECTOR Cam::forward() {
-  DirectX::XMVECTOR position = DirectX::XMLoadFloat3(&position_);
-  DirectX::XMVECTOR target = DirectX::XMLoadFloat3(&target_);
-  return DirectX::XMVector3Normalize(DirectX::XMVectorSubtract(target, position));
+DirectX::XMVECTOR Cam::forward_vector() {
+  DirectX::XMVECTOR position_vector = DirectX::XMLoadFloat3(&position_);
+  DirectX::XMVECTOR target_vector = DirectX::XMLoadFloat3(&target_);
+  return DirectX::XMVector3Normalize(DirectX::XMVectorSubtract(target_vector, position_vector));
 }
 
-DirectX::XMVECTOR Cam::right() {
-  DirectX::XMVECTOR position = DirectX::XMLoadFloat3(&position_);
-  DirectX::XMVECTOR target = DirectX::XMLoadFloat3(&target_);
-  DirectX::XMVECTOR inverse_dir = DirectX::XMVector3Normalize(DirectX::XMVectorSubtract(position, target));
-  DirectX::XMVECTOR up = DirectX::XMVectorSet(0.0f, 1.0f, 0.0f, 0.0f);
-  return DirectX::XMVector3Normalize(DirectX::XMVector3Cross(inverse_dir, up));
+DirectX::XMFLOAT3 Cam::forward_float3() {
+  DirectX::XMFLOAT3 fwd;
+  DirectX::XMStoreFloat3(&fwd, forward_vector());
+  return fwd;
+}
+
+DirectX::XMVECTOR Cam::right_vector() {
+  DirectX::XMVECTOR position_vector = DirectX::XMLoadFloat3(&position_);
+  DirectX::XMVECTOR target_vector = DirectX::XMLoadFloat3(&target_);
+  DirectX::XMVECTOR inverse_dir = DirectX::XMVector3Normalize(DirectX::XMVectorSubtract(position_vector, target_vector));
+  DirectX::XMVECTOR up_vector = DirectX::XMVectorSet(0.0f, 1.0f, 0.0f, 0.0f);
+  return DirectX::XMVector3Normalize(DirectX::XMVector3Cross(inverse_dir, up_vector));
+}
+
+DirectX::XMFLOAT3 Cam::right_float3() {
+  DirectX::XMFLOAT3 right;
+  DirectX::XMStoreFloat3(&right, right_vector());
+  return right;
 }
 
 DirectX::XMMATRIX Cam::projectionMatrix() {
@@ -156,41 +202,41 @@ bool Cam::translate() {
 
   if (input.isMouseButtonPressed(Input::kMouseButton_Right)) {
     if (input.isKeyboardButtonPressed(Input::kKeyboardButton_A)) {
-      DirectX::XMVECTOR scaled_right = DirectX::XMVectorScale(right(), movement_speed_);
+      DirectX::XMVECTOR scaled_right = DirectX::XMVectorScale(right_vector(), movement_speed_);
       DirectX::XMStoreFloat3(&position_, DirectX::XMVectorSubtract(DirectX::XMLoadFloat3(&position_), scaled_right));
       DirectX::XMStoreFloat3(&target_, DirectX::XMVectorSubtract(DirectX::XMLoadFloat3(&target_), scaled_right));
       return true;
     }
     if (input.isKeyboardButtonPressed(Input::kKeyboardButton_D)) {
       DirectX::XMFLOAT3 r,f,u;
-      DirectX::XMStoreFloat3(&r, right());
-      DirectX::XMStoreFloat3(&u, up());
-      DirectX::XMStoreFloat3(&f, forward());
-      DirectX::XMVECTOR scaled_right = DirectX::XMVectorScale(right(), movement_speed_);
+      DirectX::XMStoreFloat3(&r, right_vector());
+      DirectX::XMStoreFloat3(&u, up_vector());
+      DirectX::XMStoreFloat3(&f, forward_vector());
+      DirectX::XMVECTOR scaled_right = DirectX::XMVectorScale(right_vector(), movement_speed_);
       DirectX::XMStoreFloat3(&position_, DirectX::XMVectorAdd(DirectX::XMLoadFloat3(&position_), scaled_right));
       DirectX::XMStoreFloat3(&target_, DirectX::XMVectorAdd(DirectX::XMLoadFloat3(&target_), scaled_right));
       return true;
     }
     if (input.isKeyboardButtonPressed(Input::kKeyboardButton_W)) {
-      DirectX::XMVECTOR scaled_fwd = DirectX::XMVectorScale(forward(), movement_speed_);
+      DirectX::XMVECTOR scaled_fwd = DirectX::XMVectorScale(forward_vector(), movement_speed_);
       DirectX::XMStoreFloat3(&position_, DirectX::XMVectorAdd(DirectX::XMLoadFloat3(&position_), scaled_fwd));
       DirectX::XMStoreFloat3(&target_, DirectX::XMVectorAdd(DirectX::XMLoadFloat3(&target_), scaled_fwd));
       return true;
     }
     if (input.isKeyboardButtonPressed(Input::kKeyboardButton_S)) {
-      DirectX::XMVECTOR scaled_fwd = DirectX::XMVectorScale(forward(), movement_speed_);
+      DirectX::XMVECTOR scaled_fwd = DirectX::XMVectorScale(forward_vector(), movement_speed_);
       DirectX::XMStoreFloat3(&position_, DirectX::XMVectorSubtract(DirectX::XMLoadFloat3(&position_), scaled_fwd));
       DirectX::XMStoreFloat3(&target_, DirectX::XMVectorSubtract(DirectX::XMLoadFloat3(&target_), scaled_fwd));
       return true;
     }
     if (input.isKeyboardButtonPressed(Input::kKeyboardButton_Q)) {
-      DirectX::XMVECTOR scaled_up = DirectX::XMVectorScale(up(), movement_speed_);
+      DirectX::XMVECTOR scaled_up = DirectX::XMVectorScale(up_vector(), movement_speed_);
       DirectX::XMStoreFloat3(&position_, DirectX::XMVectorSubtract(DirectX::XMLoadFloat3(&position_), scaled_up));
       DirectX::XMStoreFloat3(&target_, DirectX::XMVectorSubtract(DirectX::XMLoadFloat3(&target_), scaled_up));
       return true;
     }
     if (input.isKeyboardButtonPressed(Input::kKeyboardButton_E)) {
-      DirectX::XMVECTOR scaled_up = DirectX::XMVectorScale(up(), movement_speed_);
+      DirectX::XMVECTOR scaled_up = DirectX::XMVectorScale(up_vector(), movement_speed_);
       DirectX::XMStoreFloat3(&position_, DirectX::XMVectorAdd(DirectX::XMLoadFloat3(&position_), scaled_up));
       DirectX::XMStoreFloat3(&target_, DirectX::XMVectorAdd(DirectX::XMLoadFloat3(&target_), scaled_up));
       return true;
@@ -214,11 +260,11 @@ bool Cam::rotate() {
       diff = { input.mouse_position_.x - last_mouse_position_.x, 
                input.mouse_position_.y - last_mouse_position_.y };
       
-      DirectX::XMMATRIX rot_mat_horizontal = DirectX::XMMatrixRotationAxis(up(), diff.x * rotation_speed_);
-      DirectX::XMMATRIX rot_mat_vertical = DirectX::XMMatrixRotationAxis(right(), diff.y * rotation_speed_);
+      DirectX::XMMATRIX rot_mat_horizontal = DirectX::XMMatrixRotationAxis(up_vector(), diff.x * rotation_speed_);
+      DirectX::XMMATRIX rot_mat_vertical = DirectX::XMMatrixRotationAxis(right_vector(), diff.y * rotation_speed_);
       DirectX::XMMATRIX rot_result = DirectX::XMMatrixMultiply(rot_mat_horizontal, rot_mat_vertical);
       DirectX::XMFLOAT3 dir;
-      DirectX::XMStoreFloat3(&dir, DirectX::XMVector4Transform(forward(), rot_result));
+      DirectX::XMStoreFloat3(&dir, DirectX::XMVector4Transform(forward_vector(), rot_result));
       target_ = { position_.x + dir.x, position_.y + dir.y, position_.z + dir.z };
 
       // actualizamos la ultima posicion del raton.
