@@ -39,12 +39,14 @@ struct PixelInfo {
   VERTEX SHADER
 */
 
+// All textures will use the same sampler
+SamplerState sampler_type : register(s0);
+// Textures
 Texture2D texture_ : register(t0);
 Texture2D texture_materialmap : register(t1);
 Texture2D texture_grass : register(t2);
 Texture2D texture_moss : register(t3);
 Texture2D texture_asphalt : register(t4);
-SamplerState sampler_type;
 
 PixelInfo VertexShaderFunction(VertexInfo vertex_info) {
 	PixelInfo pixel_info;
@@ -118,11 +120,11 @@ float4 PixelShaderFunction(PixelInfo pixel_info) : SV_TARGET {
     }break;
 
     case ASSIGNMENT: {
-
+      float uv_scale = 30.0f;
       float4 matmap_color = pixel_info.MapColor;
-      float4 grass_color = texture_grass.Sample(sampler_type, pixel_info.TexCoord * 10.0f);
-      float4 moss_color = texture_moss.Sample(sampler_type, pixel_info.TexCoord * 10.0f);
-      float4 asphalt_color = texture_asphalt.Sample(sampler_type, pixel_info.TexCoord * 10.0f);
+      float4 grass_color = texture_grass.Sample(sampler_type, pixel_info.TexCoord * uv_scale);
+      float4 moss_color = texture_moss.Sample(sampler_type, pixel_info.TexCoord * uv_scale);
+      float4 asphalt_color = texture_asphalt.Sample(sampler_type, pixel_info.TexCoord * uv_scale);
 
       grass_color *= matmap_color.g;
       moss_color *= matmap_color.r;
