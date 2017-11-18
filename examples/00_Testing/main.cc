@@ -18,6 +18,19 @@
 
 namespace W3D {
   
+DirectX::XMFLOAT3 tweening_func(DirectX::XMFLOAT3 origin, DirectX::XMFLOAT3 destiny, float alpha) {
+  float x_variation = (destiny.x - origin.x) * alpha;
+  float y_variation = (destiny.y - origin.y) * alpha;
+  float z_variation = (destiny.z - origin.z) * alpha;
+
+  return{ origin.x + x_variation, origin.y + y_variation, origin.z + z_variation };
+}
+
+float tweening_func(float origin, float destiny, float alpha) {
+  float variation = (destiny - origin) * alpha;
+  return origin + variation;
+}
+
 int32 main() {
   
   Window::Init(1024, 978);
@@ -73,7 +86,93 @@ int32 main() {
     Entity right_wrist;
     Entity neck;
     Entity pelvis_presley;
+
+    
+
+    void init(Material& mat) {
+
+      geo_body.initFromFile("./../data/geometries/robot/body.x");
+      geo_left_ankle.initFromFile("./../data/geometries/robot/left_ankle.x");
+      geo_left_elbow.initFromFile("./../data/geometries/robot/left_elbow.x");
+      geo_left_hip.initFromFile("./../data/geometries/robot/left_hip.x");
+      geo_left_knee.initFromFile("./../data/geometries/robot/left_knee.x");
+      geo_left_shoulder.initFromFile("./../data/geometries/robot/left_shoulder.x");
+      geo_left_wrist.initFromFile("./../data/geometries/robot/left_wrist.x");
+      geo_right_ankle.initFromFile("./../data/geometries/robot/right_ankle.x");
+      geo_right_elbow.initFromFile("./../data/geometries/robot/right_elbow.x");
+      geo_right_hip.initFromFile("./../data/geometries/robot/right_hip.x");
+      geo_right_knee.initFromFile("./../data/geometries/robot/right_knee.x");
+      geo_right_shoulder.initFromFile("./../data/geometries/robot/right_shoulder.x");
+      geo_right_wrist.initFromFile("./../data/geometries/robot/right_wrist.x");
+      geo_neck.initFromFile("./../data/geometries/robot/neck.x");
+      geo_pelvis_presley.initFromFile("./../data/geometries/robot/pelvis.x");
+
+      root.transform().set_position(0.0f, 0.0f, 0.0f);
+
+      pelvis_presley.addComponent(ComponentType::Render3D, &mat, &geo_pelvis_presley);
+      pelvis_presley.transform().set_position(-0.0250011f, 1.5250000f, -0.0000005f);
+      root.addChild(&pelvis_presley);
+
+      body.addComponent(ComponentType::Render3D, &mat, &geo_body);
+      body.transform().set_position(0.0500099f, 4.3749992f, 0.0000003f);
+      pelvis_presley.addChild(&body);
+
+      left_shoulder.addComponent(ComponentType::Render3D, &mat, &geo_left_shoulder);
+      left_shoulder.transform().set_position(4.6000000f, 0.0000000f, -0.0009992f);
+      body.addChild(&left_shoulder);
+
+      left_elbow.addComponent(ComponentType::Render3D, &mat, &geo_left_elbow);
+      left_elbow.transform().set_position(3.4250019f, -0.0499817f, -0.0004262f);
+      left_shoulder.addChild(&left_elbow);
+
+      left_wrist.addComponent(ComponentType::Render3D, &mat, &geo_left_wrist);
+      left_wrist.transform().set_position(5.5250008f, -0.0999710f, 0.0003968f);
+      left_elbow.addChild(&left_wrist);
+
+      right_shoulder.addComponent(ComponentType::Render3D, &mat, &geo_right_shoulder);
+      right_shoulder.transform().set_position(-4.4500023f, 0.0500000f, -0.0000021f);
+      body.addChild(&right_shoulder);
+
+      right_elbow.addComponent(ComponentType::Render3D, &mat, &geo_right_elbow);
+      right_elbow.transform().set_position(-3.3999996f, 0.0250229f, -0.0000194f);
+      right_shoulder.addChild(&right_elbow);
+
+      right_wrist.addComponent(ComponentType::Render3D, &mat, &geo_right_wrist);
+      right_wrist.transform().set_position(-6.0000381f, -0.1750183f, 0.0007156f);
+      right_elbow.addChild(&right_wrist);
+
+      neck.addComponent(ComponentType::Render3D, &mat, &geo_neck);
+      neck.transform().set_position(0.0249983f, 3.6625015f, 2.5999998f);
+      body.addChild(&neck);
+
+      left_hip.addComponent(ComponentType::Render3D, &mat, &geo_left_hip);
+      left_hip.transform().set_position(1.9500000f, -0.7724991f, 0.000000f);
+      root.addChild(&left_hip);
+
+      left_knee.addComponent(ComponentType::Render3D, &mat, &geo_left_knee);
+      left_knee.transform().set_position(0.0000006f, -2.2200001f, 0.000000f);
+      left_hip.addChild(&left_knee);
+
+      left_ankle.addComponent(ComponentType::Render3D, &mat, &geo_left_ankle);
+      left_ankle.transform().set_position(-0.0800152f, -3.6399994f, -0.0000098f);
+      left_knee.addChild(&left_ankle);
+
+      right_hip.addComponent(ComponentType::Render3D, &mat, &geo_right_hip);
+      right_hip.transform().set_position(-1.9500000f, -0.7724991f, 0.000000f);
+      root.addChild(&right_hip);
+
+      right_knee.addComponent(ComponentType::Render3D, &mat, &geo_right_knee);
+      right_knee.transform().set_position(0.0000006f, -2.2000000f, 0.000000f);
+      right_hip.addChild(&right_knee);
+
+      right_ankle.addComponent(ComponentType::Render3D, &mat, &geo_right_ankle);
+      right_ankle.transform().set_position(0.0199911f, -3.6799995f, 0.0000039f);
+      right_knee.addChild(&right_ankle);
+    }
   };
+
+
+
 
   //geo.initQuad();
   //geo.initCube();
@@ -97,112 +196,16 @@ int32 main() {
   
   terrain.addComponent(ComponentType::Render3D, &matass, &geo_terrain);
   terrain.transform().set_position(-50.0f, -10.0f, -30.0f);
-  root.addChild(&terrain);
-  //root.addChild(&plane_root);
-
-  cam_node.transform().set_position(0.0f, 4.5f, -15.0f);
-  plane_root.addChild(&cam_node);
-
-  plane.addComponent(ComponentType::Render3D, &mat_texture, nullptr);
-  plane.transform().set_scale(3.0f);
-  plane_root.addChild(&plane);
-
-  prop.addComponent(ComponentType::Render3D, &mat, &geo_prop);
-  prop.transform().set_position(0.0f, 0.0f, 1.9f);
-  //plane.addChild(&prop);
-
-  turret.addComponent(ComponentType::Render3D, &mat, &geo_turret);
-  turret.transform().set_position(0.0f, 1.05f, -1.3f);
-  //plane.addChild(&turret);
-
-  gun.addComponent(ComponentType::Render3D, &mat, &geo_gun);
-  gun.transform().set_position(0.0f, 0.5f, 0.0f);
-  //turret.addChild(&gun);
-
-  
-  
+  //root.addChild(&terrain);
   
   Robot robot;
-  robot.geo_body.initFromFile("./../data/geometries/robot/body.x");
-  robot.geo_left_ankle.initFromFile("./../data/geometries/robot/left_ankle.x");
-  robot.geo_left_elbow.initFromFile("./../data/geometries/robot/left_elbow.x");
-  robot.geo_left_hip.initFromFile("./../data/geometries/robot/left_hip.x");
-  robot.geo_left_knee.initFromFile("./../data/geometries/robot/left_knee.x");
-  robot.geo_left_shoulder.initFromFile("./../data/geometries/robot/left_shoulder.x");
-  robot.geo_left_wrist.initFromFile("./../data/geometries/robot/left_wrist.x");
-  robot.geo_right_ankle.initFromFile("./../data/geometries/robot/right_ankle.x");
-  robot.geo_right_elbow.initFromFile("./../data/geometries/robot/right_elbow.x");
-  robot.geo_right_hip.initFromFile("./../data/geometries/robot/right_hip.x");
-  robot.geo_right_knee.initFromFile("./../data/geometries/robot/right_knee.x");
-  robot.geo_right_shoulder.initFromFile("./../data/geometries/robot/right_shoulder.x");
-  robot.geo_right_wrist.initFromFile("./../data/geometries/robot/right_wrist.x");
-  robot.geo_neck.initFromFile("./../data/geometries/robot/neck.x");
-  robot.geo_pelvis_presley.initFromFile("./../data/geometries/robot/pelvis.x");
+  robot.init(mat);
+  root.addChild(&robot.root);
 
-
-
-  //root.addChild(&robot.root);
-  robot.root.transform().set_position(0.0f, 0.0f, 20.0f);
-
-  robot.body.addComponent(ComponentType::Render3D, &mat, nullptr);
-  robot.body.transform().set_position(0.0f, 0.0f, 0.0f);
-  robot.root.addChild(&robot.body);
-
-  robot.left_ankle.addComponent(ComponentType::Render3D, &mat, &robot.geo_left_ankle);
-  robot.left_ankle.transform().set_position(5.0f, 0.0f, 0.0f);
-  robot.root.addChild(&robot.left_ankle);
-
-  robot.left_elbow.addComponent(ComponentType::Render3D, &mat, &robot.geo_left_elbow);
-  robot.left_elbow.transform().set_position(0.0f, 0.0f, 0.0f);
-  robot.root.addChild(&robot.left_elbow);
-
-  robot.left_hip.addComponent(ComponentType::Render3D, &mat, &robot.geo_left_hip);
-  robot.left_hip.transform().set_position(0.0f, 5.0f, 0.0f);
-  robot.root.addChild(&robot.left_hip);
-
-  robot.left_knee.addComponent(ComponentType::Render3D, &mat, &robot.geo_left_knee);
-  robot.left_knee.transform().set_position(-5.0f, 0.0f, 0.0f);
-  robot.root.addChild(&robot.left_knee);
-
-  robot.left_shoulder.addComponent(ComponentType::Render3D, &mat, &robot.geo_left_shoulder);
-  robot.left_shoulder.transform().set_position(10.0f, 0.0f, 0.0f);
-  robot.root.addChild(&robot.left_shoulder);
-
-  robot.left_wrist.addComponent(ComponentType::Render3D, &mat, &robot.geo_left_wrist);
-  robot.left_wrist.transform().set_position(-10.0f, 0.0f, 0.0f);
-  robot.root.addChild(&robot.left_wrist);
-
-  robot.right_ankle.addComponent(ComponentType::Render3D, &mat, &robot.geo_right_ankle);
-  robot.right_ankle.transform().set_position(0.0f, -5.0f, 0.0f);
-  robot.root.addChild(&robot.right_ankle);
-
-  robot.right_elbow.addComponent(ComponentType::Render3D, &mat, &robot.geo_right_elbow);
-  robot.right_elbow.transform().set_position(0.0f, -10.0f, 0.0f);
-  robot.root.addChild(&robot.right_elbow);
-
-  robot.right_hip.addComponent(ComponentType::Render3D, &mat, &robot.geo_right_hip);
-  robot.right_hip.transform().set_position(10.0f, 0.0f, 0.0f);
-  robot.root.addChild(&robot.right_hip);
-
-  robot.right_knee.addComponent(ComponentType::Render3D, &mat, &robot.geo_right_knee);
-  robot.right_knee.transform().set_position(10.0f, 5.0f, 0.0f);
-  robot.root.addChild(&robot.right_knee);
-
-  robot.right_shoulder.addComponent(ComponentType::Render3D, &mat, &robot.geo_right_shoulder);
-  robot.right_shoulder.transform().set_position(5.0f, 10.0f, 0.0f);
-  robot.root.addChild(&robot.right_shoulder);
-
-  robot.right_wrist.addComponent(ComponentType::Render3D, &mat, &robot.geo_right_wrist);
-  robot.right_wrist.transform().set_position(-5.0f, 10.0f, 0.0f);
-  robot.root.addChild(&robot.right_wrist);
-
-  robot.neck.addComponent(ComponentType::Render3D, &mat, &robot.geo_neck);
-  robot.neck.transform().set_position(-10.0f, -5.0f, 0.0f);
-  robot.root.addChild(&robot.neck);
-
-  robot.pelvis_presley.addComponent(ComponentType::Render3D, &mat, &robot.geo_pelvis_presley);
-  robot.pelvis_presley.transform().set_position(10.0f, -10.0f, 0.0f);
-  robot.root.addChild(&robot.pelvis_presley);
+  float animation_speed = 0.0001f;
+  float animation_alpha = 0.0f;
+  int32 index = 0;
+  float animation[10] = { 0.0416666679084301, 0.2083333283662796, 0.5, 0.5833333134651184, 0.6666666865348816, 0.9166666865348816, 1.125, 1.208333373069763, 1.291666626930237, 1.666666626930237 };
 
 
   //plane_root.transform().set_rotation(0.0f, DirectX::XM_PI, 0.0f);
@@ -210,32 +213,23 @@ int32 main() {
   sprintf_s(textico, "Iniciando ventana con dimensiones %d x %d", Window::Width(), Window::Height());
   auto& cam = Core::instance().cam_;
   cam.is_navigation_enabled_ = true;
-  cam.set_position(0.0f, 4.5f, -15.0f);
-
-  float speed = 0.1f;
-  float rotation_speed = 0.0001f;
-
-
+  cam.set_position(0.0f, 4.5f, 45.0f);
 
   // enter the main loop:
   while (Window::StartFrame() && Window::IsOpened() && 
          !Input::IsKeyboardButtonDown(Input::kKeyboardButton_Escape)) {
 
-    if (Input::IsMouseButtonDown(Input::kMouseButton_Left)) {
-      DirectX::XMFLOAT3 position_vector = { 0.0f, 0.0f, 0.0f };
-      robot.neck.transform().set_world_position(DirectX::XMLoadFloat3(&position_vector));
+    animation_alpha += animation_speed;
+    if (animation_alpha > 1.0f) {
+      index++;
+      animation_alpha = 0.0f;
     }
-    if (Input::IsMouseButtonDown(Input::kMouseButton_Middle)) {
-      DirectX::XMFLOAT3 position_vector = { 1.0f, 0.0f, 0.0f };
-      robot.neck.transform().worldTraslate(1.0f, 0.0f, 0.0f);
-    }
+
+    robot.pelvis_presley.transform().set_rotation(tweening_func(animation[index], animation[index + 1], animation_alpha), 0.0f, 0.0f);
+
+
 
     cam.render(&root);
-    prop.transform().set_rotation(0.0f, 0.0f, (float32)Time() * 0.01f);
-    turret.transform().set_rotation(0.0f, (float32)Time() * 0.001f, 0.0f);
-
-	//ImGui::SetNextWindowPos(ImVec2(650, 20), ImGuiCond_FirstUseEver);
-	//ImGui::ShowTestWindow(0);
 
     Window::EndFrame();
   }
