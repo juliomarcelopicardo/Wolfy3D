@@ -53,6 +53,8 @@ class Texture {
 *******************************************************************************/
   /// Texture handle.
   ID3D11ShaderResourceView* texture_handle_;
+  /// Texture sampler.
+  ID3D11SamplerState* sampler_state_;
 
 /*******************************************************************************
 ***                           Private                                        ***
