@@ -149,10 +149,10 @@ namespace W3D {
 
     if(ImGui::TreeNode("GoPro")) {
       DirectX::XMFLOAT3 temp;
-      DirectX::XMStoreFloat3(&temp, camera.position());
+      DirectX::XMStoreFloat3(&temp, camera.position_vector());
       ImGui::DragFloat3("Position", &temp.x);
       camera.set_position(temp.x, temp.y, temp.z);
-      DirectX::XMStoreFloat3(&temp, camera.target());
+      DirectX::XMStoreFloat3(&temp, camera.target_vector());
       ImGui::DragFloat3("Target", &temp.x);
       camera.set_target(temp.x, temp.y, temp.z);
       ImGui::TreePop();
