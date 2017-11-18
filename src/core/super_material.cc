@@ -113,7 +113,7 @@ bool SuperMaterial::createMatrixBuffer() {
   ZeroMemory(&matrix_description, sizeof(D3D11_BUFFER_DESC));
 
   matrix_description.Usage = D3D11_USAGE_DYNAMIC;
-  matrix_description.ByteWidth = sizeof(MaterialParams);
+  matrix_description.ByteWidth = sizeof(MaterialSettings);
   matrix_description.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
   matrix_description.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
 

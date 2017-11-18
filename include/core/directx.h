@@ -114,7 +114,8 @@ class DirectXFramework {
   ***                               Attributes                                 ***
   *******************************************************************************/
 
-  /// This variable is a pointer to a device. In Direct3D, a device is an object that is intended to be a virtual representation of your video adapter.
+  /// This variable is a pointer to a device. 
+  /// In Direct3D, a device is an object that is intended to be a virtual representation of your video adapter.
   /// What this line of code means is that we will create a COM object called ID3D11Device.
   /// When COM makes this object, we will ignore it, and access it only indirectly using this pointer.
   ID3D11Device *device_;

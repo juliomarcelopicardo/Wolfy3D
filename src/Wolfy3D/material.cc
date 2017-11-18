@@ -38,8 +38,8 @@ MaterialTextured::~MaterialTextured() {
 void MaterialTextured::setupSuperMaterial() {
   auto& super_mat = Core::instance().super_material_;
 
-  super_mat.params_.type = MaterialType::kMaterialType_OneTexture;
-  super_mat.params_.num_textures = 1;
+  super_mat.settings_.type = MaterialType::kMaterialType_OneTexture;
+  super_mat.settings_.num_textures = 1;
   
   if (texture_ && texture_->texture_handle_) {
     texture_->use();
@@ -66,8 +66,8 @@ MaterialDiffuse::~MaterialDiffuse() {}
 void MaterialDiffuse::setupSuperMaterial() {
   auto& super_mat = Core::instance().super_material_;
 
-  super_mat.params_.type = MaterialType::kMaterialType_Diffuse;
-  super_mat.params_.num_textures = 0;
+  super_mat.settings_.type = MaterialType::kMaterialType_Diffuse;
+  super_mat.settings_.num_textures = 0;
 }
 
 /*******************************************************************************
@@ -81,8 +81,8 @@ MaterialNormals::~MaterialNormals() {}
 void MaterialNormals::setupSuperMaterial() {
   auto& super_mat = Core::instance().super_material_;
 
-  super_mat.params_.type = MaterialType::kMaterialType_Normals;
-  super_mat.params_.num_textures = 0;
+  super_mat.settings_.type = MaterialType::kMaterialType_Normals;
+  super_mat.settings_.num_textures = 0;
 }
 
 
@@ -97,8 +97,8 @@ MaterialAssesment::~MaterialAssesment() {}
 void MaterialAssesment::setupSuperMaterial() {
   auto& super_mat = Core::instance().super_material_;
 
-  super_mat.params_.type = MaterialType::kMaterialType_Assesment;
-  super_mat.params_.num_textures = 4;
+  super_mat.settings_.type = MaterialType::kMaterialType_Assesment;
+  super_mat.settings_.num_textures = 4;
 
   texture_materialmap_->use(1, false);
   texture_grass_->use(2);

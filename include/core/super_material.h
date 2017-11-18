@@ -28,7 +28,7 @@ struct Matrices {
   DirectX::XMFLOAT4X4 projection;
 };
 
-struct MaterialParams {
+struct MaterialSettings {
   Matrices matrices;
   MaterialType type;
   uint32 num_textures;
@@ -77,7 +77,7 @@ class SuperMaterial {
   /// Matrices buffer
   ID3D11Buffer* matrix_buffer_;
 
-  MaterialParams params_;
+  MaterialSettings settings_;
 
 /*******************************************************************************
 ***                           Private                                        ***
