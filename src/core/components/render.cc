@@ -47,8 +47,8 @@ void RenderComponent::render(TransformComponent* transform) {
 
     // Saving all the matrices and common data of the super material.
     DirectX::XMStoreFloat4x4(&super_mat.settings_.matrices.model, transform->global_model_matrix());
-    DirectX::XMStoreFloat4x4(&super_mat.settings_.matrices.view, DirectX::XMMatrixTranspose(camera.viewMatrix()));
-    DirectX::XMStoreFloat4x4(&super_mat.settings_.matrices.projection, DirectX::XMMatrixTranspose(camera.projectionMatrix()));
+    DirectX::XMStoreFloat4x4(&super_mat.settings_.matrices.view, DirectX::XMMatrixTranspose(camera.view_matrix()));
+    DirectX::XMStoreFloat4x4(&super_mat.settings_.matrices.projection, DirectX::XMMatrixTranspose(camera.projection_matrix()));
     super_mat.settings_.time = (float32)Time();
     // Setup the super material depending on the type of user's material associated.
     material_->setupSuperMaterial();

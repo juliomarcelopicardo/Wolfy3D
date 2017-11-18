@@ -48,10 +48,10 @@ class Cam {
   /// @param z_near Distance from the viewer to the near clipping plane(always positive).
   /// @param z_far Distance from the viewer to the far clipping plane(always positive).
   ///--------------------------------------------------------------------------
-  void setupPerspective(const float field_of_view,
-                        const float aspect_ratio,
-                        const float z_near,
-                        const float z_far);
+  void setupPerspective(const float32 field_of_view,
+                        const float32 aspect_ratio,
+                        const float32 z_near,
+                        const float32 z_far);
 
 
   ///--------------------------------------------------------------------------
@@ -69,12 +69,12 @@ class Cam {
   /// @param near, far Distances to the nearer and farther depth clipping planes.
   ///  These values are negative if the plane is to be behind the viewer.
   ///--------------------------------------------------------------------------
-  void setupOrthographic(const float left,
-                         const float right_vector,
-                         const float bottom,
-                         const float top,
-                         const float z_near,
-                         const float z_far);
+  void setupOrthographic(const float32 left,
+                         const float32 right_vector,
+                         const float32 bottom,
+                         const float32 top,
+                         const float32 z_near,
+                         const float32 z_far);
 
   ///--------------------------------------------------------------------------
   /// @fn   setupView()
@@ -120,7 +120,7 @@ class Cam {
   *******************************************************************************/
 
   ///--------------------------------------------------------------------------
-  /// @fn   set_position(const float x, const float y, const float z)
+  /// @fn   set_position(const float32 x, const float32 y, const float32 z)
   ///
   /// @brief Sets the position of the camera.
   ///
@@ -128,7 +128,7 @@ class Cam {
   /// @param Y position in the world Y axis.
   /// @param Z position in the world Z axis.
   ///--------------------------------------------------------------------------
-  void set_position(const float x, const float y, const float z);
+  void set_position(const float32 x, const float32 y, const float32 z);
 
   ///--------------------------------------------------------------------------
   /// @fn   void set_position(const DirectX::XMVECTOR position);
@@ -145,7 +145,7 @@ class Cam {
   void set_position(const DirectX::XMFLOAT3 position);
 
   ///--------------------------------------------------------------------------
-  /// @fn   set_target(const float x, const float y, const float z)
+  /// @fn   set_target(const float32 x, const float32 y, const float32 z)
   ///
   /// @brief Sets the target of the camera.
   ///
@@ -153,7 +153,7 @@ class Cam {
   /// @param Y target position in the world Y axis.
   /// @param Z target position in the world Z axis.
   ///--------------------------------------------------------------------------
-  void set_target(const float x, const float y, const float z);
+  void set_target(const float32 x, const float32 y, const float32 z);
 
   ///--------------------------------------------------------------------------
   /// @fn   void set_position(const DirectX::XMVECTOR target);
@@ -260,40 +260,58 @@ class Cam {
   DirectX::XMFLOAT3 right_float3();
 
   ///--------------------------------------------------------------------------
-  /// @fn   DirectX::XMMATRIX projectionMatrix()
+  /// @fn   DirectX::XMMATRIX projection_matrix()
   ///
   /// @brief Projection Matrix getter.
   ///
   /// @return Projection Matrix
   ///--------------------------------------------------------------------------
-  DirectX::XMMATRIX projectionMatrix();
+  DirectX::XMMATRIX projection_matrix();
 
   ///--------------------------------------------------------------------------
-  /// @fn   DirectX::XMMATRIX viewMatrix()
+  /// @fn   DirectX::XMFLOAT4X4 projection_float4x4()
+  ///
+  /// @brief Projection Matrix getter.
+  ///
+  /// @return Projection Matrix
+  ///--------------------------------------------------------------------------
+  DirectX::XMFLOAT4X4 projection_float4x4();
+
+  ///--------------------------------------------------------------------------
+  /// @fn   DirectX::XMMATRIX view_matrix()
   ///
   /// @brief View Matrix getter.
   ///
   /// @return View Matrix
   ///--------------------------------------------------------------------------
-  DirectX::XMMATRIX viewMatrix();
+  DirectX::XMMATRIX view_matrix();
+
+  ///--------------------------------------------------------------------------
+  /// @fn   DirectX::XMFLOAT4X4 view_float4x4()
+  ///
+  /// @brief View Matrix getter.
+  ///
+  /// @return View Matrix
+  ///--------------------------------------------------------------------------
+  DirectX::XMFLOAT4X4 view_float4x4();
 
   /*******************************************************************************
   ***                               Attributes                                 ***
   *******************************************************************************/
 
   /// Aspect Ratio (window width / window height)
-  float aspect_;
+  float32 aspect_;
   /// Field of View.
-  float fovy_;
+  float32 fovy_;
   /// ZNear
-  float z_near_;
+  float32 z_near_;
   /// ZFar
-  float z_far_;
+  float32 z_far_;
   
   /// Camera movement speed.
-  float movement_speed_;
+  float32 movement_speed_;
   /// Camera rotation speed.
-  float rotation_speed_;
+  float32 rotation_speed_;
   /// Sets if the navigation is enabled (translation and rotation).
   bool is_navigation_enabled_;
 

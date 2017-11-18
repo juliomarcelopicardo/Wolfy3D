@@ -51,7 +51,8 @@ project "Wolfy3D"
     "$(DXSDK_DIR)Include",
     path.join(PROJ_DIR, "include/"),
 	  path.join(PROJ_DIR, "external/"),
-	  path.join(PROJ_DIR, "external/imgui/")
+    path.join(PROJ_DIR, "external/imgui/"),
+    path.join(PROJ_DIR, "external/tinyxml2/")
   }
 
   files {
@@ -64,7 +65,9 @@ project "Wolfy3D"
     path.join(PROJ_DIR, "include/Wolfy3D/*.h"),
 	  path.join(PROJ_DIR, "include/core/components/*.h"),
 	  path.join(PROJ_DIR, "external/imgui/*.cpp"),
-	  path.join(PROJ_DIR, "external/imgui/*.h"),
+    path.join(PROJ_DIR, "external/imgui/*.h"),
+    path.join(PROJ_DIR, "external/tinyxml2/*.cpp"),
+	  path.join(PROJ_DIR, "external/tinyxml2/*.h"),
     path.join(PROJ_DIR, "data/**.**"),
   }
 

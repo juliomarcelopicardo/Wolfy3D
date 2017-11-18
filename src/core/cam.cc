@@ -12,6 +12,7 @@
 #include "core/input.h"
 #include "core/entity.h"
 
+
 namespace W3D {
 
 /*******************************************************************************
@@ -38,19 +39,19 @@ Cam::~Cam() {}
 ***                          Public setup methods                            ***
 *******************************************************************************/
 
-void Cam::setupPerspective(const float field_of_view,
-                                  const float aspect_ratio,
-                                  const float z_near,
-                                  const float z_far) {
+void Cam::setupPerspective(const float32 field_of_view,
+                           const float32 aspect_ratio,
+                           const float32 z_near,
+                           const float32 z_far) {
 
   DirectX::XMMATRIX projection = DirectX::XMMatrixPerspectiveFovLH(field_of_view, aspect_ratio, z_near, z_far);
   DirectX::XMStoreFloat4x4(&projection_matrix_, projection);
 }
 
 
-void Cam::setupOrthographic(const float left, const float right_vector, 
-                                    const float bottom, const float top, 
-                                    const float z_near, const float z_far) {
+void Cam::setupOrthographic(const float32 left, const float32 right_vector, 
+                            const float32 bottom, const float32 top, 
+                            const float32 z_near, const float32 z_far) {
   
   DirectX::XMMATRIX projection = DirectX::XMMatrixOrthographicOffCenterLH(left, right_vector, bottom, top, z_near, z_far);
   DirectX::XMStoreFloat4x4(&projection_matrix_, projection);
@@ -89,7 +90,7 @@ void Cam::render(Entity* entity) {
 ***                            Setters & Getters                             ***
 *******************************************************************************/
 
-void Cam::set_position(const float x, const float y, const float z) {
+void Cam::set_position(const float32 x, const float32 y, const float32 z) {
   position_ = { x, y, z };
   setupView();
 }
@@ -104,7 +105,7 @@ void Cam::set_position(const DirectX::XMFLOAT3 position) {
   setupView();
 }
 
-void Cam::set_target(const float x, const float y, const float z) {
+void Cam::set_target(const float32 x, const float32 y, const float32 z) {
   target_ = { x, y, z };
   setupView();
 }
@@ -177,12 +178,20 @@ DirectX::XMFLOAT3 Cam::right_float3() {
   return right;
 }
 
-DirectX::XMMATRIX Cam::projectionMatrix() {
+DirectX::XMMATRIX Cam::projection_matrix() {
   return DirectX::XMLoadFloat4x4(&projection_matrix_);
 }
 
-DirectX::XMMATRIX Cam::viewMatrix() {
+DirectX::XMFLOAT4X4 Cam::projection_float4x4() {
+  return projection_matrix_;
+}
+
+DirectX::XMMATRIX Cam::view_matrix() {
   return DirectX::XMLoadFloat4x4(&view_matrix_);
+}
+
+DirectX::XMFLOAT4X4 Cam::view_float4x4() {
+  return view_matrix_;
 }
 
 void Cam::update() {
