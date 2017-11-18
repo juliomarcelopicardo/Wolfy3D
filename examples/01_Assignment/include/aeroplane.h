@@ -14,6 +14,7 @@
 #include "core/geo.h"
 #include "Wolfy3D.h"
 #include "core/core.h"
+#include "core/entity.h"
 
 __declspec(align(16)) class Aeroplane {
 

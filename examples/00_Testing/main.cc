@@ -222,11 +222,11 @@ int32 main() {
          !Input::IsKeyboardButtonDown(Input::kKeyboardButton_Escape)) {
 
     if (Input::IsMouseButtonDown(Input::kMouseButton_Left)) {
-      DirectX::XMFLOAT3 position = { 0.0f, 0.0f, 0.0f };
-      robot.neck.transform().set_world_position(DirectX::XMLoadFloat3(&position));
+      DirectX::XMFLOAT3 position_vector = { 0.0f, 0.0f, 0.0f };
+      robot.neck.transform().set_world_position(DirectX::XMLoadFloat3(&position_vector));
     }
     if (Input::IsMouseButtonDown(Input::kMouseButton_Middle)) {
-      DirectX::XMFLOAT3 position = { 1.0f, 0.0f, 0.0f };
+      DirectX::XMFLOAT3 position_vector = { 1.0f, 0.0f, 0.0f };
       robot.neck.transform().worldTraslate(1.0f, 0.0f, 0.0f);
     }
 

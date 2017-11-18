@@ -14,7 +14,7 @@
 #include "core/entity.h"
 #include "core/texture.h"
 #include "imgui/imgui.h"
-#include "core/camera.h"
+#include "core/cam.h"
 #include "aeroplane.h"
 
 namespace W3D {
@@ -73,16 +73,16 @@ int32 main() {
   Geo geo, geo2;
   Geo geo_terrain;
   Texture texture[4];
-  texture[0].load("./../data/materialmap.dds");
-  texture[1].load("./../data/grass.dds");
-  texture[2].load("./../data/moss.dds");
-  texture[3].load("./../data/asphalt.dds");
+  texture[0].load("./../data/textures/materialmap.dds");
+  texture[1].load("./../data/textures/grass.dds");
+  texture[2].load("./../data/textures/moss.dds");
+  texture[3].load("./../data/textures/asphalt.dds");
   MaterialAssesment mat;
   mat.texture_materialmap_ = &texture[0];
   mat.texture_grass_ = &texture[1];
   mat.texture_moss_ = &texture[2];
   mat.texture_asphalt_ = &texture[3];
-  geo_terrain.initTerrain("./../data/Heightmap.bmp", { 1000.0f, 50.0f, 1000.0f });
+  geo_terrain.initTerrain("./../data/textures/Heightmap.bmp", { 1000.0f, 50.0f, 1000.0f });
 
 
   Entity terrain;
