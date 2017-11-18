@@ -58,13 +58,13 @@ DirectX::XMFLOAT3 TransformComponent::world_position_float3() {
   return world_position;
 }
 
-void TransformComponent::set_position(const DirectX::XMVECTOR position) {
-  DirectX::XMStoreFloat3(&position_, position);
+void TransformComponent::set_position(const DirectX::XMVECTOR position_vector) {
+  DirectX::XMStoreFloat3(&position_, position_vector);
   owner_->updateLocalModelAndChildrenMatrices();
 }
 
-void TransformComponent::set_position(const DirectX::XMFLOAT3 position) {
-  position_ = position;
+void TransformComponent::set_position(const DirectX::XMFLOAT3 position_vector) {
+  position_ = position_vector;
   owner_->updateLocalModelAndChildrenMatrices();
 }
 
@@ -73,18 +73,18 @@ void TransformComponent::set_position(const float32 x, const float32 y, const fl
   owner_->updateLocalModelAndChildrenMatrices();
 }
 
-void TransformComponent::set_world_position(const DirectX::XMVECTOR position) {
+void TransformComponent::set_world_position(const DirectX::XMVECTOR position_vector) {
   DirectX::XMFLOAT3 pos;
-  DirectX::XMStoreFloat3(&pos, position);
+  DirectX::XMStoreFloat3(&pos, position_vector);
   set_position(pos.x - parent_model_matrix_.m[0][3],
                pos.y - parent_model_matrix_.m[1][3],
                pos.z - parent_model_matrix_.m[2][3]);
 }
 
-void TransformComponent::set_world_position(const DirectX::XMFLOAT3 position) {
-  set_position(position.x - parent_model_matrix_.m[0][3],
-               position.y - parent_model_matrix_.m[1][3],
-               position.z - parent_model_matrix_.m[2][3]);
+void TransformComponent::set_world_position(const DirectX::XMFLOAT3 position_vector) {
+  set_position(position_vector.x - parent_model_matrix_.m[0][3],
+               position_vector.y - parent_model_matrix_.m[1][3],
+               position_vector.z - parent_model_matrix_.m[2][3]);
 }
 
 void TransformComponent::set_world_position(const float32 x, const float32 y, const float32 z) {
@@ -251,17 +251,17 @@ void TransformComponent::worldTraslate(const DirectX::XMVECTOR traslation) {
 }
 
 void TransformComponent::worldTraslate(const DirectX::XMFLOAT3 traslation) {
-  DirectX::XMFLOAT3 position;
-  DirectX::XMStoreFloat3(&position, world_position_vector());
-  set_world_position(position.x + traslation.x,
-                      position.y + traslation.y,
-                      position.z + traslation.z);
+  DirectX::XMFLOAT3 position_vector;
+  DirectX::XMStoreFloat3(&position_vector, world_position_vector());
+  set_world_position(position_vector.x + traslation.x,
+                      position_vector.y + traslation.y,
+                      position_vector.z + traslation.z);
 }
 
 void TransformComponent::worldTraslate(const float32 x, const float32 y, const float32 z) {
-  DirectX::XMFLOAT3 position;
-  DirectX::XMStoreFloat3(&position, world_position_vector());
-  set_world_position(position.x + x, position.y + y, position.z + z);
+  DirectX::XMFLOAT3 position_vector;
+  DirectX::XMStoreFloat3(&position_vector, world_position_vector());
+  set_world_position(position_vector.x + x, position_vector.y + y, position_vector.z + z);
 }
 
 #pragma endregion

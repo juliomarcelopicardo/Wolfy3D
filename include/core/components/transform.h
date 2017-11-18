@@ -78,14 +78,14 @@ public:
   ///
   /// @brief  Transform position setter.
   ///--------------------------------------------------------------------------
-  void set_position(const DirectX::XMVECTOR position);
+  void set_position(const DirectX::XMVECTOR position_vector);
 
   ///--------------------------------------------------------------------------
   /// @fn   void set_position(const DirectX::XMFLOAT3 position);
   ///
   /// @brief  Transform position setter.
   ///--------------------------------------------------------------------------
-  void set_position(const DirectX::XMFLOAT3 position);
+  void set_position(const DirectX::XMFLOAT3 position_vector);
 
   ///--------------------------------------------------------------------------
   /// @fn   void set_position(float x, float y, float z);
@@ -99,14 +99,14 @@ public:
   ///
   /// @brief  Transform world position setter.
   ///--------------------------------------------------------------------------
-  void set_world_position(const DirectX::XMVECTOR position);
+  void set_world_position(const DirectX::XMVECTOR position_vector);
 
   ///--------------------------------------------------------------------------
   /// @fn   void set_world_position(const DirectX::XMFLOAT3 position);
   ///
   /// @brief  Transform world position setter.
   ///--------------------------------------------------------------------------
-  void set_world_position(const DirectX::XMFLOAT3 position);
+  void set_world_position(const DirectX::XMFLOAT3 position_vector);
 
   ///--------------------------------------------------------------------------
   /// @fn   void set_world_position(float x, float y, float z);
