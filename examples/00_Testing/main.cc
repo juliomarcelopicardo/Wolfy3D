@@ -7,6 +7,12 @@
 
  
 #include <string>
+#include <vector>
+#include <algorithm>
+#include <iterator>
+#include <iostream>
+#include <cassert>
+#include <sstream>
 #include "Wolfy3D.h"
 #include "core/geo.h"
 #include "core/super_material.h"
@@ -15,6 +21,7 @@
 #include "core/texture.h"
 #include "imgui/imgui.h"
 #include "core/cam.h"
+#include "tinyxml2\tinyxml2.h"
 
 namespace W3D {
   
@@ -171,8 +178,79 @@ int32 main() {
     }
   };
 
+  struct BoneInfo {
 
+    std::string name;
+    std::vector<DirectX::XMFLOAT3> rotation_timers;
+    std::vector<DirectX::XMFLOAT3> rotation_euler_angles;
 
+    void setup(tinyxml2::XMLDocument& doc) {
+      // Get the main node.
+      tinyxml2::XMLNode* root = doc.FirstChild();
+      tinyxml2::XMLElement* element = nullptr;
+
+      // ROTATION X
+      // Look for the correct element.
+      std::string rotX_text = name + ".rotateX";
+      for (auto* i = root->FirstChildElement(); i != nullptr; i = i->NextSiblingElement()) {
+        std::string id = i->Attribute("id");
+        if (id == rotX_text) {
+          element = i;
+          break;
+        }
+      }
+
+      std::vector<float32> temp;
+      uint32 size = 0;
+
+      // TIMERS
+      tinyxml2::XMLElement* timers_element = element->FirstChildElement()->FirstChildElement("float_array");
+      size = timers_element->IntAttribute("count");
+      rotation_timers.resize(size);
+      //std::string float_array = ;
+      std::istringstream iss(timers_element->GetText());
+      std::copy(std::istream_iterator<float32>(iss), std::istream_iterator<float32>(), std::back_inserter(temp));
+
+      for (int i = 0; i < size; i++) {
+        rotation_timers[i].x = temp[i];
+      }
+
+      temp.clear();
+      // ANGLES
+      tinyxml2::XMLElement* angles_element = element->FirstChildElement()->NextSiblingElement()->FirstChildElement("float_array");
+      size = angles_element->IntAttribute("count");
+      rotation_euler_angles.resize(size);
+      std::string float_array2 = angles_element->GetText();
+      std::istringstream iss2(float_array2);
+      std::copy(std::istream_iterator<float32>(iss2), std::istream_iterator<float32>(), std::back_inserter(temp));
+
+      for (int i = 0; i < size; i++) {
+        rotation_euler_angles[i].x = DirectX::XMConvertToRadians(temp[i]);
+      }
+
+      std::string rotY_text = name + ".rotateY";
+      std::string rotZ_text = name + ".rotateZ";
+
+      
+
+    }
+  };
+
+  struct Animation {
+
+    BoneInfo pelvis;
+
+    void init() {
+      tinyxml2::XMLDocument xml;
+      xml.LoadFile("../data/animations/RobotIdleAnimDAE.txt");
+      pelvis.name = "pelvis";
+      pelvis.setup(xml);
+    }
+
+  };
+
+  Animation anim;
+  anim.init();
 
   //geo.initQuad();
   //geo.initCube();
@@ -196,7 +274,7 @@ int32 main() {
   
   terrain.addComponent(ComponentType::Render3D, &matass, &geo_terrain);
   terrain.transform().set_position(-50.0f, -10.0f, -30.0f);
-  //root.addChild(&terrain);
+  root.addChild(&terrain);
   
   Robot robot;
   robot.init(mat);
@@ -206,7 +284,7 @@ int32 main() {
   float animation_alpha = 0.0f;
   int32 index = 0;
   float animation[10] = { 0.0416666679084301, 0.2083333283662796, 0.5, 0.5833333134651184, 0.6666666865348816, 0.9166666865348816, 1.125, 1.208333373069763, 1.291666626930237, 1.666666626930237 };
-
+  
 
   //plane_root.transform().set_rotation(0.0f, DirectX::XM_PI, 0.0f);
   char textico[256];
