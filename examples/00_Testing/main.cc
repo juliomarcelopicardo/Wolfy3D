@@ -180,9 +180,74 @@ int32 main() {
 
   struct BoneInfo {
 
+    BoneInfo() {
+      speed = 1.0f;
+      alpha = 0.0f;
+      timer = 0.0f;
+      timer_limit = 0.0f;
+      step_destiny = 0;
+    }
+
     std::string name;
     std::vector<DirectX::XMFLOAT3> rotation_timers;
     std::vector<DirectX::XMFLOAT3> rotation_radians;
+    uint32 vectors_size;
+
+    // Animation info
+    DirectX::XMFLOAT3 origin_rotation; // To interpole.
+    DirectX::XMFLOAT3 destiny_rotation; // To interpole.
+    float32 alpha;
+    float32 timer;
+    float32 timer_limit;
+    float32 speed;
+    uint32 step_destiny; // Nos dira a que paso queremos llegar en las anims.
+
+    void startAnimationWithInitialBlending(DirectX::XMFLOAT3 rot_origin) {
+      step_destiny = 1;
+      alpha = 0;
+      timer = 0.0f;
+      timer_limit = rotation_timers[step_destiny].x;
+      origin_rotation = rot_origin;
+      destiny_rotation = rotation_radians[step_destiny];
+    }
+
+    void startAnimationWithoutBlending() {
+      step_destiny = 1;
+      alpha = 0;
+      timer = 0.0f;
+      timer_limit = rotation_timers[step_destiny].x;
+      origin_rotation = rotation_radians[0];
+      destiny_rotation = rotation_radians[step_destiny];
+    }
+
+    void startNewStep() {
+      step_destiny += 1;
+      if (step_destiny == vectors_size) {
+        step_destiny = 1;
+      }
+      timer = 0.0f;
+      timer_limit = rotation_timers[step_destiny].x; // Ya que son todos iguales x y z
+      origin_rotation = destiny_rotation;
+      destiny_rotation = rotation_radians[step_destiny];
+    }
+
+    // Retorna la rotacion actual.
+    DirectX::XMFLOAT3 update(const float32 delta_time) {
+      timer += speed * delta_time;
+
+      // Relleno el alpha.
+      alpha = timer / timer_limit; // obtengo valor entre 0 y 1
+      if (alpha > 1.0f) { 
+        alpha = 0.0f;
+      }
+      // Compruebo si he terminado el step.
+      if (timer > timer_limit) {
+        startNewStep();
+      }
+
+      // retorno la rotacion que corresponde.
+      return tweening_func(origin_rotation, destiny_rotation, alpha);
+    }
 
     enum Axis {
       kAxis_X = 0,
@@ -196,7 +261,6 @@ int32 main() {
       tinyxml2::XMLElement* time_elem = nullptr;
       tinyxml2::XMLElement* rot_elem = nullptr;
       std::vector<float32> temp;
-      uint32 size = 0;
 
       switch (axis) {
         case BoneInfo::kAxis_X: { rot_text = name + ".rotateX"; }break;
@@ -214,16 +278,19 @@ int32 main() {
         }
       }
 
+      if (!time_elem || !rot_elem) {
+        MessageBox(NULL, "Error loading animation from file", "ERROR", MB_OK);
+      }
 
       // TIMERS
-      size = time_elem->IntAttribute("count");
-      rotation_timers.resize(size);
+      vectors_size = time_elem->IntAttribute("count");
+      rotation_timers.resize(vectors_size);
       std::istringstream time_string(time_elem->GetText());
       std::copy(std::istream_iterator<float32>(time_string), 
                 std::istream_iterator<float32>(), 
                 std::back_inserter(temp));
 
-      for (int i = 0; i < size; i++) {
+      for (int i = 0; i < vectors_size; i++) {
         switch (axis) {
           case BoneInfo::kAxis_X: { rotation_timers[i].x = temp[i]; } break;
           case BoneInfo::kAxis_Y: { rotation_timers[i].y = temp[i]; } break;
@@ -233,19 +300,19 @@ int32 main() {
 
       temp.clear();
       // ANGLES
-      size = rot_elem->IntAttribute("count");
-      rotation_radians.resize(size);
+      vectors_size = rot_elem->IntAttribute("count");
+      rotation_radians.resize(vectors_size);
       std::istringstream rot_string(rot_elem->GetText());
       std::copy(std::istream_iterator<float32>(rot_string), 
                 std::istream_iterator<float32>(), 
                 std::back_inserter(temp));
 
-      for (int i = 0; i < size; i++) {
+      for (int i = 0; i < vectors_size; i++) {
         //rotation_radians[i].x = DirectX::XMConvertToRadians(temp[i]);
         switch (axis) {
-          case BoneInfo::kAxis_X: { rotation_radians[i].x = temp[i]; } break;
-          case BoneInfo::kAxis_Y: { rotation_radians[i].y = temp[i]; } break;
-          case BoneInfo::kAxis_Z: { rotation_radians[i].z = temp[i]; } break;
+          case BoneInfo::kAxis_X: { rotation_radians[i].x = DirectX::XMConvertToRadians(temp[i]); } break;
+          case BoneInfo::kAxis_Y: { rotation_radians[i].y = DirectX::XMConvertToRadians(temp[i]); } break;
+          case BoneInfo::kAxis_Z: { rotation_radians[i].z = DirectX::XMConvertToRadians(temp[i]); } break;
         }
       }
     }
@@ -260,23 +327,165 @@ int32 main() {
       setupAxisRotation(kAxis_Z, root);
 
     }
+
   };
 
   struct Animation {
 
-    BoneInfo pelvis;
+    BoneInfo bone_root;
+    BoneInfo bone_body;
+    BoneInfo bone_left_ankle;
+    BoneInfo bone_left_elbow;
+    BoneInfo bone_left_hip;
+    BoneInfo bone_left_knee;
+    BoneInfo bone_left_shoulder;
+    BoneInfo bone_left_wrist;
+    BoneInfo bone_right_ankle;
+    BoneInfo bone_right_elbow;
+    BoneInfo bone_right_hip;
+    BoneInfo bone_right_knee;
+    BoneInfo bone_right_shoulder;
+    BoneInfo bone_right_wrist;
+    BoneInfo bone_neck;
+    BoneInfo bone_pelvis_presley;
 
-    void init() {
+    void init(const char* filename) {
+
       tinyxml2::XMLDocument xml;
-      xml.LoadFile("../data/animations/RobotIdleAnimDAE.txt");
-      pelvis.name = "pelvis";
-      pelvis.setup(xml);
+      xml.LoadFile(filename);
+
+      bone_root.name = "root";
+      bone_body.name = "body";
+      bone_left_ankle.name = "left_ankle";
+      bone_left_elbow.name = "left_elbow";
+      bone_left_hip.name = "left_hip";
+      bone_left_knee.name = "left_knee";
+      bone_left_shoulder.name = "left_shoulder";
+      bone_left_wrist.name = "left_wrist";
+      bone_right_ankle.name = "right_ankle";
+      bone_right_elbow.name = "right_elbow";
+      bone_right_hip.name = "right_hip";
+      bone_right_knee.name = "right_knee";
+      bone_right_shoulder.name = "right_shoulder";
+      bone_right_wrist.name = "right_wrist";
+      bone_neck.name = "neck";
+      bone_pelvis_presley.name = "pelvis";
+
+      bone_root.setup(xml);
+      bone_body.setup(xml);
+      bone_left_ankle.setup(xml);
+      bone_left_elbow.setup(xml);
+      bone_left_hip.setup(xml);
+      bone_left_knee.setup(xml);
+      bone_left_shoulder.setup(xml);
+      bone_left_wrist.setup(xml);
+      bone_right_ankle.setup(xml);
+      bone_right_elbow.setup(xml);
+      bone_right_hip.setup(xml);
+      bone_right_knee.setup(xml);
+      bone_right_shoulder.setup(xml);
+      bone_right_wrist.setup(xml);
+      bone_neck.setup(xml);
+      bone_pelvis_presley.setup(xml);
+    }
+
+    void update(const float32 delta_time, Robot* robot) {
+      robot->root.transform().set_rotation(bone_root.update(delta_time));
+      robot->body.transform().set_rotation(bone_body.update(delta_time));
+      robot->left_ankle.transform().set_rotation(bone_left_ankle.update(delta_time));
+      robot->left_elbow.transform().set_rotation(bone_left_elbow.update(delta_time));
+      robot->left_hip.transform().set_rotation(bone_left_hip.update(delta_time));
+      robot->left_knee.transform().set_rotation(bone_left_knee.update(delta_time));
+      robot->left_shoulder.transform().set_rotation(bone_left_shoulder.update(delta_time));
+      robot->left_wrist.transform().set_rotation(bone_left_wrist.update(delta_time));
+      robot->right_ankle.transform().set_rotation(bone_right_ankle.update(delta_time));
+      robot->right_elbow.transform().set_rotation(bone_right_elbow.update(delta_time));
+      robot->right_hip.transform().set_rotation(bone_right_hip.update(delta_time));
+      robot->right_knee.transform().set_rotation(bone_right_knee.update(delta_time));
+      robot->right_shoulder.transform().set_rotation(bone_right_shoulder.update(delta_time));
+      robot->right_wrist.transform().set_rotation(bone_right_wrist.update(delta_time));
+      robot->neck.transform().set_rotation(bone_neck.update(delta_time));
+      robot->pelvis_presley.transform().set_rotation(bone_pelvis_presley.update(delta_time));
+    }
+
+    void play(const bool initial_blending, Robot* robot) {
+      if (initial_blending) {
+        bone_root.startAnimationWithInitialBlending(robot->root.transform().rotation_float3());
+        bone_body.startAnimationWithInitialBlending(robot->body.transform().rotation_float3());
+        bone_left_ankle.startAnimationWithInitialBlending(robot->left_ankle.transform().rotation_float3());
+        bone_left_elbow.startAnimationWithInitialBlending(robot->left_elbow.transform().rotation_float3());
+        bone_left_hip.startAnimationWithInitialBlending(robot->left_hip.transform().rotation_float3());
+        bone_left_knee.startAnimationWithInitialBlending(robot->left_knee.transform().rotation_float3());
+        bone_left_shoulder.startAnimationWithInitialBlending(robot->left_shoulder.transform().rotation_float3());
+        bone_left_wrist.startAnimationWithInitialBlending(robot->left_wrist.transform().rotation_float3());
+        bone_right_ankle.startAnimationWithInitialBlending(robot->right_ankle.transform().rotation_float3());
+        bone_right_elbow.startAnimationWithInitialBlending(robot->right_elbow.transform().rotation_float3());
+        bone_right_hip.startAnimationWithInitialBlending(robot->right_hip.transform().rotation_float3());
+        bone_right_knee.startAnimationWithInitialBlending(robot->right_knee.transform().rotation_float3());
+        bone_right_shoulder.startAnimationWithInitialBlending(robot->right_shoulder.transform().rotation_float3());
+        bone_right_wrist.startAnimationWithInitialBlending(robot->right_wrist.transform().rotation_float3());
+        bone_neck.startAnimationWithInitialBlending(robot->neck.transform().rotation_float3());
+        bone_pelvis_presley.startAnimationWithInitialBlending(robot->pelvis_presley.transform().rotation_float3());
+      }
+      else {
+        bone_root.startAnimationWithoutBlending();
+        bone_body.startAnimationWithoutBlending();
+        bone_left_ankle.startAnimationWithoutBlending();
+        bone_left_elbow.startAnimationWithoutBlending();
+        bone_left_hip.startAnimationWithoutBlending();
+        bone_left_knee.startAnimationWithoutBlending();
+        bone_left_shoulder.startAnimationWithoutBlending();
+        bone_left_wrist.startAnimationWithoutBlending();
+        bone_right_ankle.startAnimationWithoutBlending();
+        bone_right_elbow.startAnimationWithoutBlending();
+        bone_right_hip.startAnimationWithoutBlending();
+        bone_right_knee.startAnimationWithoutBlending();
+        bone_right_shoulder.startAnimationWithoutBlending();
+        bone_right_wrist.startAnimationWithoutBlending();
+        bone_neck.startAnimationWithoutBlending();
+        bone_pelvis_presley.startAnimationWithoutBlending();
+      }
     }
 
   };
 
-  Animation anim;
-  anim.init();
+  struct AnimController {
+
+    AnimController() {
+      current_animation = nullptr;
+      is_running = false;
+      robot = nullptr;
+    }
+
+    Robot* robot;
+    Animation* current_animation;
+    Animation idle;
+    Animation attack;
+    Animation die;
+
+    bool is_running;
+
+    void init(Robot* r) {
+      idle.init("../data/animations/RobotIdleAnimDAE.txt");
+      attack.init("../data/animations/RobotAttackAnimDAE.txt");
+      die.init("../data/animations/RobotDieAnimDAE.txt");
+      current_animation = &attack;
+      robot = r;
+      current_animation->play(false, robot);
+    }
+
+    void update(const float delta_time) {
+      current_animation->update(delta_time, robot);
+    }
+
+    
+
+  };
+  
+  
+
+
+  
 
   //geo.initQuad();
   //geo.initCube();
@@ -285,10 +494,10 @@ int32 main() {
   //geo.initExtruded(100, 2.0f, 1.0f, 4.0f);
   //geo.initTerrain("./../data/Heightmap.bmp", { 10, 2, 10 });
   //geo2.initTriangle({ 3.0f, 3.0f });
-  geo_plane.initFromFile("./../data/geometries/plane/plane.x");
-  geo_prop.initFromFile("./../data/geometries/plane/prop.x");
-  geo_gun.initFromFile("./../data/geometries/plane/gun.x");
-  geo_turret.initFromFile("./../data/geometries/plane/turret.x");
+  //geo_plane.initFromFile("./../data/geometries/plane/plane.x");
+  //geo_prop.initFromFile("./../data/geometries/plane/prop.x");
+  //geo_gun.initFromFile("./../data/geometries/plane/gun.x");
+  //geo_turret.initFromFile("./../data/geometries/plane/turret.x");
   geo_terrain.initTerrain("./../data/textures/Heightmap.bmp", { 100.0f, 7.0f, 100.0f });
 
   texture.load("./../data/textures/texture.png");
@@ -302,15 +511,6 @@ int32 main() {
   terrain.transform().set_position(-50.0f, -10.0f, -30.0f);
   root.addChild(&terrain);
   
-  Robot robot;
-  robot.init(mat);
-  root.addChild(&robot.root);
-
-  float animation_speed = 0.0001f;
-  float animation_alpha = 0.0f;
-  int32 index = 0;
-  float animation[10] = { 0.0416666679084301, 0.2083333283662796, 0.5, 0.5833333134651184, 0.6666666865348816, 0.9166666865348816, 1.125, 1.208333373069763, 1.291666626930237, 1.666666626930237 };
-  
 
   //plane_root.transform().set_rotation(0.0f, DirectX::XM_PI, 0.0f);
   char textico[256];
@@ -319,23 +519,47 @@ int32 main() {
   cam.is_navigation_enabled_ = true;
   cam.set_position(0.0f, 4.5f, 45.0f);
 
+
+
+
+
+
+  Robot robot;
+  robot.init(mat);
+  root.addChild(&robot.root);
+
+  AnimController anim_controller;
+  anim_controller.init(&robot);
+
   // enter the main loop:
+
   while (Window::StartFrame() && Window::IsOpened() && 
          !Input::IsKeyboardButtonDown(Input::kKeyboardButton_Escape)) {
+    static uint64 last_time_updated = Time();
+    uint64 tick = Time();
+    uint64 delta = tick - last_time_updated;
 
-    animation_alpha += animation_speed;
-    if (animation_alpha > 1.0f) {
-      index++;
-      animation_alpha = 0.0f;
+    anim_controller.update((float32)delta * 0.001);
+    
+    if (Input::IsKeyboardButtonDown(Input::kKeyboardButton_Left)) {
+      anim_controller.current_animation = &anim_controller.attack;
+      anim_controller.current_animation->play(true, anim_controller.robot);
     }
 
-    robot.pelvis_presley.transform().set_rotation(tweening_func(animation[index], animation[index + 1], animation_alpha), 0.0f, 0.0f);
-
-
+    if (Input::IsKeyboardButtonDown(Input::kKeyboardButton_Right)) {
+      anim_controller.current_animation = &anim_controller.idle;
+      anim_controller.current_animation->play(true, anim_controller.robot);
+    }
 
     cam.render(&root);
 
     Window::EndFrame();
+
+    uint64 sleepy = 16 - (Time() - tick);
+    if (sleepy > 0) {
+      Sleep(sleepy);
+    }
+    last_time_updated = tick;
   }
 
   Window::Close();
