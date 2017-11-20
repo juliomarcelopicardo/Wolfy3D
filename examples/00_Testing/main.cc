@@ -182,56 +182,82 @@ int32 main() {
 
     std::string name;
     std::vector<DirectX::XMFLOAT3> rotation_timers;
-    std::vector<DirectX::XMFLOAT3> rotation_euler_angles;
+    std::vector<DirectX::XMFLOAT3> rotation_radians;
 
-    void setup(tinyxml2::XMLDocument& doc) {
-      // Get the main node.
-      tinyxml2::XMLNode* root = doc.FirstChild();
-      tinyxml2::XMLElement* element = nullptr;
+    enum Axis {
+      kAxis_X = 0,
+      kAxis_Y = 1,
+      kAxis_Z = 2,
+    };
 
-      // ROTATION X
-      // Look for the correct element.
-      std::string rotX_text = name + ".rotateX";
+    void setupAxisRotation(Axis axis, tinyxml2::XMLNode* root) {
+
+      std::string rot_text;
+      tinyxml2::XMLElement* time_elem = nullptr;
+      tinyxml2::XMLElement* rot_elem = nullptr;
+      std::vector<float32> temp;
+      uint32 size = 0;
+
+      switch (axis) {
+        case BoneInfo::kAxis_X: { rot_text = name + ".rotateX"; }break;
+        case BoneInfo::kAxis_Y: { rot_text = name + ".rotateY"; }break;
+        case BoneInfo::kAxis_Z: { rot_text = name + ".rotateZ"; }break;
+      }
+
+      // Searching for the correct child.
       for (auto* i = root->FirstChildElement(); i != nullptr; i = i->NextSiblingElement()) {
         std::string id = i->Attribute("id");
-        if (id == rotX_text) {
-          element = i;
+        if (id == rot_text) {
+          time_elem = i->FirstChildElement()->FirstChildElement("float_array");
+          rot_elem = i->FirstChildElement()->NextSiblingElement()->FirstChildElement("float_array");
           break;
         }
       }
 
-      std::vector<float32> temp;
-      uint32 size = 0;
 
       // TIMERS
-      tinyxml2::XMLElement* timers_element = element->FirstChildElement()->FirstChildElement("float_array");
-      size = timers_element->IntAttribute("count");
+      size = time_elem->IntAttribute("count");
       rotation_timers.resize(size);
-      //std::string float_array = ;
-      std::istringstream iss(timers_element->GetText());
-      std::copy(std::istream_iterator<float32>(iss), std::istream_iterator<float32>(), std::back_inserter(temp));
+      std::istringstream time_string(time_elem->GetText());
+      std::copy(std::istream_iterator<float32>(time_string), 
+                std::istream_iterator<float32>(), 
+                std::back_inserter(temp));
 
       for (int i = 0; i < size; i++) {
-        rotation_timers[i].x = temp[i];
+        switch (axis) {
+          case BoneInfo::kAxis_X: { rotation_timers[i].x = temp[i]; } break;
+          case BoneInfo::kAxis_Y: { rotation_timers[i].y = temp[i]; } break;
+          case BoneInfo::kAxis_Z: { rotation_timers[i].z = temp[i]; } break;
+        } 
       }
 
       temp.clear();
       // ANGLES
-      tinyxml2::XMLElement* angles_element = element->FirstChildElement()->NextSiblingElement()->FirstChildElement("float_array");
-      size = angles_element->IntAttribute("count");
-      rotation_euler_angles.resize(size);
-      std::string float_array2 = angles_element->GetText();
-      std::istringstream iss2(float_array2);
-      std::copy(std::istream_iterator<float32>(iss2), std::istream_iterator<float32>(), std::back_inserter(temp));
+      size = rot_elem->IntAttribute("count");
+      rotation_radians.resize(size);
+      std::istringstream rot_string(rot_elem->GetText());
+      std::copy(std::istream_iterator<float32>(rot_string), 
+                std::istream_iterator<float32>(), 
+                std::back_inserter(temp));
 
       for (int i = 0; i < size; i++) {
-        rotation_euler_angles[i].x = DirectX::XMConvertToRadians(temp[i]);
+        //rotation_radians[i].x = DirectX::XMConvertToRadians(temp[i]);
+        switch (axis) {
+          case BoneInfo::kAxis_X: { rotation_radians[i].x = temp[i]; } break;
+          case BoneInfo::kAxis_Y: { rotation_radians[i].y = temp[i]; } break;
+          case BoneInfo::kAxis_Z: { rotation_radians[i].z = temp[i]; } break;
+        }
       }
+    }
 
-      std::string rotY_text = name + ".rotateY";
-      std::string rotZ_text = name + ".rotateZ";
 
-      
+    void setup(tinyxml2::XMLDocument& doc) {
+      // Get the main node.
+      tinyxml2::XMLNode* root = doc.FirstChild();
+
+      setupAxisRotation(kAxis_X, root);
+      setupAxisRotation(kAxis_Y, root);
+      setupAxisRotation(kAxis_Z, root);
 
     }
   };
