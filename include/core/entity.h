@@ -27,6 +27,9 @@ class Entity {
   /// Default class constructor.
   Entity();
 
+  /// Default class constructor.
+  Entity(const char* name);
+
   /// Default class destructor.
   ~Entity();
 
@@ -83,14 +86,14 @@ class Entity {
   ///--------------------------------------------------------------------------
   RenderComponent* render3D();
 
-  /*******************************************************************************
-  ***                           Private                                        ***
-  *******************************************************************************/
+
 
   /// Parent of this entity  
   Entity* parent_;
   /// Childrens attached to this entity  
   std::vector<Entity*> children_;
+  /// Name of the entity.
+  std::string name_;
 
  private:
 

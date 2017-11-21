@@ -22,6 +22,15 @@ namespace W3D {
     initialized_ = false;
     render3D_ = nullptr;
     parent_ = nullptr;
+    name_ = "Entity";
+    transform_.set_owner(this);
+  }
+
+  Entity::Entity(const char* name) {
+    initialized_ = false;
+    render3D_ = nullptr;
+    parent_ = nullptr;
+    name_ = name;
     transform_.set_owner(this);
   }
 
