@@ -25,6 +25,38 @@
 
 namespace W3D {
   
+void ImGuiGenerateNodeStats(Entity* entity) {
+
+  DirectX::XMFLOAT3 temp;
+
+  ImGui::PushID(entity);
+
+  // rotation
+  temp = entity->transform().rotation_float3();
+  temp.x = DirectX::XMConvertToDegrees(temp.x);
+  temp.y = DirectX::XMConvertToDegrees(temp.y);
+  temp.z = DirectX::XMConvertToDegrees(temp.z);
+  ImGui::DragFloat3(" Rotation", &temp.x, 0.05f);
+  //entity->transform().set_rotation(temp);
+
+
+  ImGui::PopID();
+}
+
+/// @brief ImGui scene's root children stats.
+void ImGuiGenerateRootTreeStats(Entity* root_entity) {
+
+  if (ImGui::TreeNode(root_entity->name_.c_str())) {
+    ImGuiGenerateNodeStats(root_entity);
+    uint32 size = root_entity->children_.size();
+    for (uint32 i = 0; i < size; i++) {
+      ImGuiGenerateRootTreeStats(root_entity->children_[i]);
+    }
+    ImGui::TreePop();
+  }
+
+}
+
 DirectX::XMFLOAT3 tweening_func(DirectX::XMFLOAT3 origin, DirectX::XMFLOAT3 destiny, float alpha) {
   float x_variation = (destiny.x - origin.x) * alpha;
   float y_variation = (destiny.y - origin.y) * alpha;
@@ -50,16 +82,16 @@ int32 main() {
   Texture texture, texture2;
   
 
-  Texture assesment[4];
-  assesment[0].load("./../data/textures/materialmap.dds");
-  assesment[1].load("./../data/textures/grass.dds");
-  assesment[2].load("./../data/textures/moss.dds");
-  assesment[3].load("./../data/textures/asphalt.dds");
-  MaterialAssesment matass;
-  matass.texture_materialmap_ = &assesment[0];
-  matass.texture_grass_ = &assesment[1];
-  matass.texture_moss_ = &assesment[2];
-  matass.texture_asphalt_ = &assesment[3];
+  Texture assesment_texture[4];
+  assesment_texture[0].load("./../data/textures/materialmap.dds");
+  assesment_texture[1].load("./../data/textures/grass.dds");
+  assesment_texture[2].load("./../data/textures/moss.dds");
+  assesment_texture[3].load("./../data/textures/asphalt.dds");
+  MaterialAssesment mat_assesment;
+  mat_assesment.texture_materialmap_ = &assesment_texture[0];
+  mat_assesment.texture_grass_ = &assesment_texture[1];
+  mat_assesment.texture_moss_ = &assesment_texture[2];
+  mat_assesment.texture_asphalt_ = &assesment_texture[3];
 
   struct Robot {
     Geo geo_body;
@@ -117,62 +149,77 @@ int32 main() {
       root.transform().set_position(0.0f, 0.0f, 0.0f);
 
       pelvis_presley.addComponent(ComponentType::Render3D, &mat, &geo_pelvis_presley);
+      pelvis_presley.name_ = "pelvis";
       pelvis_presley.transform().set_position(-0.0250011f, 1.5250000f, -0.0000005f);
       root.addChild(&pelvis_presley);
 
       body.addComponent(ComponentType::Render3D, &mat, &geo_body);
+      body.name_ = "body";
       body.transform().set_position(0.0500099f, 4.3749992f, 0.0000003f);
       pelvis_presley.addChild(&body);
 
       left_shoulder.addComponent(ComponentType::Render3D, &mat, &geo_left_shoulder);
+      left_shoulder.name_ = "left_shoulder";
       left_shoulder.transform().set_position(4.6000000f, 0.0000000f, -0.0009992f);
       body.addChild(&left_shoulder);
 
       left_elbow.addComponent(ComponentType::Render3D, &mat, &geo_left_elbow);
+      left_elbow.name_ = "left_elbow";
       left_elbow.transform().set_position(3.4250019f, -0.0499817f, -0.0004262f);
       left_shoulder.addChild(&left_elbow);
 
       left_wrist.addComponent(ComponentType::Render3D, &mat, &geo_left_wrist);
+      left_wrist.name_ = "left_wrist";
       left_wrist.transform().set_position(5.5250008f, -0.0999710f, 0.0003968f);
       left_elbow.addChild(&left_wrist);
 
       right_shoulder.addComponent(ComponentType::Render3D, &mat, &geo_right_shoulder);
+      right_shoulder.name_ = "right_shoulder";
       right_shoulder.transform().set_position(-4.4500023f, 0.0500000f, -0.0000021f);
       body.addChild(&right_shoulder);
 
       right_elbow.addComponent(ComponentType::Render3D, &mat, &geo_right_elbow);
+      right_elbow.name_ = "right_elbow";
       right_elbow.transform().set_position(-3.3999996f, 0.0250229f, -0.0000194f);
       right_shoulder.addChild(&right_elbow);
 
       right_wrist.addComponent(ComponentType::Render3D, &mat, &geo_right_wrist);
+      right_wrist.name_ = "right_wrist";
       right_wrist.transform().set_position(-6.0000381f, -0.1750183f, 0.0007156f);
       right_elbow.addChild(&right_wrist);
 
       neck.addComponent(ComponentType::Render3D, &mat, &geo_neck);
+      neck.name_ = "neck";
       neck.transform().set_position(0.0249983f, 3.6625015f, 2.5999998f);
       body.addChild(&neck);
 
       left_hip.addComponent(ComponentType::Render3D, &mat, &geo_left_hip);
+      left_hip.name_ = "left_hip";
       left_hip.transform().set_position(1.9500000f, -0.7724991f, 0.000000f);
       root.addChild(&left_hip);
 
       left_knee.addComponent(ComponentType::Render3D, &mat, &geo_left_knee);
+      left_knee.name_ = "left_knee";
       left_knee.transform().set_position(0.0000006f, -2.2200001f, 0.000000f);
       left_hip.addChild(&left_knee);
 
       left_ankle.addComponent(ComponentType::Render3D, &mat, &geo_left_ankle);
+      left_ankle.name_ = "left_ankle";
       left_ankle.transform().set_position(-0.0800152f, -3.6399994f, -0.0000098f);
       left_knee.addChild(&left_ankle);
 
       right_hip.addComponent(ComponentType::Render3D, &mat, &geo_right_hip);
+      right_hip.name_ = "right_hip";
       right_hip.transform().set_position(-1.9500000f, -0.7724991f, 0.000000f);
       root.addChild(&right_hip);
 
       right_knee.addComponent(ComponentType::Render3D, &mat, &geo_right_knee);
+      right_knee.name_ = "right_knee";
       right_knee.transform().set_position(0.0000006f, -2.2000000f, 0.000000f);
       right_hip.addChild(&right_knee);
 
       right_ankle.addComponent(ComponentType::Render3D, &mat, &geo_right_ankle);
+      right_ankle.name_ = "right_ankle";
       right_ankle.transform().set_position(0.0199911f, -3.6799995f, 0.0000039f);
       right_knee.addChild(&right_ankle);
     }
@@ -181,7 +228,7 @@ int32 main() {
   struct BoneInfo {
 
     BoneInfo() {
-      speed = 1.0f;
+      
       alpha = 0.0f;
       timer = 0.0f;
       timer_limit = 0.0f;
@@ -199,20 +246,20 @@ int32 main() {
     float32 alpha;
     float32 timer;
     float32 timer_limit;
-    float32 speed;
     uint32 step_destiny; // Nos dira a que paso queremos llegar en las anims.
 
-    void startAnimationWithInitialBlending(DirectX::XMFLOAT3 rot_origin) {
-      step_destiny = 1;
+    void startAnimationWithInitialBlending(DirectX::XMFLOAT3 rot_origin, const float32 blending_duration) {
+      step_destiny = 0;
       alpha = 0;
       timer = 0.0f;
-      timer_limit = rotation_timers[step_destiny].x;
+      //timer_limit = rotation_timers[step_destiny].x;
+      timer_limit = blending_duration;
       origin_rotation = rot_origin;
       destiny_rotation = rotation_radians[step_destiny];
     }
 
     void startAnimationWithoutBlending() {
-      step_destiny = 1;
+      step_destiny = 0;
       alpha = 0;
       timer = 0.0f;
       timer_limit = rotation_timers[step_destiny].x;
@@ -233,7 +280,7 @@ int32 main() {
 
     // Retorna la rotacion actual.
     DirectX::XMFLOAT3 update(const float32 delta_time) {
-      timer += speed * delta_time;
+      timer += delta_time;
 
       // Relleno el alpha.
       alpha = timer / timer_limit; // obtengo valor entre 0 y 1
@@ -260,7 +307,7 @@ int32 main() {
       std::string rot_text;
       tinyxml2::XMLElement* time_elem = nullptr;
       tinyxml2::XMLElement* rot_elem = nullptr;
-      std::vector<float32> temp;
+      std::vector<float64> temp;
 
       switch (axis) {
         case BoneInfo::kAxis_X: { rot_text = name + ".rotateX"; }break;
@@ -286,8 +333,8 @@ int32 main() {
       vectors_size = time_elem->IntAttribute("count");
       rotation_timers.resize(vectors_size);
       std::istringstream time_string(time_elem->GetText());
-      std::copy(std::istream_iterator<float32>(time_string), 
-                std::istream_iterator<float32>(), 
+      std::copy(std::istream_iterator<float64>(time_string),
+                std::istream_iterator<float64>(),
                 std::back_inserter(temp));
 
       for (int i = 0; i < vectors_size; i++) {
@@ -303,8 +350,8 @@ int32 main() {
       vectors_size = rot_elem->IntAttribute("count");
       rotation_radians.resize(vectors_size);
       std::istringstream rot_string(rot_elem->GetText());
-      std::copy(std::istream_iterator<float32>(rot_string), 
-                std::istream_iterator<float32>(), 
+      std::copy(std::istream_iterator<float64>(rot_string),
+                std::istream_iterator<float64>(),
                 std::back_inserter(temp));
 
       for (int i = 0; i < vectors_size; i++) {
@@ -348,6 +395,7 @@ int32 main() {
     BoneInfo bone_right_wrist;
     BoneInfo bone_neck;
     BoneInfo bone_pelvis_presley;
+    float32 speed;
 
     void init(const char* filename) {
 
@@ -387,45 +435,48 @@ int32 main() {
       bone_right_wrist.setup(xml);
       bone_neck.setup(xml);
       bone_pelvis_presley.setup(xml);
+
+      speed = 1.0f;
     }
 
     void update(const float32 delta_time, Robot* robot) {
-      robot->root.transform().set_rotation(bone_root.update(delta_time));
-      robot->body.transform().set_rotation(bone_body.update(delta_time));
-      robot->left_ankle.transform().set_rotation(bone_left_ankle.update(delta_time));
-      robot->left_elbow.transform().set_rotation(bone_left_elbow.update(delta_time));
-      robot->left_hip.transform().set_rotation(bone_left_hip.update(delta_time));
-      robot->left_knee.transform().set_rotation(bone_left_knee.update(delta_time));
-      robot->left_shoulder.transform().set_rotation(bone_left_shoulder.update(delta_time));
-      robot->left_wrist.transform().set_rotation(bone_left_wrist.update(delta_time));
-      robot->right_ankle.transform().set_rotation(bone_right_ankle.update(delta_time));
-      robot->right_elbow.transform().set_rotation(bone_right_elbow.update(delta_time));
-      robot->right_hip.transform().set_rotation(bone_right_hip.update(delta_time));
-      robot->right_knee.transform().set_rotation(bone_right_knee.update(delta_time));
-      robot->right_shoulder.transform().set_rotation(bone_right_shoulder.update(delta_time));
-      robot->right_wrist.transform().set_rotation(bone_right_wrist.update(delta_time));
-      robot->neck.transform().set_rotation(bone_neck.update(delta_time));
-      robot->pelvis_presley.transform().set_rotation(bone_pelvis_presley.update(delta_time));
+      float32 delta_scaled = delta_time * speed;
+      robot->root.transform().set_rotation(bone_root.update(delta_scaled));
+      robot->pelvis_presley.transform().set_rotation(bone_pelvis_presley.update(delta_scaled));
+      robot->body.transform().set_rotation(bone_body.update(delta_scaled));
+      robot->right_shoulder.transform().set_rotation(bone_right_shoulder.update(delta_scaled));
+      robot->right_elbow.transform().set_rotation(bone_right_elbow.update(delta_scaled));
+      robot->right_wrist.transform().set_rotation(bone_right_wrist.update(delta_scaled));
+      robot->left_shoulder.transform().set_rotation(bone_left_shoulder.update(delta_scaled));
+      robot->left_elbow.transform().set_rotation(bone_left_elbow.update(delta_scaled));
+      robot->left_wrist.transform().set_rotation(bone_left_wrist.update(delta_scaled));
+      robot->neck.transform().set_rotation(bone_neck.update(delta_scaled));
+      robot->left_hip.transform().set_rotation(bone_left_hip.update(delta_scaled));
+      robot->left_knee.transform().set_rotation(bone_left_knee.update(delta_scaled));
+      robot->left_ankle.transform().set_rotation(bone_left_ankle.update(delta_scaled));
+      robot->right_ankle.transform().set_rotation(bone_right_ankle.update(delta_scaled));
+      robot->right_hip.transform().set_rotation(bone_right_hip.update(delta_scaled));
+      robot->right_knee.transform().set_rotation(bone_right_knee.update(delta_scaled));
     }
 
-    void play(const bool initial_blending, Robot* robot) {
+    void play(const bool initial_blending, Robot* robot, const float32 blending_duration = 1.0f) {
       if (initial_blending) {
-        bone_root.startAnimationWithInitialBlending(robot->root.transform().rotation_float3());
-        bone_body.startAnimationWithInitialBlending(robot->body.transform().rotation_float3());
-        bone_left_ankle.startAnimationWithInitialBlending(robot->left_ankle.transform().rotation_float3());
-        bone_left_elbow.startAnimationWithInitialBlending(robot->left_elbow.transform().rotation_float3());
-        bone_left_hip.startAnimationWithInitialBlending(robot->left_hip.transform().rotation_float3());
-        bone_left_knee.startAnimationWithInitialBlending(robot->left_knee.transform().rotation_float3());
-        bone_left_shoulder.startAnimationWithInitialBlending(robot->left_shoulder.transform().rotation_float3());
-        bone_left_wrist.startAnimationWithInitialBlending(robot->left_wrist.transform().rotation_float3());
-        bone_right_ankle.startAnimationWithInitialBlending(robot->right_ankle.transform().rotation_float3());
-        bone_right_elbow.startAnimationWithInitialBlending(robot->right_elbow.transform().rotation_float3());
-        bone_right_hip.startAnimationWithInitialBlending(robot->right_hip.transform().rotation_float3());
-        bone_right_knee.startAnimationWithInitialBlending(robot->right_knee.transform().rotation_float3());
-        bone_right_shoulder.startAnimationWithInitialBlending(robot->right_shoulder.transform().rotation_float3());
-        bone_right_wrist.startAnimationWithInitialBlending(robot->right_wrist.transform().rotation_float3());
-        bone_neck.startAnimationWithInitialBlending(robot->neck.transform().rotation_float3());
-        bone_pelvis_presley.startAnimationWithInitialBlending(robot->pelvis_presley.transform().rotation_float3());
+        bone_root.startAnimationWithInitialBlending(robot->root.transform().rotation_float3(), blending_duration);
+        bone_body.startAnimationWithInitialBlending(robot->body.transform().rotation_float3(), blending_duration);
+        bone_left_ankle.startAnimationWithInitialBlending(robot->left_ankle.transform().rotation_float3(), blending_duration);
+        bone_left_elbow.startAnimationWithInitialBlending(robot->left_elbow.transform().rotation_float3(), blending_duration);
+        bone_left_hip.startAnimationWithInitialBlending(robot->left_hip.transform().rotation_float3(), blending_duration);
+        bone_left_knee.startAnimationWithInitialBlending(robot->left_knee.transform().rotation_float3(), blending_duration);
+        bone_left_shoulder.startAnimationWithInitialBlending(robot->left_shoulder.transform().rotation_float3(), blending_duration);
+        bone_left_wrist.startAnimationWithInitialBlending(robot->left_wrist.transform().rotation_float3(), blending_duration);
+        bone_right_ankle.startAnimationWithInitialBlending(robot->right_ankle.transform().rotation_float3(), blending_duration);
+        bone_right_elbow.startAnimationWithInitialBlending(robot->right_elbow.transform().rotation_float3(), blending_duration);
+        bone_right_hip.startAnimationWithInitialBlending(robot->right_hip.transform().rotation_float3(), blending_duration);
+        bone_right_knee.startAnimationWithInitialBlending(robot->right_knee.transform().rotation_float3(), blending_duration);
+        bone_right_shoulder.startAnimationWithInitialBlending(robot->right_shoulder.transform().rotation_float3(), blending_duration);
+        bone_right_wrist.startAnimationWithInitialBlending(robot->right_wrist.transform().rotation_float3(), blending_duration);
+        bone_neck.startAnimationWithInitialBlending(robot->neck.transform().rotation_float3(), blending_duration);
+        bone_pelvis_presley.startAnimationWithInitialBlending(robot->pelvis_presley.transform().rotation_float3(), blending_duration);
       }
       else {
         bone_root.startAnimationWithoutBlending();
@@ -469,13 +520,14 @@ int32 main() {
       idle.init("../data/animations/RobotIdleAnimDAE.txt");
       attack.init("../data/animations/RobotAttackAnimDAE.txt");
       die.init("../data/animations/RobotDieAnimDAE.txt");
-      current_animation = &attack;
       robot = r;
-      current_animation->play(false, robot);
+      //current_animation->play(true, robot);
     }
 
     void update(const float delta_time) {
-      current_animation->update(delta_time, robot);
+      if (current_animation) {
+        current_animation->update(delta_time, robot);
+      }
     }
 
     
@@ -507,7 +559,7 @@ int32 main() {
   Entity plane_root, plane, prop, turret, gun, cam_node, terrain, root;
 
   
-  terrain.addComponent(ComponentType::Render3D, &matass, &geo_terrain);
+  terrain.addComponent(ComponentType::Render3D, &mat_assesment, &geo_terrain);
   terrain.transform().set_position(-50.0f, -10.0f, -30.0f);
   root.addChild(&terrain);
   
@@ -521,8 +573,7 @@ int32 main() {
 
 
 
-
-
+  float debug_speed = 1.0f;
 
   Robot robot;
   robot.init(mat);
@@ -533,32 +584,37 @@ int32 main() {
 
   // enter the main loop:
 
-  while (Window::StartFrame() && Window::IsOpened() && 
-         !Input::IsKeyboardButtonDown(Input::kKeyboardButton_Escape)) {
+  while (Window::StartFrame() && Window::IsOpened() &&
+    !Input::IsKeyboardButtonDown(Input::kKeyboardButton_Escape)) {
     static uint64 last_time_updated = Time();
     uint64 tick = Time();
     uint64 delta = tick - last_time_updated;
 
     anim_controller.update((float32)delta * 0.001);
-    
+
     if (Input::IsKeyboardButtonDown(Input::kKeyboardButton_Left)) {
       anim_controller.current_animation = &anim_controller.attack;
-      anim_controller.current_animation->play(true, anim_controller.robot);
+      anim_controller.current_animation->play(true, anim_controller.robot, 0.5f);
     }
 
     if (Input::IsKeyboardButtonDown(Input::kKeyboardButton_Right)) {
       anim_controller.current_animation = &anim_controller.idle;
-      anim_controller.current_animation->play(true, anim_controller.robot);
+      anim_controller.current_animation->play(true, anim_controller.robot, 0.5f);
     }
 
     cam.render(&root);
 
+    ImGui::SliderFloat("Animation Speed", &debug_speed, 0.0f, 5.0f);
+    anim_controller.attack.speed = debug_speed;
+    anim_controller.die.speed = debug_speed;
+    anim_controller.idle.speed = debug_speed;
+    
+    ImGuiGenerateRootTreeStats(&robot.root);
+
+    ImGui::Text("Wolfy3D speed: %.3f ms/frame (%.1f FPS)",
+      1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
     Window::EndFrame();
 
-    uint64 sleepy = 16 - (Time() - tick);
-    if (sleepy > 0) {
-      Sleep(sleepy);
-    }
     last_time_updated = tick;
   }
 
