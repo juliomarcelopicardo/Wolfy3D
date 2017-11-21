@@ -342,22 +342,22 @@ DirectX::XMMATRIX TransformComponent::global_model_matrix() {
 
 void TransformComponent::calculateLocalModelMatrix() {
 
-DirectX::XMMATRIX ret;
-DirectX::XMVECTOR origin;
-origin = DirectX::XMVectorSet(0.0f, 0.0f, 0.0f, 1.0f);
+  DirectX::XMMATRIX ret;
+  DirectX::XMVECTOR origin;
+  origin = DirectX::XMVectorSet(0.0f, 0.0f, 0.0f, 1.0f);
 
-DirectX::XMVECTOR quat_x, quat_y, quat_z;
-quat_x = DirectX::XMQuaternionRotationAxis(DirectX::XMVectorSet(1.0f, 0.0f, 0.0f, 0.0f), rotation_.x);
-quat_y = DirectX::XMQuaternionRotationAxis(DirectX::XMVectorSet(0.0f, 1.0f, 0.0f, 0.0f), rotation_.y);
-quat_z = DirectX::XMQuaternionRotationAxis(DirectX::XMVectorSet(0.0f, 0.0f, 1.0f, 0.0f), rotation_.z);
+  DirectX::XMVECTOR quat_x, quat_y, quat_z;
+  quat_x = DirectX::XMQuaternionRotationAxis(DirectX::XMVectorSet(1.0f, 0.0f, 0.0f, 0.0f), rotation_.x);
+  quat_y = DirectX::XMQuaternionRotationAxis(DirectX::XMVectorSet(0.0f, 1.0f, 0.0f, 0.0f), rotation_.y);
+  quat_z = DirectX::XMQuaternionRotationAxis(DirectX::XMVectorSet(0.0f, 0.0f, 1.0f, 0.0f), rotation_.z);
 	
-ret = DirectX::XMMatrixTransformation(origin,
-	                                    DirectX::XMQuaternionIdentity(),
-											                DirectX::XMLoadFloat3(&scale_),
-											                origin,
-											                DirectX::XMQuaternionNormalize(DirectX::XMQuaternionMultiply(DirectX::XMQuaternionMultiply(quat_z, quat_x), quat_y)),
-											                DirectX::XMLoadFloat3(&position_));
-DirectX::XMStoreFloat4x4(&local_model_matrix_, DirectX::XMMatrixTranspose(ret));
+  ret = DirectX::XMMatrixTransformation(origin,
+	                                      DirectX::XMQuaternionIdentity(),
+											                  DirectX::XMLoadFloat3(&scale_),
+											                  origin,
+											                  DirectX::XMQuaternionNormalize(DirectX::XMQuaternionMultiply(DirectX::XMQuaternionMultiply(quat_z, quat_x), quat_y)),
+											                  DirectX::XMLoadFloat3(&position_));
+  DirectX::XMStoreFloat4x4(&local_model_matrix_, DirectX::XMMatrixTranspose(ret));
 }
 
 #pragma endregion

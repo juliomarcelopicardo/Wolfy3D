@@ -31,13 +31,17 @@ void ImGuiGenerateNodeStats(Entity* entity) {
 
   ImGui::PushID(entity);
 
+  // Position
+  temp = entity->transform().position_float3();
+  ImGui::DragFloat3(" Position", &temp.x);
+
   // rotation
   temp = entity->transform().rotation_float3();
-  //temp.x = DirectX::XMConvertToDegrees(temp.x);
-  //temp.y = DirectX::XMConvertToDegrees(temp.y);
-  //temp.z = DirectX::XMConvertToDegrees(temp.z);
+  temp.x = DirectX::XMConvertToDegrees(temp.x);
+  temp.y = DirectX::XMConvertToDegrees(temp.y);
+  temp.z = DirectX::XMConvertToDegrees(temp.z);
   ImGui::DragFloat3(" Rotation", &temp.x, 0.05f);
-  entity->transform().set_rotation(temp);
+  //entity->transform().set_rotation(temp);
 
 
   ImGui::PopID();
@@ -109,6 +113,7 @@ int32 main() {
     Geo geo_right_wrist;
     Geo geo_neck;
     Geo geo_pelvis_presley;
+    Entity robot_root;
     Entity root;
     Entity body;
     Entity left_ankle;
@@ -146,7 +151,11 @@ int32 main() {
       geo_neck.initFromFile("./../data/geometries/robot/neck.x");
       geo_pelvis_presley.initFromFile("./../data/geometries/robot/pelvis.x");
 
-      root.transform().set_position(0.0f, 0.0f, 0.0f);
+      robot_root.transform().set_position(0.0f, -7.0f, 0.0f);
+
+      root.name_ = "root";
+      root.transform().set_position(0.1027778f, 7.5644722f, 0.000000f);
+      robot_root.addChild(&root);
 
       pelvis_presley.addComponent(ComponentType::Render3D, &mat, &geo_pelvis_presley);
       pelvis_presley.name_ = "pelvis";
@@ -225,76 +234,98 @@ int32 main() {
     }
   };
 
-  struct BoneInfo {
+  struct StepsInfo {
 
-    BoneInfo() {
-      
+    StepsInfo() {
+      step_timers.clear();
+      step_values.clear();
+      num_steps = 0;
+      origin = { 0.0f, 0.0f, 0.0f };
+      destiny = { 0.0f, 0.0f, 0.0f };
       alpha = 0.0f;
       timer = 0.0f;
       timer_limit = 0.0f;
       step_destiny = 0;
     }
 
-    std::string name;
-    std::vector<DirectX::XMFLOAT3> rotation_timers;
-    std::vector<DirectX::XMFLOAT3> rotation_radians;
-    uint32 vectors_size;
+    std::vector<DirectX::XMFLOAT3> step_timers; // Key frames times.
+    std::vector<DirectX::XMFLOAT3> step_values; // angles, positions, etc.
+    uint32 num_steps;
+    DirectX::XMFLOAT3 origin; // To interpole.
+    DirectX::XMFLOAT3 destiny; // To interpole.
+    float32 alpha; // Interpolation alpha.
+    float32 timer; // Chronometer
+    float32 timer_limit; // Time to change to the next step or key frame.
+    uint32 step_destiny; // Step which will be set as destiny.
 
-    // Animation info
-    DirectX::XMFLOAT3 origin_rotation; // To interpole.
-    DirectX::XMFLOAT3 destiny_rotation; // To interpole.
-    float32 alpha;
-    float32 timer;
-    float32 timer_limit;
-    uint32 step_destiny; // Nos dira a que paso queremos llegar en las anims.
-
-    void startAnimationWithInitialBlending(DirectX::XMFLOAT3 rot_origin, const float32 blending_duration) {
+    void startWithBlending(DirectX::XMFLOAT3 origin_value, const float blending_duration) {
       step_destiny = 0;
-      alpha = 0;
+      alpha = 0.0f;
       timer = 0.0f;
-      //timer_limit = rotation_timers[step_destiny].x;
       timer_limit = blending_duration;
-      origin_rotation = rot_origin;
-      destiny_rotation = rotation_radians[step_destiny];
+      origin = origin_value;
+      destiny = step_values[step_destiny];
     }
 
-    void startAnimationWithoutBlending() {
+    void startWithoutBlending() {
       step_destiny = 0;
-      alpha = 0;
+      alpha = 0.0f;
       timer = 0.0f;
-      timer_limit = rotation_timers[step_destiny].x;
-      origin_rotation = rotation_radians[0];
-      destiny_rotation = rotation_radians[step_destiny];
+      timer_limit = step_timers[step_destiny].x;
+      origin = step_values[0];
+      destiny = step_values[step_destiny];
     }
 
-	
     void startNewStep() {
       step_destiny += 1;
-      if (step_destiny == vectors_size) {
-        step_destiny = 1;
+      if (step_destiny == num_steps) {
+        step_destiny = 0;
       }
       timer = 0.0f;
-      timer_limit = rotation_timers[step_destiny].x; // Ya que son todos iguales x y z
-      origin_rotation = destiny_rotation;
-      destiny_rotation = rotation_radians[step_destiny];
+      timer_limit = step_timers[step_destiny].x; // Ya que son todos iguales x y z
+      origin = destiny;
+      destiny = step_values[step_destiny];
     }
 
-    // Retorna la rotacion actual.
+    // Returns the rotation or traslation.
     DirectX::XMFLOAT3 update(const float32 delta_time) {
       timer += delta_time;
 
       // Relleno el alpha.
-      alpha = timer / timer_limit; // obtengo valor entre 0 y 1
-      if (alpha > 1.0f) { 
+      alpha = timer / timer_limit; // values between 0 and 1 to interpole
+      if (alpha > 1.0f) {
         alpha = 0.0f;
       }
-      // Compruebo si he terminado el step.
+      // Check if we need to change to the next step.
       if (timer > timer_limit) {
         startNewStep();
       }
 
       // retorno la rotacion que corresponde.
-      return tweening_func(origin_rotation, destiny_rotation, alpha);
+      return tweening_func(origin, destiny, alpha);
+    }
+
+
+  };
+
+  struct BoneInfo {
+
+    StepsInfo translation;
+    StepsInfo rotation;
+
+    std::string name;
+
+    void startAnimationWithInitialBlending(DirectX::XMFLOAT3 rot_origin,
+                                           DirectX::XMFLOAT3 traslation_origin,
+                                           const float32 blending_duration) {
+
+      translation.startWithBlending(traslation_origin, blending_duration);
+      rotation.startWithBlending(rot_origin, blending_duration);
+    }
+
+    void startAnimationWithoutBlending() {
+      translation.startWithoutBlending();
+      rotation.startWithoutBlending();
     }
 
     enum Axis {
@@ -307,7 +338,7 @@ int32 main() {
 
       std::string rot_text;
       tinyxml2::XMLElement* time_elem = nullptr;
-      tinyxml2::XMLElement* rot_elem = nullptr;
+      tinyxml2::XMLElement* value_elem = nullptr;
       std::vector<float64> temp;
 
       switch (axis) {
@@ -321,50 +352,102 @@ int32 main() {
         std::string id = i->Attribute("id");
         if (id == rot_text) {
           time_elem = i->FirstChildElement()->FirstChildElement("float_array");
-          rot_elem = i->FirstChildElement()->NextSiblingElement()->FirstChildElement("float_array");
+          value_elem = i->FirstChildElement()->NextSiblingElement()->FirstChildElement("float_array");
           break;
         }
       }
 
-      if (!time_elem || !rot_elem) {
+      if (!time_elem || !value_elem) {
         MessageBox(NULL, "Error loading animation from file", "ERROR", MB_OK);
       }
 
       // TIMERS
-      vectors_size = time_elem->IntAttribute("count");
-      rotation_timers.resize(vectors_size);
+      rotation.num_steps = time_elem->IntAttribute("count");
+      rotation.step_timers.resize(rotation.num_steps);
       std::istringstream time_string(time_elem->GetText());
       std::copy(std::istream_iterator<float64>(time_string),
                 std::istream_iterator<float64>(),
                 std::back_inserter(temp));
 
-      for (int i = 0; i < vectors_size; i++) {
+      for (int i = 0; i < rotation.num_steps; i++) {
         switch (axis) {
-          case BoneInfo::kAxis_X: { rotation_timers[i].x = temp[i]; } break;
-          case BoneInfo::kAxis_Y: { rotation_timers[i].y = temp[i]; } break;
-          case BoneInfo::kAxis_Z: { rotation_timers[i].z = temp[i]; } break;
+          case BoneInfo::kAxis_X: { rotation.step_timers[i].x = temp[i]; } break;
+          case BoneInfo::kAxis_Y: { rotation.step_timers[i].y = temp[i]; } break;
+          case BoneInfo::kAxis_Z: { rotation.step_timers[i].z = temp[i]; } break;
         } 
       }
 
       temp.clear();
-      // ANGLES
-      vectors_size = rot_elem->IntAttribute("count");
-      rotation_radians.resize(vectors_size);
-      std::istringstream rot_string(rot_elem->GetText());
+      // VALUES -> angles
+      rotation.num_steps = value_elem->IntAttribute("count");
+      rotation.step_values.resize(rotation.num_steps);
+      std::istringstream rot_string(value_elem->GetText());
       std::copy(std::istream_iterator<float64>(rot_string),
                 std::istream_iterator<float64>(),
                 std::back_inserter(temp));
 
-      for (int i = 0; i < vectors_size; i++) {
+      for (int i = 0; i < rotation.num_steps; i++) {
         //rotation_radians[i].x = DirectX::XMConvertToRadians(temp[i]);
         switch (axis) {
-          case BoneInfo::kAxis_X: { rotation_radians[i].x = DirectX::XMConvertToRadians(temp[i]); } break;
-          case BoneInfo::kAxis_Y: { rotation_radians[i].y = DirectX::XMConvertToRadians(temp[i]); } break;
-          case BoneInfo::kAxis_Z: { rotation_radians[i].z = DirectX::XMConvertToRadians(temp[i]); } break;
+          case BoneInfo::kAxis_X: { rotation.step_values[i].x = DirectX::XMConvertToRadians(temp[i]); } break;
+          case BoneInfo::kAxis_Y: { rotation.step_values[i].y = DirectX::XMConvertToRadians(temp[i]); } break;
+          case BoneInfo::kAxis_Z: { rotation.step_values[i].z = DirectX::XMConvertToRadians(temp[i]); } break;
         }
       }
     }
 
+    void setupTranslation(tinyxml2::XMLNode* root) {
+
+      std::string tr_text = name + ".translate";
+      tinyxml2::XMLElement* time_elem = nullptr;
+      tinyxml2::XMLElement* value_elem = nullptr;
+      std::vector<float64> temp;
+
+      // Searching for the correct child.
+      for (auto* i = root->FirstChildElement(); i != nullptr; i = i->NextSiblingElement()) {
+        std::string id = i->Attribute("id");
+        if (id == tr_text) {
+          time_elem = i->FirstChildElement()->FirstChildElement("float_array");
+          value_elem = i->FirstChildElement()->NextSiblingElement()->FirstChildElement("float_array");
+          break;
+        }
+      }
+
+      if (!time_elem || !value_elem) {
+        MessageBox(NULL, "Error loading animation from file", "ERROR", MB_OK);
+      }
+
+      // TIMERS
+      translation.num_steps = time_elem->IntAttribute("count");
+      translation.step_timers.resize(translation.num_steps);
+      std::istringstream time_string(time_elem->GetText());
+      std::copy(std::istream_iterator<float64>(time_string),
+                std::istream_iterator<float64>(),
+                std::back_inserter(temp));
+
+      for (int i = 0; i < translation.num_steps; i++) {
+        translation.step_timers[i].x = temp[i];
+      }
+
+      temp.clear();
+      // VALUES -> positions
+      translation.step_values.resize(translation.num_steps);
+      std::istringstream tr_string(value_elem->GetText());
+      std::copy(std::istream_iterator<float64>(tr_string),
+        std::istream_iterator<float64>(),
+        std::back_inserter(temp));
+
+      uint32 num_positions = temp.size() / 3;
+      uint32 index = 0;
+      for (int i = 0; i < num_positions; i++) {
+        translation.step_values[i].x = temp[index] * 0.1;
+        index++;
+        translation.step_values[i].y = temp[index] * 0.1;
+        index++;
+        translation.step_values[i].z = temp[index] * 0.1;
+        index++;
+      }
+    }
 
     void setup(tinyxml2::XMLDocument& doc) {
       // Get the main node.
@@ -373,7 +456,7 @@ int32 main() {
       setupAxisRotation(kAxis_X, root);
       setupAxisRotation(kAxis_Y, root);
       setupAxisRotation(kAxis_Z, root);
-
+      setupTranslation(root);
     }
 
   };
@@ -442,42 +525,63 @@ int32 main() {
 
     void update(const float32 delta_time, Robot* robot) {
       float32 delta_scaled = delta_time * speed;
-      robot->root.transform().set_rotation(bone_root.update(delta_scaled));
-      robot->pelvis_presley.transform().set_rotation(bone_pelvis_presley.update(delta_scaled));
-      robot->body.transform().set_rotation(bone_body.update(delta_scaled));
-      robot->right_shoulder.transform().set_rotation(bone_right_shoulder.update(delta_scaled));
-      robot->right_elbow.transform().set_rotation(bone_right_elbow.update(delta_scaled));
-      robot->right_wrist.transform().set_rotation(bone_right_wrist.update(delta_scaled));
-      robot->left_shoulder.transform().set_rotation(bone_left_shoulder.update(delta_scaled));
-      robot->left_elbow.transform().set_rotation(bone_left_elbow.update(delta_scaled));
-      robot->left_wrist.transform().set_rotation(bone_left_wrist.update(delta_scaled));
-      robot->neck.transform().set_rotation(bone_neck.update(delta_scaled));
-      robot->left_hip.transform().set_rotation(bone_left_hip.update(delta_scaled));
-      robot->left_knee.transform().set_rotation(bone_left_knee.update(delta_scaled));
-      robot->left_ankle.transform().set_rotation(bone_left_ankle.update(delta_scaled));
-      robot->right_ankle.transform().set_rotation(bone_right_ankle.update(delta_scaled));
-      robot->right_hip.transform().set_rotation(bone_right_hip.update(delta_scaled));
-      robot->right_knee.transform().set_rotation(bone_right_knee.update(delta_scaled));
+      // POSITIONS 
+      /*
+      */
+      robot->root.transform().set_position(bone_root.translation.update(delta_scaled));
+      robot->pelvis_presley.transform().set_position(bone_pelvis_presley.translation.update(delta_scaled));
+      robot->body.transform().set_position(bone_body.translation.update(delta_scaled));
+      robot->right_shoulder.transform().set_position(bone_right_shoulder.translation.update(delta_scaled));
+      robot->right_elbow.transform().set_position(bone_right_elbow.translation.update(delta_scaled));
+      robot->right_wrist.transform().set_position(bone_right_wrist.translation.update(delta_scaled));
+      robot->left_shoulder.transform().set_position(bone_left_shoulder.translation.update(delta_scaled));
+      robot->left_elbow.transform().set_position(bone_left_elbow.translation.update(delta_scaled));
+      robot->left_wrist.transform().set_position(bone_left_wrist.translation.update(delta_scaled));
+      robot->neck.transform().set_position(bone_neck.translation.update(delta_scaled));
+      robot->left_hip.transform().set_position(bone_left_hip.translation.update(delta_scaled));
+      robot->left_knee.transform().set_position(bone_left_knee.translation.update(delta_scaled));
+      robot->left_ankle.transform().set_position(bone_left_ankle.translation.update(delta_scaled));
+      robot->right_ankle.transform().set_position(bone_right_ankle.translation.update(delta_scaled));
+      robot->right_hip.transform().set_position(bone_right_hip.translation.update(delta_scaled));
+      robot->right_knee.transform().set_position(bone_right_knee.translation.update(delta_scaled));
+
+      // ROTATIONS
+      robot->root.transform().set_rotation(bone_root.rotation.update(delta_scaled));
+      robot->pelvis_presley.transform().set_rotation(bone_pelvis_presley.rotation.update(delta_scaled));
+      robot->body.transform().set_rotation(bone_body.rotation.update(delta_scaled));
+      robot->right_shoulder.transform().set_rotation(bone_right_shoulder.rotation.update(delta_scaled));
+      robot->right_elbow.transform().set_rotation(bone_right_elbow.rotation.update(delta_scaled));
+      robot->right_wrist.transform().set_rotation(bone_right_wrist.rotation.update(delta_scaled));
+      robot->left_shoulder.transform().set_rotation(bone_left_shoulder.rotation.update(delta_scaled));
+      robot->left_elbow.transform().set_rotation(bone_left_elbow.rotation.update(delta_scaled));
+      robot->left_wrist.transform().set_rotation(bone_left_wrist.rotation.update(delta_scaled));
+      robot->neck.transform().set_rotation(bone_neck.rotation.update(delta_scaled));
+      robot->left_hip.transform().set_rotation(bone_left_hip.rotation.update(delta_scaled));
+      robot->left_knee.transform().set_rotation(bone_left_knee.rotation.update(delta_scaled));
+      robot->left_ankle.transform().set_rotation(bone_left_ankle.rotation.update(delta_scaled));
+      robot->right_ankle.transform().set_rotation(bone_right_ankle.rotation.update(delta_scaled));
+      robot->right_hip.transform().set_rotation(bone_right_hip.rotation.update(delta_scaled));
+      robot->right_knee.transform().set_rotation(bone_right_knee.rotation.update(delta_scaled));
     }
 
     void play(const bool initial_blending, Robot* robot, const float32 blending_duration = 1.0f) {
       if (initial_blending) {
-        bone_root.startAnimationWithInitialBlending(robot->root.transform().rotation_float3(), blending_duration);
-        bone_body.startAnimationWithInitialBlending(robot->body.transform().rotation_float3(), blending_duration);
-        bone_left_ankle.startAnimationWithInitialBlending(robot->left_ankle.transform().rotation_float3(), blending_duration);
-        bone_left_elbow.startAnimationWithInitialBlending(robot->left_elbow.transform().rotation_float3(), blending_duration);
-        bone_left_hip.startAnimationWithInitialBlending(robot->left_hip.transform().rotation_float3(), blending_duration);
-        bone_left_knee.startAnimationWithInitialBlending(robot->left_knee.transform().rotation_float3(), blending_duration);
-        bone_left_shoulder.startAnimationWithInitialBlending(robot->left_shoulder.transform().rotation_float3(), blending_duration);
-        bone_left_wrist.startAnimationWithInitialBlending(robot->left_wrist.transform().rotation_float3(), blending_duration);
-        bone_right_ankle.startAnimationWithInitialBlending(robot->right_ankle.transform().rotation_float3(), blending_duration);
-        bone_right_elbow.startAnimationWithInitialBlending(robot->right_elbow.transform().rotation_float3(), blending_duration);
-        bone_right_hip.startAnimationWithInitialBlending(robot->right_hip.transform().rotation_float3(), blending_duration);
-        bone_right_knee.startAnimationWithInitialBlending(robot->right_knee.transform().rotation_float3(), blending_duration);
-        bone_right_shoulder.startAnimationWithInitialBlending(robot->right_shoulder.transform().rotation_float3(), blending_duration);
-        bone_right_wrist.startAnimationWithInitialBlending(robot->right_wrist.transform().rotation_float3(), blending_duration);
-        bone_neck.startAnimationWithInitialBlending(robot->neck.transform().rotation_float3(), blending_duration);
-        bone_pelvis_presley.startAnimationWithInitialBlending(robot->pelvis_presley.transform().rotation_float3(), blending_duration);
+        bone_root.startAnimationWithInitialBlending(robot->root.transform().rotation_float3(), robot->root.transform().position_float3(), blending_duration);
+        bone_body.startAnimationWithInitialBlending(robot->body.transform().rotation_float3(), robot->body.transform().position_float3(), blending_duration);
+        bone_left_ankle.startAnimationWithInitialBlending(robot->left_ankle.transform().rotation_float3(), robot->left_ankle.transform().position_float3(), blending_duration);
+        bone_left_elbow.startAnimationWithInitialBlending(robot->left_elbow.transform().rotation_float3(), robot->left_elbow.transform().position_float3(), blending_duration);
+        bone_left_hip.startAnimationWithInitialBlending(robot->left_hip.transform().rotation_float3(), robot->left_hip.transform().position_float3(), blending_duration);
+        bone_left_knee.startAnimationWithInitialBlending(robot->left_knee.transform().rotation_float3(), robot->left_knee.transform().position_float3(), blending_duration);
+        bone_left_shoulder.startAnimationWithInitialBlending(robot->left_shoulder.transform().rotation_float3(), robot->left_shoulder.transform().position_float3(), blending_duration);
+        bone_left_wrist.startAnimationWithInitialBlending(robot->left_wrist.transform().rotation_float3(), robot->left_wrist.transform().position_float3(), blending_duration);
+        bone_right_ankle.startAnimationWithInitialBlending(robot->right_ankle.transform().rotation_float3(), robot->right_ankle.transform().position_float3(), blending_duration);
+        bone_right_elbow.startAnimationWithInitialBlending(robot->right_elbow.transform().rotation_float3(), robot->right_elbow.transform().position_float3(), blending_duration);
+        bone_right_hip.startAnimationWithInitialBlending(robot->right_hip.transform().rotation_float3(), robot->right_hip.transform().position_float3(), blending_duration);
+        bone_right_knee.startAnimationWithInitialBlending(robot->right_knee.transform().rotation_float3(), robot->right_knee.transform().position_float3(), blending_duration);
+        bone_right_shoulder.startAnimationWithInitialBlending(robot->right_shoulder.transform().rotation_float3(), robot->right_shoulder.transform().position_float3(), blending_duration);
+        bone_right_wrist.startAnimationWithInitialBlending(robot->right_wrist.transform().rotation_float3(), robot->right_wrist.transform().position_float3(), blending_duration);
+        bone_neck.startAnimationWithInitialBlending(robot->neck.transform().rotation_float3(), robot->neck.transform().position_float3(), blending_duration);
+        bone_pelvis_presley.startAnimationWithInitialBlending(robot->pelvis_presley.transform().rotation_float3(), robot->pelvis_presley.transform().position_float3(), blending_duration);
       }
       else {
         bone_root.startAnimationWithoutBlending();
@@ -522,7 +626,6 @@ int32 main() {
       attack.init("../data/animations/RobotAttackAnimDAE.txt");
       die.init("../data/animations/RobotDieAnimDAE.txt");
       robot = r;
-      //current_animation->play(true, robot);
     }
 
     void update(const float delta_time) {
@@ -578,7 +681,7 @@ int32 main() {
 
   Robot robot;
   robot.init(mat);
-  root.addChild(&robot.root);
+  root.addChild(&robot.robot_root);
 
   AnimController anim_controller;
   anim_controller.init(&robot);
@@ -591,18 +694,29 @@ int32 main() {
     uint64 tick = Time();
     uint64 delta = tick - last_time_updated;
 
-    anim_controller.update((float32)delta * 0.001);
+    char delta_[128];
+    sprintf(delta_, "%f\n", (float32)delta);
+    if ((float32)delta > 10) {
+      OutputDebugString(delta_);
+    }
 
     if (Input::IsKeyboardButtonDown(Input::kKeyboardButton_Left)) {
       anim_controller.current_animation = &anim_controller.attack;
-      anim_controller.current_animation->play(false, anim_controller.robot, 0.5f);
+      anim_controller.current_animation->play(true, anim_controller.robot, 0.5f);
     }
 
     if (Input::IsKeyboardButtonDown(Input::kKeyboardButton_Right)) {
       anim_controller.current_animation = &anim_controller.idle;
-      anim_controller.current_animation->play(false, anim_controller.robot, 0.5f);
+      anim_controller.current_animation->play(true, anim_controller.robot, 0.5f);
     }
 
+    if (Input::IsKeyboardButtonDown(Input::kKeyboardButton_Up)) {
+      anim_controller.current_animation = &anim_controller.die;
+      anim_controller.current_animation->play(true, anim_controller.robot, 0.5f);
+    }
+
+    //anim_controller.update((float32)delta * 0.001);
+    anim_controller.update(0.001);
     cam.render(&root);
 
     ImGui::SliderFloat("Animation Speed", &debug_speed, 0.0f, 5.0f);
