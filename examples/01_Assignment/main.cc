@@ -11,7 +11,7 @@
 #include "core/geo.h"
 #include "core/super_material.h"
 #include "core/core.h"
-#include "core/entity.h"
+#include "core/Entity.h"
 #include "core/texture.h"
 #include "imgui/imgui.h"
 #include "core/cam.h"
@@ -27,8 +27,12 @@ void AirplaneInput() {
   // Movement on forward is automatic
   g_plane.move_forward();
 
-  if (Input::IsMouseButtonUp(W3D::Input::kMouseButton_Left)) {
+  if (Input::IsMouseButtonUp(W3D::Input::kMouseButton_Right)) {
     g_plane.shoot();
+  }
+
+  if (Input::IsKeyboardButtonUp(W3D::Input::kKeyboardButton_Q)) {
+    g_plane.toggleCameraMode();
   }
 
   ///////////////////////////////////////////////
@@ -84,7 +88,6 @@ int32 main() {
   mat.texture_asphalt_ = &texture[3];
   geo_terrain.initTerrain("./../data/textures/Heightmap.bmp", { 1000.0f, 50.0f, 1000.0f });
 
-
   Entity terrain;
 
   g_plane.init(&root);
@@ -103,31 +106,27 @@ int32 main() {
   while (Window::StartFrame() && Window::IsOpened() && 
          !Input::IsKeyboardButtonDown(Input::kKeyboardButton_Escape)) {
 
-	uint64 start = Time();
-    DirectX::XMFLOAT3 temp;
+	  uint64 start = Time();
 
-    DirectX::XMStoreFloat3(&temp, g_plane.camera_node().transform().world_position_vector());
-    cam.set_position(temp.x, temp.y, temp.z);
+    if (!cam.is_navigation_enabled_) {
+      ///////////////////////////////////////////
+      // Transfer ownership of camera to the plane
+      // this way camera will move between camera
+      // position nodes of the airplane.
+      g_plane.update_camera_view(&cam);
 
-    DirectX::XMStoreFloat3(&temp, g_plane.root().transform().world_position_vector());
-    cam.set_target(temp.x, temp.y, temp.z);
+      ///////////////////////////////////////////
+      // Input for our Aeroplane
+      AirplaneInput();
+    }
 
-    ///////////////////////////////////////////
-    // Input for our Aeroplane
-    AirplaneInput();
-    
+    g_plane.imgui_debug();
     g_plane.update();
 
-
     cam.render(&root);
-    g_plane.prop().transform().set_rotation(0.0f, 0.0f, (float32)Time() * 0.01f);
-    g_plane.turret().transform().set_rotation(0.0f, (float32)Time() * 0.001f, 0.0f);
-
-	  ImGui::SetNextWindowPos(ImVec2(650, 20), ImGuiCond_FirstUseEver);
-	  ImGui::ShowTestWindow(0);
 
     Window::EndFrame();
-	Sleep(start + 16 - Time());
+	  Sleep(start + 16 - Time());
   }
 
   Window::Close();

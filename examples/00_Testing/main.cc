@@ -33,11 +33,11 @@ void ImGuiGenerateNodeStats(Entity* entity) {
 
   // rotation
   temp = entity->transform().rotation_float3();
-  temp.x = DirectX::XMConvertToDegrees(temp.x);
-  temp.y = DirectX::XMConvertToDegrees(temp.y);
-  temp.z = DirectX::XMConvertToDegrees(temp.z);
+  //temp.x = DirectX::XMConvertToDegrees(temp.x);
+  //temp.y = DirectX::XMConvertToDegrees(temp.y);
+  //temp.z = DirectX::XMConvertToDegrees(temp.z);
   ImGui::DragFloat3(" Rotation", &temp.x, 0.05f);
-  //entity->transform().set_rotation(temp);
+  entity->transform().set_rotation(temp);
 
 
   ImGui::PopID();
@@ -267,6 +267,7 @@ int32 main() {
       destiny_rotation = rotation_radians[step_destiny];
     }
 
+	
     void startNewStep() {
       step_destiny += 1;
       if (step_destiny == vectors_size) {
@@ -594,12 +595,12 @@ int32 main() {
 
     if (Input::IsKeyboardButtonDown(Input::kKeyboardButton_Left)) {
       anim_controller.current_animation = &anim_controller.attack;
-      anim_controller.current_animation->play(true, anim_controller.robot, 0.5f);
+      anim_controller.current_animation->play(false, anim_controller.robot, 0.5f);
     }
 
     if (Input::IsKeyboardButtonDown(Input::kKeyboardButton_Right)) {
       anim_controller.current_animation = &anim_controller.idle;
-      anim_controller.current_animation->play(true, anim_controller.robot, 0.5f);
+      anim_controller.current_animation->play(false, anim_controller.robot, 0.5f);
     }
 
     cam.render(&root);
