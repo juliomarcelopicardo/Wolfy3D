@@ -36,7 +36,7 @@ void ImGuiGenerateNodeStats(Entity* entity) {
   ImGui::DragFloat3(" Position", &temp.x);
 
   // rotation
-  temp = entity->transform().rotation_float3();
+  temp = entity->transform().euler_rotation_float3();
   temp.x = DirectX::XMConvertToDegrees(temp.x);
   temp.y = DirectX::XMConvertToDegrees(temp.y);
   temp.z = DirectX::XMConvertToDegrees(temp.z);
@@ -60,6 +60,8 @@ void ImGuiGenerateRootTreeStats(Entity* root_entity) {
   }
 
 }
+
+
 
 DirectX::XMFLOAT3 tweening_func(DirectX::XMFLOAT3 origin, DirectX::XMFLOAT3 destiny, float alpha) {
   float x_variation = (destiny.x - origin.x) * alpha;
@@ -248,7 +250,7 @@ int32 main() {
       step_destiny = 0;
     }
 
-    std::vector<DirectX::XMFLOAT3> step_timers; // Key frames times.
+    std::vector<float32> step_timers; // Key frames times.
     std::vector<DirectX::XMFLOAT3> step_values; // angles, positions, etc.
     uint32 num_steps;
     DirectX::XMFLOAT3 origin; // To interpole.
@@ -271,7 +273,7 @@ int32 main() {
       step_destiny = 0;
       alpha = 0.0f;
       timer = 0.0f;
-      timer_limit = step_timers[step_destiny].x;
+      timer_limit = step_timers[step_destiny];
       origin = step_values[0];
       destiny = step_values[step_destiny];
     }
@@ -282,7 +284,7 @@ int32 main() {
         step_destiny = 0;
       }
       timer = 0.0f;
-      timer_limit = step_timers[step_destiny].x; // Ya que son todos iguales x y z
+      timer_limit = step_timers[step_destiny]; // Ya que son todos iguales x y z
       origin = destiny;
       destiny = step_values[step_destiny];
     }
@@ -370,11 +372,7 @@ int32 main() {
                 std::back_inserter(temp));
 
       for (int i = 0; i < rotation.num_steps; i++) {
-        switch (axis) {
-          case BoneInfo::kAxis_X: { rotation.step_timers[i].x = temp[i]; } break;
-          case BoneInfo::kAxis_Y: { rotation.step_timers[i].y = temp[i]; } break;
-          case BoneInfo::kAxis_Z: { rotation.step_timers[i].z = temp[i]; } break;
-        } 
+        rotation.step_timers[i] = temp[i]; 
       }
 
       temp.clear();
@@ -426,7 +424,7 @@ int32 main() {
                 std::back_inserter(temp));
 
       for (int i = 0; i < translation.num_steps; i++) {
-        translation.step_timers[i].x = temp[i];
+        translation.step_timers[i] = temp[i];
       }
 
       temp.clear();
@@ -546,42 +544,42 @@ int32 main() {
       robot->right_knee.transform().set_position(bone_right_knee.translation.update(delta_scaled));
 
       // ROTATIONS
-      robot->root.transform().set_rotation(bone_root.rotation.update(delta_scaled));
-      robot->pelvis_presley.transform().set_rotation(bone_pelvis_presley.rotation.update(delta_scaled));
-      robot->body.transform().set_rotation(bone_body.rotation.update(delta_scaled));
-      robot->right_shoulder.transform().set_rotation(bone_right_shoulder.rotation.update(delta_scaled));
-      robot->right_elbow.transform().set_rotation(bone_right_elbow.rotation.update(delta_scaled));
-      robot->right_wrist.transform().set_rotation(bone_right_wrist.rotation.update(delta_scaled));
-      robot->left_shoulder.transform().set_rotation(bone_left_shoulder.rotation.update(delta_scaled));
-      robot->left_elbow.transform().set_rotation(bone_left_elbow.rotation.update(delta_scaled));
-      robot->left_wrist.transform().set_rotation(bone_left_wrist.rotation.update(delta_scaled));
-      robot->neck.transform().set_rotation(bone_neck.rotation.update(delta_scaled));
-      robot->left_hip.transform().set_rotation(bone_left_hip.rotation.update(delta_scaled));
-      robot->left_knee.transform().set_rotation(bone_left_knee.rotation.update(delta_scaled));
-      robot->left_ankle.transform().set_rotation(bone_left_ankle.rotation.update(delta_scaled));
-      robot->right_ankle.transform().set_rotation(bone_right_ankle.rotation.update(delta_scaled));
-      robot->right_hip.transform().set_rotation(bone_right_hip.rotation.update(delta_scaled));
-      robot->right_knee.transform().set_rotation(bone_right_knee.rotation.update(delta_scaled));
+      robot->root.transform().set_euler_rotation(bone_root.rotation.update(delta_scaled));
+      robot->pelvis_presley.transform().set_euler_rotation(bone_pelvis_presley.rotation.update(delta_scaled));
+      robot->body.transform().set_euler_rotation(bone_body.rotation.update(delta_scaled));
+      robot->right_shoulder.transform().set_euler_rotation(bone_right_shoulder.rotation.update(delta_scaled));
+      robot->right_elbow.transform().set_euler_rotation(bone_right_elbow.rotation.update(delta_scaled));
+      robot->right_wrist.transform().set_euler_rotation(bone_right_wrist.rotation.update(delta_scaled));
+      robot->left_shoulder.transform().set_euler_rotation(bone_left_shoulder.rotation.update(delta_scaled));
+      robot->left_elbow.transform().set_euler_rotation(bone_left_elbow.rotation.update(delta_scaled));
+      robot->left_wrist.transform().set_euler_rotation(bone_left_wrist.rotation.update(delta_scaled));
+      robot->neck.transform().set_euler_rotation(bone_neck.rotation.update(delta_scaled));
+      robot->left_hip.transform().set_euler_rotation(bone_left_hip.rotation.update(delta_scaled));
+      robot->left_knee.transform().set_euler_rotation(bone_left_knee.rotation.update(delta_scaled));
+      robot->left_ankle.transform().set_euler_rotation(bone_left_ankle.rotation.update(delta_scaled));
+      robot->right_ankle.transform().set_euler_rotation(bone_right_ankle.rotation.update(delta_scaled));
+      robot->right_hip.transform().set_euler_rotation(bone_right_hip.rotation.update(delta_scaled));
+      robot->right_knee.transform().set_euler_rotation(bone_right_knee.rotation.update(delta_scaled));
     }
 
     void play(const bool initial_blending, Robot* robot, const float32 blending_duration = 1.0f) {
       if (initial_blending) {
-        bone_root.startAnimationWithInitialBlending(robot->root.transform().rotation_float3(), robot->root.transform().position_float3(), blending_duration);
-        bone_body.startAnimationWithInitialBlending(robot->body.transform().rotation_float3(), robot->body.transform().position_float3(), blending_duration);
-        bone_left_ankle.startAnimationWithInitialBlending(robot->left_ankle.transform().rotation_float3(), robot->left_ankle.transform().position_float3(), blending_duration);
-        bone_left_elbow.startAnimationWithInitialBlending(robot->left_elbow.transform().rotation_float3(), robot->left_elbow.transform().position_float3(), blending_duration);
-        bone_left_hip.startAnimationWithInitialBlending(robot->left_hip.transform().rotation_float3(), robot->left_hip.transform().position_float3(), blending_duration);
-        bone_left_knee.startAnimationWithInitialBlending(robot->left_knee.transform().rotation_float3(), robot->left_knee.transform().position_float3(), blending_duration);
-        bone_left_shoulder.startAnimationWithInitialBlending(robot->left_shoulder.transform().rotation_float3(), robot->left_shoulder.transform().position_float3(), blending_duration);
-        bone_left_wrist.startAnimationWithInitialBlending(robot->left_wrist.transform().rotation_float3(), robot->left_wrist.transform().position_float3(), blending_duration);
-        bone_right_ankle.startAnimationWithInitialBlending(robot->right_ankle.transform().rotation_float3(), robot->right_ankle.transform().position_float3(), blending_duration);
-        bone_right_elbow.startAnimationWithInitialBlending(robot->right_elbow.transform().rotation_float3(), robot->right_elbow.transform().position_float3(), blending_duration);
-        bone_right_hip.startAnimationWithInitialBlending(robot->right_hip.transform().rotation_float3(), robot->right_hip.transform().position_float3(), blending_duration);
-        bone_right_knee.startAnimationWithInitialBlending(robot->right_knee.transform().rotation_float3(), robot->right_knee.transform().position_float3(), blending_duration);
-        bone_right_shoulder.startAnimationWithInitialBlending(robot->right_shoulder.transform().rotation_float3(), robot->right_shoulder.transform().position_float3(), blending_duration);
-        bone_right_wrist.startAnimationWithInitialBlending(robot->right_wrist.transform().rotation_float3(), robot->right_wrist.transform().position_float3(), blending_duration);
-        bone_neck.startAnimationWithInitialBlending(robot->neck.transform().rotation_float3(), robot->neck.transform().position_float3(), blending_duration);
-        bone_pelvis_presley.startAnimationWithInitialBlending(robot->pelvis_presley.transform().rotation_float3(), robot->pelvis_presley.transform().position_float3(), blending_duration);
+        bone_root.startAnimationWithInitialBlending(robot->root.transform().euler_rotation_float3(), robot->root.transform().position_float3(), blending_duration);
+        bone_body.startAnimationWithInitialBlending(robot->body.transform().euler_rotation_float3(), robot->body.transform().position_float3(), blending_duration);
+        bone_left_ankle.startAnimationWithInitialBlending(robot->left_ankle.transform().euler_rotation_float3(), robot->left_ankle.transform().position_float3(), blending_duration);
+        bone_left_elbow.startAnimationWithInitialBlending(robot->left_elbow.transform().euler_rotation_float3(), robot->left_elbow.transform().position_float3(), blending_duration);
+        bone_left_hip.startAnimationWithInitialBlending(robot->left_hip.transform().euler_rotation_float3(), robot->left_hip.transform().position_float3(), blending_duration);
+        bone_left_knee.startAnimationWithInitialBlending(robot->left_knee.transform().euler_rotation_float3(), robot->left_knee.transform().position_float3(), blending_duration);
+        bone_left_shoulder.startAnimationWithInitialBlending(robot->left_shoulder.transform().euler_rotation_float3(), robot->left_shoulder.transform().position_float3(), blending_duration);
+        bone_left_wrist.startAnimationWithInitialBlending(robot->left_wrist.transform().euler_rotation_float3(), robot->left_wrist.transform().position_float3(), blending_duration);
+        bone_right_ankle.startAnimationWithInitialBlending(robot->right_ankle.transform().euler_rotation_float3(), robot->right_ankle.transform().position_float3(), blending_duration);
+        bone_right_elbow.startAnimationWithInitialBlending(robot->right_elbow.transform().euler_rotation_float3(), robot->right_elbow.transform().position_float3(), blending_duration);
+        bone_right_hip.startAnimationWithInitialBlending(robot->right_hip.transform().euler_rotation_float3(), robot->right_hip.transform().position_float3(), blending_duration);
+        bone_right_knee.startAnimationWithInitialBlending(robot->right_knee.transform().euler_rotation_float3(), robot->right_knee.transform().position_float3(), blending_duration);
+        bone_right_shoulder.startAnimationWithInitialBlending(robot->right_shoulder.transform().euler_rotation_float3(), robot->right_shoulder.transform().position_float3(), blending_duration);
+        bone_right_wrist.startAnimationWithInitialBlending(robot->right_wrist.transform().euler_rotation_float3(), robot->right_wrist.transform().position_float3(), blending_duration);
+        bone_neck.startAnimationWithInitialBlending(robot->neck.transform().euler_rotation_float3(), robot->neck.transform().position_float3(), blending_duration);
+        bone_pelvis_presley.startAnimationWithInitialBlending(robot->pelvis_presley.transform().euler_rotation_float3(), robot->pelvis_presley.transform().position_float3(), blending_duration);
       }
       else {
         bone_root.startAnimationWithoutBlending();
@@ -715,8 +713,8 @@ int32 main() {
       anim_controller.current_animation->play(true, anim_controller.robot, 0.5f);
     }
 
-    //anim_controller.update((float32)delta * 0.001);
-    anim_controller.update(0.001);
+    anim_controller.update((float32)delta * 0.001);
+    //anim_controller.update(0.001);
     cam.render(&root);
 
     ImGui::SliderFloat("Animation Speed", &debug_speed, 0.0f, 5.0f);
