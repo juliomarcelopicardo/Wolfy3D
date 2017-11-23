@@ -11,9 +11,78 @@
 namespace W3D {
 namespace Math {
 
+#pragma region EULER_QUATERNION_CONVERSIONS
+
+DirectX::XMFLOAT4 ConvertEulerToQuaternionFloat4(DirectX::XMFLOAT3 euler) {
+
+  DirectX::XMVECTOR quat_x, quat_y, quat_z, temp;
+  DirectX::XMFLOAT4 result;
+    
+  quat_x = DirectX::XMQuaternionRotationAxis(DirectX::XMVectorSet(1.0f, 0.0f, 0.0f, 0.0f), euler.x);
+  quat_y = DirectX::XMQuaternionRotationAxis(DirectX::XMVectorSet(0.0f, 1.0f, 0.0f, 0.0f), euler.y);
+  quat_z = DirectX::XMQuaternionRotationAxis(DirectX::XMVectorSet(0.0f, 0.0f, 1.0f, 0.0f), euler.z);
+    
+  temp = DirectX::XMQuaternionNormalize(DirectX::XMQuaternionMultiply(quat_z, quat_x));
+  temp = DirectX::XMQuaternionNormalize(DirectX::XMQuaternionMultiply(temp, quat_y));
+    
+  DirectX::XMStoreFloat4(&result, temp);
+  return result;
+}
+
+DirectX::XMFLOAT4 ConvertEulerToQuaternionFloat4(DirectX::XMVECTOR euler) {
+
+  DirectX::XMVECTOR quat_x, quat_y, quat_z, temp;
+  DirectX::XMFLOAT3 radians;
+  DirectX::XMFLOAT4 result;
+  DirectX::XMStoreFloat3(&radians, euler);
+
+  quat_x = DirectX::XMQuaternionRotationAxis(DirectX::XMVectorSet(1.0f, 0.0f, 0.0f, 0.0f), radians.x);
+  quat_y = DirectX::XMQuaternionRotationAxis(DirectX::XMVectorSet(0.0f, 1.0f, 0.0f, 0.0f), radians.y);
+  quat_z = DirectX::XMQuaternionRotationAxis(DirectX::XMVectorSet(0.0f, 0.0f, 1.0f, 0.0f), radians.z);
+
+  temp = DirectX::XMQuaternionNormalize(DirectX::XMQuaternionMultiply(quat_z, quat_x));
+  temp = DirectX::XMQuaternionNormalize(DirectX::XMQuaternionMultiply(temp, quat_y));
+
+  DirectX::XMStoreFloat4(&result, temp);
+  return result;
+}
+
+DirectX::XMVECTOR ConvertEulerToQuaternionVector(DirectX::XMFLOAT3 euler) {
+
+  DirectX::XMVECTOR quat_x, quat_y, quat_z, result;
+    
+  quat_x = DirectX::XMQuaternionRotationAxis(DirectX::XMVectorSet(1.0f, 0.0f, 0.0f, 0.0f), euler.x);
+  quat_y = DirectX::XMQuaternionRotationAxis(DirectX::XMVectorSet(0.0f, 1.0f, 0.0f, 0.0f), euler.y);
+  quat_z = DirectX::XMQuaternionRotationAxis(DirectX::XMVectorSet(0.0f, 0.0f, 1.0f, 0.0f), euler.z);
+    
+  result = DirectX::XMQuaternionNormalize(DirectX::XMQuaternionMultiply(quat_z, quat_x));
+  result = DirectX::XMQuaternionNormalize(DirectX::XMQuaternionMultiply(result, quat_y));
+
+  return result;
+}
+
+DirectX::XMVECTOR ConvertEulerToQuaternionVector(DirectX::XMVECTOR euler) {
+
+  DirectX::XMVECTOR quat_x, quat_y, quat_z, result;
+  DirectX::XMFLOAT3 radians;
+  DirectX::XMStoreFloat3(&radians, euler);
+
+  quat_x = DirectX::XMQuaternionRotationAxis(DirectX::XMVectorSet(1.0f, 0.0f, 0.0f, 0.0f), radians.x);
+  quat_y = DirectX::XMQuaternionRotationAxis(DirectX::XMVectorSet(0.0f, 1.0f, 0.0f, 0.0f), radians.y);
+  quat_z = DirectX::XMQuaternionRotationAxis(DirectX::XMVectorSet(0.0f, 0.0f, 1.0f, 0.0f), radians.z);
+
+  result = DirectX::XMQuaternionNormalize(DirectX::XMQuaternionMultiply(quat_z, quat_x));
+  result = DirectX::XMQuaternionNormalize(DirectX::XMQuaternionMultiply(result, quat_y));
+
+  return result;
+}
+
+#pragma endregion
+
 #pragma region EXTRACT_EULER_ROTATION_FROM_MODEL_MATRIX
 
-DirectX::XMFLOAT3 GetEulerRotationFromModelMatrix(DirectX::XMFLOAT4X4 m) {
+
+  DirectX::XMFLOAT3 GetEulerRotationFromModelMatrix(DirectX::XMFLOAT4X4 m) {
   DirectX::XMFLOAT3 euler;
 
   float sp = -m._32;

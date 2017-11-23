@@ -14,6 +14,46 @@
 namespace W3D {
 namespace Math {
 
+#pragma region EULER_QUATERNION_CONVERSIONS
+
+///--------------------------------------------------------------------------
+/// @fn   DirectX::XMFLOAT4 ConvertEulerToQuaternionFloat4(DirectX::XMFLOAT3 euler_radians);
+///
+/// @brief Converts an euler rotation XYZ to quaternion.
+/// @param euler_radians Rotation in euler radians.
+/// @return Rotation in normalized quaternion.
+///--------------------------------------------------------------------------
+DirectX::XMFLOAT4 ConvertEulerToQuaternionFloat4(DirectX::XMFLOAT3 euler_radians);
+
+///--------------------------------------------------------------------------
+/// @fn   DirectX::XMFLOAT4 ConvertEulerToQuaternionFloat4(DirectX::XMVECTOR euler_radians);
+///
+/// @brief Converts an euler rotation XYZ to quaternion.
+/// @param euler_radians Rotation in euler radians.
+/// @return Rotation in normalized quaternion.
+///--------------------------------------------------------------------------
+DirectX::XMFLOAT4 ConvertEulerToQuaternionFloat4(DirectX::XMVECTOR euler_radians);
+
+///--------------------------------------------------------------------------
+/// @fn   DirectX::XMVECTOR ConvertEulerToQuaternionVector(DirectX::XMFLOAT3 euler_radians);
+///
+/// @brief Converts an euler rotation XYZ to quaternion.
+/// @param euler_radians Rotation in euler radians.
+/// @return Rotation in normalized quaternion.
+///--------------------------------------------------------------------------
+DirectX::XMVECTOR ConvertEulerToQuaternionVector(DirectX::XMFLOAT3 euler_radians);
+
+///--------------------------------------------------------------------------
+/// @fn   DirectX::XMVECTOR ConvertEulerToQuaternionVector(DirectX::XMVECTOR euler_radians);
+///
+/// @brief Converts an euler rotation XYZ to quaternion.
+/// @param euler_radians Rotation in euler radians.
+/// @return Rotation in normalized quaternion.
+///--------------------------------------------------------------------------
+DirectX::XMVECTOR ConvertEulerToQuaternionVector(DirectX::XMVECTOR euler_radians);
+
+#pragma endregion
+
 #pragma region EXTRACT_EULER_ROTATION_FROM_MODEL_MATRIX
 
 ///--------------------------------------------------------------------------
