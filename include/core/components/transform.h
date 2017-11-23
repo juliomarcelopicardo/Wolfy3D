@@ -50,12 +50,20 @@ public:
   DirectX::XMVECTOR position_vector() const;
 
   ///--------------------------------------------------------------------------
-  /// @fn   DirectX::XMVECTOR position_float3() const;
+  /// @fn   DirectX::XMFLOAT3 position_float3() const;
   ///
   /// @brief  Transform position getter.
   /// @return XMFLOAT3 containing X,Y,Z Position.
   ///--------------------------------------------------------------------------
   DirectX::XMFLOAT3 position_float3() const;
+
+  ///--------------------------------------------------------------------------
+  /// @fn   DirectX::XMFLOAT4 position_float3() const;
+  ///
+  /// @brief  Transform position getter.
+  /// @return XMFLOAT4 containing X,Y,Z Position.
+  ///--------------------------------------------------------------------------
+  DirectX::XMFLOAT4 position_float4() const;
 
   ///--------------------------------------------------------------------------
   /// @fn   DirectX::XMVECTOR world_position_vector();
@@ -66,7 +74,7 @@ public:
   DirectX::XMVECTOR world_position_vector();
 
   ///--------------------------------------------------------------------------
-  /// @fn   DirectX::XMVECTOR world_position_float3();
+  /// @fn   DirectX::XMFLOAT3 world_position_float3();
   ///
   /// @brief  Transform world position getter.
   /// @return XMVECTOR containing X,Y,Z World Position.

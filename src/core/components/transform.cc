@@ -47,6 +47,10 @@ DirectX::XMFLOAT3 TransformComponent::position_float3() const {
   return position_;
 }
 
+DirectX::XMFLOAT4 TransformComponent::position_float4() const {
+  return { position_.x, position_.y, position_.z, 1.0f };
+}
+
 DirectX::XMVECTOR TransformComponent::world_position_vector() {
   return DirectX::XMLoadFloat3(&world_position_float3());
 }
@@ -191,14 +195,7 @@ void TransformComponent::set_euler_world_rotation(const DirectX::XMFLOAT3 rotati
 }
 
 void TransformComponent::set_quaternion_world_rotation(const DirectX::XMFLOAT4 rotation) {
-  if (owner_->parent_) {
-    DirectX::XMFLOAT4 rot = owner_->parent_->transform().quaternion_world_rotation_float4();
-    //DirectX::Quaterniond 
-    //set_euler_rotation(x - rot.x, y - rot.y, z - rot.z);
-  }
-  else {
-    //set_euler_rotation(x, y, z);
-  }
+  // TODO
 }
 
 void TransformComponent::set_euler_world_rotation(const DirectX::XMVECTOR rotation) {
@@ -207,8 +204,8 @@ void TransformComponent::set_euler_world_rotation(const DirectX::XMVECTOR rotati
   set_euler_world_rotation(rot);
 }
 
-void TransformComponent::set_quaternion_world_rotation(const DirectX::XMVECTOR quaternion)
-{
+void TransformComponent::set_quaternion_world_rotation(const DirectX::XMVECTOR quaternion) {
+  // TODO 
 }
 
 #pragma endregion

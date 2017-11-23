@@ -104,7 +104,7 @@ void Aeroplane::shoot() {
 
   bullets_[current_bullet_].dir = gun_.transform().world_forward_vector();
   bullets_[current_bullet_].obj->transform().set_world_position(gun_node_.transform().world_position_vector());
-  bullets_[current_bullet_].obj->transform().set_rotation(gun_.transform().world_rotation_float3());
+  bullets_[current_bullet_].obj->transform().set_euler_rotation(gun_.transform().euler_world_rotation_float3());
   
 
   bullets_[current_bullet_].shot = true;
@@ -121,12 +121,12 @@ void Aeroplane::update() {
     }
   }
 
-  landing_node_.transform().set_rotation(0.0f, (W3D::float32)W3D::Time() * 0.001f, 0.0f);
-  turret_.transform().set_rotation(0.0f, (W3D::float32)W3D::Time() * 0.001f, 0.0f);
-  gun_.transform().set_rotation(sin((W3D::float32)W3D::Time() * 0.001f) * 0.25f + 0.25f, 0.0f, 0.0f);
+  landing_node_.transform().set_euler_rotation(0.0f, (W3D::float32)W3D::Time() * 0.001f, 0.0f);
+  turret_.transform().set_euler_rotation(0.0f, (W3D::float32)W3D::Time() * 0.001f, 0.0f);
+  gun_.transform().set_euler_rotation(sin((W3D::float32)W3D::Time() * 0.001f) * 0.25f + 0.25f, 0.0f, 0.0f);
 
   if (engine_enabled_) {
-    prop().transform().set_rotation(0.0f, 0.0f, (W3D::float32)W3D::Time() * 0.01f * acceleration_);
+    prop().transform().set_euler_rotation(0.0f, 0.0f, (W3D::float32)W3D::Time() * 0.01f * acceleration_);
     if (acceleration_ < 1.00f) {
       acceleration_ += (W3D::float32)W3D::Time() * 0.0000005f;
     }
@@ -143,12 +143,12 @@ void Aeroplane::move_pitch(W3D::float32 pitch_limit_degrees, bool facing_upwards
   // Plane can't move up or down if the engine isn't fully started
   if (acceleration_ >= 0.50f) {
     if (facing_upwards) {
-      if (plane_root_.transform().rotation_float3().x > DirectX::XMConvertToRadians(pitch_limit_degrees)) {
+      if (plane_root_.transform().euler_rotation_float3().x > DirectX::XMConvertToRadians(pitch_limit_degrees)) {
         plane_root_.transform().rotate(-rotation_speed_, 0.0f, 0.0f);
       }
     }
     else {
-      if (plane_root_.transform().rotation_float3().x < DirectX::XMConvertToRadians(pitch_limit_degrees)) {
+      if (plane_root_.transform().euler_rotation_float3().x < DirectX::XMConvertToRadians(pitch_limit_degrees)) {
         plane_root_.transform().rotate(rotation_speed_, 0.0f, 0.0f);
       }
     }
@@ -157,7 +157,7 @@ void Aeroplane::move_pitch(W3D::float32 pitch_limit_degrees, bool facing_upwards
 
 void Aeroplane::move_roll_yaw(W3D::float32 roll_limit_degrees, bool facing_leftwards, bool enable_yaw) {
   if (facing_leftwards) {
-    if (plane_root_.transform().rotation_float3().z < DirectX::XMConvertToRadians(roll_limit_degrees)) {
+    if (plane_root_.transform().euler_rotation_float3().z < DirectX::XMConvertToRadians(roll_limit_degrees)) {
       plane_root_.transform().rotate(0.0f, 0.0f, rotation_speed_);
     }
     if (enable_yaw) {
@@ -165,7 +165,7 @@ void Aeroplane::move_roll_yaw(W3D::float32 roll_limit_degrees, bool facing_leftw
     }
   }
   else {
-    if (plane_root_.transform().rotation_float3().z > DirectX::XMConvertToRadians(roll_limit_degrees)) {
+    if (plane_root_.transform().euler_rotation_float3().z > DirectX::XMConvertToRadians(roll_limit_degrees)) {
       plane_root_.transform().rotate(0.0f, 0.0f, -rotation_speed_);
     }
     if (enable_yaw) {
@@ -272,11 +272,11 @@ void Aeroplane::imgui_debug() {
       }
 
       W3D::float32 rotation[3];
-      rotation[0] = root_node_.transform().world_rotation_float3().x;
-      rotation[1] = root_node_.transform().world_rotation_float3().y;
-      rotation[2] = root_node_.transform().world_rotation_float3().z;
+      rotation[0] = root_node_.transform().euler_world_rotation_float3().x;
+      rotation[1] = root_node_.transform().euler_world_rotation_float3().y;
+      rotation[2] = root_node_.transform().euler_world_rotation_float3().z;
       if (ImGui::DragFloat3("Rotation", rotation, 0.01f)) {
-        root_node_.transform().set_world_rotation(rotation[0], rotation[1], rotation[2]);
+        root_node_.transform().set_euler_world_rotation(rotation[0], rotation[1], rotation[2]);
       }
       ImGui::PopID();
       ImGui::TreePop();
@@ -293,11 +293,11 @@ void Aeroplane::imgui_debug() {
       }
 
       W3D::float32 rotation[3];
-      rotation[0] = camera_node_.transform().world_rotation_float3().x;
-      rotation[1] = camera_node_.transform().world_rotation_float3().y;
-      rotation[2] = camera_node_.transform().world_rotation_float3().z;
+      rotation[0] = camera_node_.transform().euler_world_rotation_float3().x;
+      rotation[1] = camera_node_.transform().euler_world_rotation_float3().y;
+      rotation[2] = camera_node_.transform().euler_world_rotation_float3().z;
       if (ImGui::DragFloat3("Rotation", rotation, 0.01f)) {
-        camera_node_.transform().set_world_rotation(rotation[0], rotation[1], rotation[2]);
+        camera_node_.transform().set_euler_world_rotation(rotation[0], rotation[1], rotation[2]);
       }
       ImGui::PopID();
       ImGui::TreePop();
@@ -314,11 +314,11 @@ void Aeroplane::imgui_debug() {
       }
 
       W3D::float32 rotation[3];
-      rotation[0] = camera_gun_node_.transform().world_rotation_float3().x;
-      rotation[1] = camera_gun_node_.transform().world_rotation_float3().y;
-      rotation[2] = camera_gun_node_.transform().world_rotation_float3().z;
+      rotation[0] = camera_gun_node_.transform().euler_world_rotation_float3().x;
+      rotation[1] = camera_gun_node_.transform().euler_world_rotation_float3().y;
+      rotation[2] = camera_gun_node_.transform().euler_world_rotation_float3().z;
       if (ImGui::DragFloat3("Rotation", rotation, 0.01f)) {
-        camera_gun_node_.transform().set_world_rotation(rotation[0], rotation[1], rotation[2]);
+        camera_gun_node_.transform().set_euler_world_rotation(rotation[0], rotation[1], rotation[2]);
       }
       ImGui::PopID();
       ImGui::TreePop();
@@ -335,11 +335,11 @@ void Aeroplane::imgui_debug() {
       }
 
       W3D::float32 rotation[3];
-      rotation[0] = camera_landing_node_.transform().world_rotation_float3().x;
-      rotation[1] = camera_landing_node_.transform().world_rotation_float3().y;
-      rotation[2] = camera_landing_node_.transform().world_rotation_float3().z;
+      rotation[0] = camera_landing_node_.transform().euler_world_rotation_float3().x;
+      rotation[1] = camera_landing_node_.transform().euler_world_rotation_float3().y;
+      rotation[2] = camera_landing_node_.transform().euler_world_rotation_float3().z;
       if (ImGui::DragFloat3("Rotation", rotation, 0.01f)) {
-        camera_landing_node_.transform().set_world_rotation(rotation[0], rotation[1], rotation[2]);
+        camera_landing_node_.transform().set_euler_world_rotation(rotation[0], rotation[1], rotation[2]);
       }
       ImGui::PopID();
       ImGui::TreePop();
