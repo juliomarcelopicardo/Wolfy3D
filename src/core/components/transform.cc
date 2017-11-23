@@ -196,6 +196,7 @@ void TransformComponent::set_euler_world_rotation(const DirectX::XMFLOAT3 rotati
 
 void TransformComponent::set_quaternion_world_rotation(const DirectX::XMFLOAT4 rotation) {
   // TODO
+  MessageBox(NULL, "SET QUATERNION WORLD ROTATION NOT IMPLEMENTED YET", "ERROR", MB_OK);
 }
 
 void TransformComponent::set_euler_world_rotation(const DirectX::XMVECTOR rotation) {
@@ -206,6 +207,7 @@ void TransformComponent::set_euler_world_rotation(const DirectX::XMVECTOR rotati
 
 void TransformComponent::set_quaternion_world_rotation(const DirectX::XMVECTOR quaternion) {
   // TODO 
+  MessageBox(NULL, "SET QUATERNION WORLD ROTATION NOT IMPLEMENTED YET", "ERROR", MB_OK);
 }
 
 #pragma endregion
