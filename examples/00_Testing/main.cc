@@ -61,11 +61,6 @@ void ImGuiGenerateRootTreeStats(Entity* root_entity) {
 
 }
 
-float tweening_func(float origin, float destiny, float alpha) {
-  float variation = (destiny - origin) * alpha;
-  return origin + variation;
-}
-
 int32 main() {
   
   Window::Init(1200, 978);
@@ -149,77 +144,77 @@ int32 main() {
       root.transform().set_position(0.1027778f, 7.5644722f, 0.000000f);
       robot_root.addChild(&root);
 
-      pelvis_presley.addComponent(ComponentType::Render3D, &mat, &geo_pelvis_presley);
+      pelvis_presley.addComponent(kComponentType_Render, &mat, &geo_pelvis_presley);
       pelvis_presley.name_ = "pelvis";
       pelvis_presley.transform().set_position(-0.0250011f, 1.5250000f, -0.0000005f);
       root.addChild(&pelvis_presley);
 
-      body.addComponent(ComponentType::Render3D, &mat, &geo_body);
+      body.addComponent(kComponentType_Render, &mat, &geo_body);
       body.name_ = "body";
       body.transform().set_position(0.0500099f, 4.3749992f, 0.0000003f);
       pelvis_presley.addChild(&body);
 
-      left_shoulder.addComponent(ComponentType::Render3D, &mat, &geo_left_shoulder);
+      left_shoulder.addComponent(kComponentType_Render, &mat, &geo_left_shoulder);
       left_shoulder.name_ = "left_shoulder";
       left_shoulder.transform().set_position(4.6000000f, 0.0000000f, -0.0009992f);
       body.addChild(&left_shoulder);
 
-      left_elbow.addComponent(ComponentType::Render3D, &mat, &geo_left_elbow);
+      left_elbow.addComponent(kComponentType_Render, &mat, &geo_left_elbow);
       left_elbow.name_ = "left_elbow";
       left_elbow.transform().set_position(3.4250019f, -0.0499817f, -0.0004262f);
       left_shoulder.addChild(&left_elbow);
 
-      left_wrist.addComponent(ComponentType::Render3D, &mat, &geo_left_wrist);
+      left_wrist.addComponent(kComponentType_Render, &mat, &geo_left_wrist);
       left_wrist.name_ = "left_wrist";
       left_wrist.transform().set_position(5.5250008f, -0.0999710f, 0.0003968f);
       left_elbow.addChild(&left_wrist);
 
-      right_shoulder.addComponent(ComponentType::Render3D, &mat, &geo_right_shoulder);
+      right_shoulder.addComponent(kComponentType_Render, &mat, &geo_right_shoulder);
       right_shoulder.name_ = "right_shoulder";
       right_shoulder.transform().set_position(-4.4500023f, 0.0500000f, -0.0000021f);
       body.addChild(&right_shoulder);
 
-      right_elbow.addComponent(ComponentType::Render3D, &mat, &geo_right_elbow);
+      right_elbow.addComponent(kComponentType_Render, &mat, &geo_right_elbow);
       right_elbow.name_ = "right_elbow";
       right_elbow.transform().set_position(-3.3999996f, 0.0250229f, -0.0000194f);
       right_shoulder.addChild(&right_elbow);
 
-      right_wrist.addComponent(ComponentType::Render3D, &mat, &geo_right_wrist);
+      right_wrist.addComponent(kComponentType_Render, &mat, &geo_right_wrist);
       right_wrist.name_ = "right_wrist";
       right_wrist.transform().set_position(-6.0000381f, -0.1750183f, 0.0007156f);
       right_elbow.addChild(&right_wrist);
 
-      neck.addComponent(ComponentType::Render3D, &mat, &geo_neck);
+      neck.addComponent(kComponentType_Render, &mat, &geo_neck);
       neck.name_ = "neck";
       neck.transform().set_position(0.0249983f, 3.6625015f, 2.5999998f);
       body.addChild(&neck);
 
-      left_hip.addComponent(ComponentType::Render3D, &mat, &geo_left_hip);
+      left_hip.addComponent(kComponentType_Render, &mat, &geo_left_hip);
       left_hip.name_ = "left_hip";
       left_hip.transform().set_position(1.9500000f, -0.7724991f, 0.000000f);
       root.addChild(&left_hip);
 
-      left_knee.addComponent(ComponentType::Render3D, &mat, &geo_left_knee);
+      left_knee.addComponent(kComponentType_Render, &mat, &geo_left_knee);
       left_knee.name_ = "left_knee";
       left_knee.transform().set_position(0.0000006f, -2.2200001f, 0.000000f);
       left_hip.addChild(&left_knee);
 
-      left_ankle.addComponent(ComponentType::Render3D, &mat, &geo_left_ankle);
+      left_ankle.addComponent(kComponentType_Render, &mat, &geo_left_ankle);
       left_ankle.name_ = "left_ankle";
       left_ankle.transform().set_position(-0.0800152f, -3.6399994f, -0.0000098f);
       left_knee.addChild(&left_ankle);
 
-      right_hip.addComponent(ComponentType::Render3D, &mat, &geo_right_hip);
+      right_hip.addComponent(kComponentType_Render, &mat, &geo_right_hip);
       right_hip.name_ = "right_hip";
       right_hip.transform().set_position(-1.9500000f, -0.7724991f, 0.000000f);
       root.addChild(&right_hip);
 
-      right_knee.addComponent(ComponentType::Render3D, &mat, &geo_right_knee);
+      right_knee.addComponent(kComponentType_Render, &mat, &geo_right_knee);
       right_knee.name_ = "right_knee";
       right_knee.transform().set_position(0.0000006f, -2.2000000f, 0.000000f);
       right_hip.addChild(&right_knee);
 
-      right_ankle.addComponent(ComponentType::Render3D, &mat, &geo_right_ankle);
+      right_ankle.addComponent(kComponentType_Render, &mat, &geo_right_ankle);
       right_ankle.name_ = "right_ankle";
       right_ankle.transform().set_position(0.0199911f, -3.6799995f, 0.0000039f);
       right_knee.addChild(&right_ankle);
@@ -304,27 +299,15 @@ int32 main() {
 
       // retorno la rotacion que corresponde.
       switch (mode) {
-        case StepsInfo::kMode_Rotation: { return quaternionTweening(origin, destiny, alpha); } break;
-        case StepsInfo::kMode_Translation: { return translationTweening(origin, destiny, alpha); } break;
+        case StepsInfo::kMode_Rotation: { return Math::QuaternionLerpVector(origin, destiny, alpha); } break;
+        case StepsInfo::kMode_Translation: { return Math::LerpVector(origin, destiny, alpha); } break;
       }
 
       MessageBox(NULL, "Error StepsInfo Mode not set", "ERROR", MB_OK);
       return DirectX::XMVECTOR();
     }
 
-    DirectX::XMVECTOR quaternionTweening(DirectX::XMFLOAT4 origin, DirectX::XMFLOAT4 destiny, float alpha) {
-      DirectX::XMVECTOR begin = DirectX::XMLoadFloat4(&origin);
-      DirectX::XMVECTOR end = DirectX::XMLoadFloat4(&destiny);
-      return DirectX::XMQuaternionNormalize(DirectX::XMQuaternionSlerp(begin, end, alpha));
-    }
 
-    DirectX::XMVECTOR translationTweening(DirectX::XMFLOAT4 origin, DirectX::XMFLOAT4 destiny, float alpha) {
-      DirectX::XMFLOAT3 result;
-      result = { origin.x + (destiny.x - origin.x) * alpha,
-                 origin.y + (destiny.y - origin.y) * alpha,
-                 origin.z + (destiny.z - origin.z) * alpha };
-      return DirectX::XMLoadFloat3(&result);
-    }
 
   };
 
@@ -483,13 +466,11 @@ int32 main() {
 
     void convertEulerAnglesIntoQuaternion() {
       for (uint32 i = 0; i < rotation.num_steps; ++i) {
-        DirectX::XMVECTOR quat_x, quat_y, quat_z, temp;
-        quat_x = DirectX::XMQuaternionRotationAxis(DirectX::XMVectorSet(1.0f, 0.0f, 0.0f, 0.0f), rotation.step_values[i].x);
-        quat_y = DirectX::XMQuaternionRotationAxis(DirectX::XMVectorSet(0.0f, 1.0f, 0.0f, 0.0f), rotation.step_values[i].y);
-        quat_z = DirectX::XMQuaternionRotationAxis(DirectX::XMVectorSet(0.0f, 0.0f, 1.0f, 0.0f), rotation.step_values[i].z);
-        temp = DirectX::XMQuaternionNormalize(DirectX::XMQuaternionMultiply(quat_z, quat_x));
-        temp = DirectX::XMQuaternionNormalize(DirectX::XMQuaternionMultiply(temp, quat_y));
-        DirectX::XMStoreFloat4(&rotation.step_values[i], temp);
+        DirectX::XMFLOAT3 rot = { rotation.step_values[i].x, 
+                                  rotation.step_values[i].y, 
+                                  rotation.step_values[i].z };
+
+        rotation.step_values[i] = Math::ConvertEulerToQuaternionFloat4(rot);
       }
     }
 
@@ -697,7 +678,7 @@ int32 main() {
   Entity plane_root, plane, prop, turret, gun, cam_node, terrain, root;
 
   
-  terrain.addComponent(ComponentType::Render3D, &mat_assesment, &geo_terrain);
+  terrain.addComponent(kComponentType_Render, &mat_assesment, &geo_terrain);
   terrain.transform().set_position(-50.0f, -10.0f, -30.0f);
   root.addChild(&terrain);
   

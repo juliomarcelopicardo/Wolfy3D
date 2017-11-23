@@ -112,7 +112,7 @@ DirectX::XMVECTOR TransformComponent::quaternion_rotation_vector() {
 DirectX::XMFLOAT3 TransformComponent::euler_rotation_float3() {
   DirectX::XMFLOAT4X4 m;
   DirectX::XMStoreFloat4x4(&m, DirectX::XMMatrixTranspose(local_model_matrix()));
-  return getEulerAnglesFromModelMatrix(m);
+  return Math::GetEulerRotationFromModelMatrix(m);
 }
 
 DirectX::XMFLOAT4 TransformComponent::quaternion_rotation_float4() {
@@ -125,7 +125,7 @@ DirectX::XMVECTOR TransformComponent::euler_world_rotation_vector() {
 
   DirectX::XMStoreFloat4x4(&m, DirectX::XMMatrixTranspose(global_model_matrix()));
   
-  return DirectX::XMLoadFloat3(&getEulerAnglesFromModelMatrix(m));
+  return DirectX::XMLoadFloat3(&Math::GetEulerRotationFromModelMatrix(m));
 }
 
 DirectX::XMVECTOR TransformComponent::quaternion_world_rotation_vector() {
@@ -138,7 +138,7 @@ DirectX::XMFLOAT3 TransformComponent::euler_world_rotation_float3() {
 
   DirectX::XMStoreFloat4x4(&m, DirectX::XMMatrixTranspose(global_model_matrix()));
 
-  return getEulerAnglesFromModelMatrix(m);
+  return Math::GetEulerRotationFromModelMatrix(m);
 }
 
 DirectX::XMFLOAT4 TransformComponent::quaternion_world_rotation_float4() {
@@ -150,18 +150,14 @@ DirectX::XMFLOAT4 TransformComponent::quaternion_world_rotation_float4() {
 }
 
 void TransformComponent::set_euler_rotation(const float32 x, const float32 y, const float32 z) {
-  DirectX::XMVECTOR quat_x, quat_y, quat_z, temp;
-  quat_x = DirectX::XMQuaternionRotationAxis(DirectX::XMVectorSet(1.0f, 0.0f, 0.0f, 0.0f), x);
-  quat_y = DirectX::XMQuaternionRotationAxis(DirectX::XMVectorSet(0.0f, 1.0f, 0.0f, 0.0f), y);
-  quat_z = DirectX::XMQuaternionRotationAxis(DirectX::XMVectorSet(0.0f, 0.0f, 1.0f, 0.0f), z);
-  temp = DirectX::XMQuaternionNormalize(DirectX::XMQuaternionMultiply(quat_z, quat_x));
-  temp = DirectX::XMQuaternionNormalize(DirectX::XMQuaternionMultiply(temp, quat_y));
-  DirectX::XMStoreFloat4(&quaternion_, temp);
+  DirectX::XMFLOAT3 rotation = { x, y, z };
+  quaternion_ = Math::ConvertEulerToQuaternionFloat4(rotation);
   owner_->updateLocalModelAndChildrenMatrices();
 }
 
 void TransformComponent::set_euler_rotation(const DirectX::XMFLOAT3 rotation) {
-  set_euler_rotation(rotation.x, rotation.y, rotation.z);
+  quaternion_ = Math::ConvertEulerToQuaternionFloat4(rotation);
+  owner_->updateLocalModelAndChildrenMatrices();
 }
 
 void TransformComponent::set_quaternion_rotation(const DirectX::XMFLOAT4 quaternion) {
@@ -172,7 +168,8 @@ void TransformComponent::set_quaternion_rotation(const DirectX::XMFLOAT4 quatern
 void TransformComponent::set_euler_rotation(const DirectX::XMVECTOR rotation) {
   DirectX::XMFLOAT3 euler;
   DirectX::XMStoreFloat3(&euler, rotation);
-  set_euler_rotation(euler);
+  quaternion_ = Math::ConvertEulerToQuaternionFloat4(rotation);
+  owner_->updateLocalModelAndChildrenMatrices();
 }
 
 void TransformComponent::set_quaternion_rotation(const DirectX::XMVECTOR quaternion) {
@@ -379,31 +376,6 @@ void TransformComponent::calculateLocalModelMatrix() {
 #pragma endregion
 
 
-
-
-DirectX::XMFLOAT3 TransformComponent::getEulerAnglesFromModelMatrix(DirectX::XMFLOAT4X4 m) {
-  DirectX::XMFLOAT3 euler;
-
-  float sp = -m._32;
-  if (sp <= -1.0f) {
-    euler.x = -1.570796f;
-  }
-  else if (sp >= 1.0f) {
-    euler.x = 1.570796f;
-  }
-  else {
-    euler.x = asin(sp);
-  }
-  if (fabs(sp) > 0.9999f) {
-    euler.z = 0.0f;
-    euler.y = atan2(-m._13, m._11);
-  }
-  else {
-    euler.y = atan2(m._31, m._33);
-    euler.z = atan2(m._12, m._22);
-  }
-  return euler;
-}
 
 
 }; /* W3D */

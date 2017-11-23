@@ -13,5 +13,6 @@
 #include "Wolfy3D/input.h"
 #include "Wolfy3D/time.h"
 #include "Wolfy3D/material.h"
+#include "Wolfy3D/math.h"
 
 #endif

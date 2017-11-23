@@ -57,16 +57,12 @@ namespace W3D {
   ***                                 ENUMS                                    ***
   *******************************************************************************/
 
-  enum class ComponentType {
-    None,
-    Transform,
-    Render3D
+  enum ComponentType {
+    kComponentType_None,
+    kComponentType_Transform,
+    kComponentType_Render
   };
 
-  enum EjemploEnum {
-    kEjemploEnum_A = 0,
-    kEjemploEnum_B = 1
-  };
 
 }; /* W3D */
 

@@ -92,7 +92,7 @@ int32 main() {
 
   g_plane.init(&root);
 
-  terrain.addComponent(ComponentType::Render3D, &mat, &geo_terrain);
+  terrain.addComponent(kComponentType_Render, &mat, &geo_terrain);
   terrain.transform().set_position(-50.0f, -10.0f, -30.0f);
   root.addChild(&terrain);
 

@@ -48,7 +48,7 @@ namespace W3D {
 
   void Entity::addComponent(ComponentType component, Material *mat, Geo *geo) {
     switch (component) {
-      case W3D::ComponentType::Render3D: {
+      case W3D::kComponentType_Render: {
         if (!render3D_) {
           render3D_ = new RenderComponent;
           render3D_->init(mat, geo);

@@ -10,6 +10,7 @@
 
 #include <DirectXMath.h>
 #include "Wolfy3D/globals.h"
+#include "Wolfy3D/math.h"
 
 namespace W3D {
 
@@ -489,14 +490,7 @@ private:
   ***                              Private methods                             ***
   *******************************************************************************/
 
-  ///--------------------------------------------------------------------------
-  /// @fn   DirectX::XMFLOAT3 getEulerAnglesFromModelMatrix(DirectX::XMFLOAT4X4 m);
-  ///
-  /// @brief Extract the euler angles rotation from a model matrix. In radians
-  /// @param trasposed_matrix Matrix where to extract the rotation.
-  /// @return radians with the rotation in XYZ axis.
-  ///--------------------------------------------------------------------------
-  DirectX::XMFLOAT3 getEulerAnglesFromModelMatrix(DirectX::XMFLOAT4X4 trasposed_matrix);
+
 
 };
 

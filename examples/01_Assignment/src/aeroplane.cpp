@@ -52,18 +52,18 @@ void Aeroplane::init(W3D::Entity* scene) {
   camera_landing_node_.transform().set_position(0.0f, 30.0f, -30.0f);
   landing_node_.addChild(&camera_landing_node_);
 
-	plane_.addComponent(W3D::ComponentType::Render3D, &mat_, &geo_plane_);
+	plane_.addComponent(W3D::kComponentType_Render, &mat_, &geo_plane_);
 	plane_root_.addChild(&plane_);
 
-  prop_.addComponent(W3D::ComponentType::Render3D, &mat_, &geo_prop_);
+  prop_.addComponent(W3D::kComponentType_Render, &mat_, &geo_prop_);
   prop_.transform().set_position(0.0f, 0.0f, 1.9f);
   plane_.addChild(&prop_);
 
-  turret_.addComponent(W3D::ComponentType::Render3D, &mat_, &geo_turret_);
+  turret_.addComponent(W3D::kComponentType_Render, &mat_, &geo_turret_);
   turret_.transform().set_position(0.0f, 1.05f, -1.3f);
   plane_.addChild(&turret_);
 
-  gun_.addComponent(W3D::ComponentType::Render3D, &mat_, &geo_gun_);
+  gun_.addComponent(W3D::kComponentType_Render, &mat_, &geo_gun_);
   gun_.transform().set_position(0.0f, 0.5f, 0.0f);
   turret_.addChild(&gun_);
 
@@ -84,7 +84,7 @@ void Aeroplane::init(W3D::Entity* scene) {
   W3D::int32 loops = bullets_.size();
   for (W3D::int32 i = 0; i < loops; i++) {
     bullets_[i].obj = new W3D::Entity();
-    bullets_[i].obj->addComponent(W3D::ComponentType::Render3D, &mat_, &geo_bullet_);
+    bullets_[i].obj->addComponent(W3D::kComponentType_Render, &mat_, &geo_bullet_);
     bullets_[i].obj->transform().set_position(-1000.0f, 0.0f, 0.0f);
     bullets_[i].obj->transform().set_scale(0.02f, 0.02f, 0.2f);
     bullets_[i].shot = false;
