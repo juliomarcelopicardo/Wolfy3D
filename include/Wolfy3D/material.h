@@ -90,11 +90,11 @@ private:
 /*
 MATERIAL ASSESMENT SUBCLASS
 */
-class MaterialAssesment : public Material {
+class MaterialTerrain : public Material {
 
 public:
-  MaterialAssesment();
-  ~MaterialAssesment();
+  MaterialTerrain();
+  ~MaterialTerrain();
 
   void setupSuperMaterial() override;
 
@@ -107,8 +107,8 @@ private:
 
 
 
-  MaterialAssesment(const MaterialAssesment& copy);
-  MaterialAssesment& operator=(const MaterialAssesment& copy);
+  MaterialTerrain(const MaterialTerrain& copy);
+  MaterialTerrain& operator=(const MaterialTerrain& copy);
 };
 
 }; /* W3D */

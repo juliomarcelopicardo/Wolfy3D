@@ -87,17 +87,17 @@ void MaterialNormals::setupSuperMaterial() {
 
 
 /*******************************************************************************
-***                       MATERIAL ASSESMENT SUB CLASS                       ***
+***                        MATERIAL TERRAIN SUB CLASS                        ***
 *******************************************************************************/
 
-MaterialAssesment::MaterialAssesment() : Material() {}
+MaterialTerrain::MaterialTerrain() : Material() {}
 
-MaterialAssesment::~MaterialAssesment() {}
+MaterialTerrain::~MaterialTerrain() {}
 
-void MaterialAssesment::setupSuperMaterial() {
+void MaterialTerrain::setupSuperMaterial() {
   auto& super_mat = Core::instance().super_material_;
 
-  super_mat.settings_.type = MaterialType::kMaterialType_Assesment;
+  super_mat.settings_.type = MaterialType::kMaterialType_Terrain;
   super_mat.settings_.num_textures = 4;
 
   texture_materialmap_->use(1, false);
