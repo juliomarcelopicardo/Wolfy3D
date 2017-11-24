@@ -98,6 +98,7 @@ void Airplane::initHierarchy() {
   plane_.addChild(&turret_);
   turret_.addChild(&gun_);
   gun_.addChild(&bullet_spawn_point_);
+  gun_.addChild(&gun_camera_);
 }
 
 void Airplane::initTransforms() {
@@ -107,6 +108,7 @@ void Airplane::initTransforms() {
   prop_.transform().set_position(0.0f, 0.0f, 1.9f);
   turret_.transform().set_position(0.0f, 1.05f, -1.3f);
   gun_.transform().set_position(0.0f, 0.5f, 0.0f);
+  gun_camera_.transform().set_position(0.0f, 3.0f, -15.0f);
   bullet_spawn_point_.transform().set_position(0.0f, 0.0f, 2.0f);
 }
 

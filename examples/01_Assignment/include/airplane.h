@@ -75,8 +75,10 @@ public:
   Entity prop_;
   /// Turret node.
   Entity turret_;
-  ///  Gun node.
+  /// Gun node.
   Entity gun_;
+  /// Gun camera
+  Entity gun_camera_;
   /// Bullet spawn point.
   Entity bullet_spawn_point_;
   /// Back 3rd person camera node.

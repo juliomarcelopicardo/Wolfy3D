@@ -99,6 +99,7 @@ private:
   enum CameraMode {
     kCameraMode_Plane3rdPerson = 0,
     kCameraMode_LandingTrack = 1,
+    kCameraMode_PlaneGun = 2,
   };
 
   /// Will set will camera will be rendering the scene.

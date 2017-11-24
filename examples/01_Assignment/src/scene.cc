@@ -39,7 +39,7 @@ void Scene::init() {
 
 void Scene::update(const float32 delta_time) {
   plane_.update(delta_time);
-  landing_track_.transform().rotate(0.0f, delta_time * 0.001f, 0.0f);
+  landing_track_.transform().rotate(0.0f, delta_time * 0.0005f, 0.0f);
   updateCameraMode();
 }
 
@@ -61,6 +61,10 @@ void Scene::updateCameraMode() {
       camera.set_position(landing_track_camera_.transform().world_position_float3());
       camera.set_target(landing_track_.transform().world_position_float3());
     } break;
+    case kCameraMode_PlaneGun: {
+      camera.set_position(plane_.gun_camera_.transform().world_position_float3());
+      camera.set_target(plane_.turret_.transform().world_position_float3());
+    } break;
   };
 
 }
@@ -72,6 +76,9 @@ void Scene::switchCameraMode() {
       camera_mode_ = kCameraMode_LandingTrack;
     } break;
     case kCameraMode_LandingTrack: {
+      camera_mode_ = kCameraMode_PlaneGun;
+    } break;
+    case kCameraMode_PlaneGun: {
       camera_mode_ = kCameraMode_Plane3rdPerson;
     } break;
   };
