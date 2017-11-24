@@ -12,6 +12,7 @@
 #include "Wolfy3D.h"
 #include "airplane.h"
 #include "terrain.h"
+#include "bullet.h"
 
 namespace W3D {
 
@@ -96,14 +97,6 @@ private:
   /// Private operator of assignment.
   Scene operator=(const Scene& copy);
 
-  enum CameraMode {
-    kCameraMode_Plane3rdPerson = 0,
-    kCameraMode_LandingTrack = 1,
-    kCameraMode_PlaneGun = 2,
-  };
-
-  /// Will set will camera will be rendering the scene.
-  CameraMode camera_mode_;
 
   /// Depending on the camera mode, will set the camera position and target.
   void updateCameraMode();
@@ -114,6 +107,14 @@ private:
 ***                       Private Attributes                                 ***
 *******************************************************************************/
 
+  enum CameraMode {
+    kCameraMode_Plane3rdPerson = 0,
+    kCameraMode_LandingTrack = 1,
+    kCameraMode_PlaneGun = 2,
+  };
+
+  /// Will set will camera will be rendering the scene.
+  CameraMode camera_mode_;
 
 
 }; /* Scene */

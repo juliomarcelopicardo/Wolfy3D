@@ -32,6 +32,10 @@ void Scene::init() {
   root_.addChild(&terrain_.root_);
   root_.addChild(&landing_track_);
   landing_track_.addChild(&landing_track_camera_);
+  for (uint32 i = 0; i < plane_.num_bullets_; ++i) {
+    plane_.bullet_[i].init();
+    root_.addChild(&plane_.bullet_[i].root_);
+  }
 
   landing_track_.transform().set_position(319.0f, 2.5f, 500.0f);
   landing_track_camera_.transform().set_position(0.0f, 7.0f, 15.0f);
