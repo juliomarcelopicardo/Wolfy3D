@@ -80,6 +80,11 @@ public:
   /// Terrain object.
   Terrain terrain_;
 
+  /// Land track node.
+  Entity landing_track_;
+  /// Landing track camera_;
+  Entity landing_track_camera_;
+
 private:
 
 /*******************************************************************************
@@ -91,6 +96,18 @@ private:
   /// Private operator of assignment.
   Scene operator=(const Scene& copy);
 
+  enum CameraMode {
+    kCameraMode_Plane3rdPerson = 0,
+    kCameraMode_LandingTrack = 1,
+  };
+
+  /// Will set will camera will be rendering the scene.
+  CameraMode camera_mode_;
+
+  /// Depending on the camera mode, will set the camera position and target.
+  void updateCameraMode();
+  /// Update inputs.
+  void switchCameraMode();
 
 /*******************************************************************************
 ***                       Private Attributes                                 ***

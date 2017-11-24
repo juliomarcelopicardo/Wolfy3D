@@ -29,8 +29,7 @@ void Update(Scene& scene, const float32 delta_time) {
   
   scene.update(delta_time);
 
-  camera.set_position(scene.plane_.back_camera_.transform().world_position_float3());
-  camera.set_target(scene.plane_.plane_.transform().world_position_float3());
+
   //camera.update();
   camera.render(&scene.root_);
 
