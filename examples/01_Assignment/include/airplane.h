@@ -60,6 +60,8 @@ public:
 ***                       Public  Attributes                                 ***
 *******************************************************************************/
 
+  /* Skin */
+  DirectX::XMFLOAT4 color_;
 
   /* Hierarchy */
 

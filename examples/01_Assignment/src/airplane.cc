@@ -18,6 +18,7 @@ namespace W3D {
 
 
 Airplane::Airplane() {
+  color_ = { 1.0f, 1.0f, 1.0f, 1.0f };
   prop_rotation_speed_ = 1.0f;
   z_rotation_constraint_degrees = 50.0f;
   z_rotation_alpha_ = 0.0f;
@@ -40,7 +41,7 @@ Airplane::Airplane() {
   max_forward_speed_ = 0.015f;
   forward_speed_ = 0.0f;
   traslation_velocity_ = { 0.0f, 0.0f, 0.0f };
-  forward_acceleration_ = 0.000001f;
+  forward_acceleration_ = 0.00001f;
 }
 
 Airplane::~Airplane() {
@@ -108,6 +109,7 @@ void Airplane::initTransforms() {
 }
 
 void Airplane::initRenderComponents() {
+  material_.set_color(1.0f, 1.0f, 1.0f);
   plane_.addComponent(W3D::kComponentType_Render, &material_, &geo_plane_);
   prop_.addComponent(W3D::kComponentType_Render, &material_, &geo_prop_);
   turret_.addComponent(W3D::kComponentType_Render, &material_, &geo_turret_);
@@ -266,6 +268,9 @@ void Airplane::updateImGui() {
   ImGui::PushID(this);
   if (ImGui::TreeNode("AirPlane")) {
     
+    ImGui::ColorEdit3(" Color", &color_.x);
+    material_.set_color(color_);
+    ImGui::SliderFloat("Max Forward Speed", &max_forward_speed_, 0.001f, 0.1f);
     ImGui::SliderFloat("Prop Max Rotation Speed", &prop_rotation_speed_, 0.01f, 2.0f, "%.3f");
     ImGui::SliderFloat("Y Max Rotation Speed", &y_rotation_speed_, 0.001f, 0.1f, "%.4f");
     ImGui::SliderFloat("Y Max Traslation Speed", &up_traslation_speed_, 0.001f, 0.1f, "%.4f");
