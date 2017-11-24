@@ -40,6 +40,7 @@ void MaterialTextured::setupSuperMaterial() {
 
   super_mat.settings_.type = MaterialType::kMaterialType_OneTexture;
   super_mat.settings_.num_textures = 1;
+  super_mat.settings_.albedo_color = { 1.0f, 1.0f, 1.0f, 1.0f };
   
   if (texture_ && texture_->texture_handle_) {
     texture_->use();
@@ -59,7 +60,9 @@ void MaterialTextured::set_texture(Texture* texture) {
 ***                        MATERIAL DIFFUSE SUB CLASS                        ***
 *******************************************************************************/
 
-MaterialDiffuse::MaterialDiffuse() : Material() {}
+MaterialDiffuse::MaterialDiffuse() : Material() {
+  color = { 1.0f, 1.0f, 1.0f, 1.0f };
+}
 
 MaterialDiffuse::~MaterialDiffuse() {}
 
@@ -68,6 +71,18 @@ void MaterialDiffuse::setupSuperMaterial() {
 
   super_mat.settings_.type = MaterialType::kMaterialType_Diffuse;
   super_mat.settings_.num_textures = 0;
+  super_mat.settings_.albedo_color = color;
+}
+
+void MaterialDiffuse::set_color(const DirectX::XMFLOAT4& rgba) {
+  color = rgba;
+}
+
+void MaterialDiffuse::set_color(const float32 r, 
+                                const float32 g, 
+                                const float32 b, 
+                                const float32 a) {
+  color = { r, g, b, a };
 }
 
 /*******************************************************************************
@@ -83,6 +98,7 @@ void MaterialNormals::setupSuperMaterial() {
 
   super_mat.settings_.type = MaterialType::kMaterialType_Normals;
   super_mat.settings_.num_textures = 0;
+  super_mat.settings_.albedo_color = { 1.0f, 1.0f, 1.0f, 1.0f };
 }
 
 
@@ -99,6 +115,7 @@ void MaterialTerrain::setupSuperMaterial() {
 
   super_mat.settings_.type = MaterialType::kMaterialType_Terrain;
   super_mat.settings_.num_textures = 4;
+  super_mat.settings_.albedo_color = { 1.0f, 1.0f, 1.0f, 1.0f };
 
   texture_materialmap_->use(1, false);
   texture_grass_->use(2);

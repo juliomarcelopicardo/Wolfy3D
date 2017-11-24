@@ -30,6 +30,7 @@ struct Matrices {
 
 struct MaterialSettings {
   Matrices matrices;
+  DirectX::XMFLOAT4 albedo_color;
   MaterialType type;
   uint32 num_textures;
   float32 time;

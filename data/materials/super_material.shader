@@ -6,6 +6,7 @@ cbuffer CustomConstantBuffer {
 	matrix model_matrix;
 	matrix view_matrix;
 	matrix projection_matrix;
+  float4 albedo_color;
   unsigned int type;
   unsigned int num_textures;
   float timer;
@@ -112,7 +113,7 @@ PIXEL/FRAGMENT SHADER
 */
 float4 PixelShaderFunction(PixelInfo pixel_info) : SV_TARGET {
   
-  float4 color = pixel_info.Color * CalculateLightDiffuseColor(pixel_info.Normal);
+  float4 color = pixel_info.Color * albedo_color * CalculateLightDiffuseColor(pixel_info.Normal);
 
   switch (type) {
 

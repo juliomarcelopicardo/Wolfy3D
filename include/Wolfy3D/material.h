@@ -10,6 +10,7 @@
 
 #include "Wolfy3D/globals.h"
 #include "core/texture.h"
+#include <DirectXMath.h>
 
 namespace W3D {
 
@@ -62,8 +63,15 @@ public:
   ~MaterialDiffuse();
 
   void setupSuperMaterial() override;
+  void set_color(const DirectX::XMFLOAT4& color);
+  void set_color(const float32 r, 
+                 const float32 g, 
+                 const float32 b, 
+                 const float32 a = 1.0f);
 
 private:
+
+  DirectX::XMFLOAT4 color;
 
   MaterialDiffuse(const MaterialDiffuse& copy);
   MaterialDiffuse& operator=(const MaterialDiffuse& copy);
