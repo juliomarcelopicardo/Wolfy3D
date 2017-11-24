@@ -23,9 +23,11 @@ Scene::~Scene() {}
 
 void Scene::init() {
   plane_.init();
+  terrain_.init();
 
   root_.transform().set_position(0.0f, 0.0f, 0.0f);
   root_.addChild(&plane_.root_);
+  root_.addChild(&terrain_.root_);
 }
 
 void Scene::update(const float32 delta_time) {

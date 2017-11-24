@@ -11,6 +11,7 @@
 
 #include "Wolfy3D.h"
 #include "airplane.h"
+#include "terrain.h"
 
 namespace W3D {
 
@@ -76,6 +77,8 @@ public:
 
   /// Airplane object.
   Airplane plane_;
+  /// Terrain object.
+  Terrain terrain_;
 
 private:
 
