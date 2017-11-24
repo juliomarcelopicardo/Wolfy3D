@@ -17,7 +17,7 @@ namespace W3D {
 *******************************************************************************/
 
 Airplane::Airplane() {
-  prop_rotation_speed_ = 0.5f;
+  prop_rotation_speed_ = 0.055f;
   z_rotation_constraint_degrees = 50.0f;
   z_rotation_alpha_ = 0.0f;
   z_rotation_speed_ = 0.001f;
@@ -55,7 +55,7 @@ void Airplane::update(const float32& delta_time) {
   
   updateInput();
   updateRotations(delta_time);
-  debugImgui(delta_time);
+  updateImGui();
 }
 
 
@@ -81,6 +81,8 @@ void Airplane::initHierarchy() {
 }
 
 void Airplane::initTransforms() {
+  root_.transform().set_position(319.0f, 2.5f, 500.0f);
+  root_.transform().rotate(0.0f, DirectX::XMConvertToRadians(105.0f), 0.0f);
   back_camera_.transform().set_position(0.0f, 7.0f, -25.0f);
   prop_.transform().set_position(0.0f, 0.0f, 1.9f);
   turret_.transform().set_position(0.0f, 1.05f, -1.3f);
@@ -196,16 +198,63 @@ void Airplane::updateInput() {
   is_S_key_pressed_ = Input::IsKeyboardButtonPressed(Input::kKeyboardButton_S);
 }
 
-void Airplane::debugImgui(const float32& delta_time) {
-  float32 delta = delta_time;
-  //ImGui::PushID(&plane_);
-  if (ImGui::TreeNode("Debug Plane")) {
-    ImGui::DragFloat("Z_ROTATION_ALPHA", &z_rotation_alpha_);
-    ImGui::DragFloat("DELTA", &delta);
-    ImGui::DragFloat("Z_ROTATION_SPEED", &z_rotation_speed_);
+void Airplane::updateImGui() {
+  ImGui::PushID(this);
+  if (ImGui::TreeNode("AirPlane")) {
+    
+    ImGui::SliderFloat("Prop Rotation Speed", &prop_rotation_speed_, 0.01f, 0.1f, "%.3f");
+    updateImGuiRotationX();
+    updateImGuiRotationZ();
+
     ImGui::TreePop();
   }
-  //ImGui::PopID();
+  ImGui::PopID();
+}
+
+void Airplane::updateImGuiRotationX() {
+  ImGui::PushID("XRotation");
+  if (ImGui::TreeNode("X Rotation")) {
+
+    float32 rot_speed = x_rotation_speed_;
+    float32 rot_to_idle_speed = x_rotation_to_idle_speed_;
+    float32 constraint_degrees = x_rotation_constraint_degrees;
+
+    ImGui::SliderFloat("Max Degrees", &x_rotation_constraint_degrees, 10.0f, 70.0f);
+    ImGui::SliderFloat("Rotation Speed", &x_rotation_speed_, 0.0001f, 0.01f, "%.4f");
+    ImGui::SliderFloat("Back To Idle Speed", &x_rotation_to_idle_speed_, 0.0001f, 0.01f, "%.4f");
+
+    if (x_rotation_speed_ != rot_speed ||
+        x_rotation_to_idle_speed_ != rot_to_idle_speed ||
+        constraint_degrees != x_rotation_constraint_degrees) {
+      setupLerpQuaternionConstraints();
+    }
+
+    ImGui::TreePop();
+  }
+  ImGui::PopID();
+}
+
+void Airplane::updateImGuiRotationZ() {
+  ImGui::PushID("ZRotation");
+  if (ImGui::TreeNode("Z Rotation")) {
+
+    float32 rot_speed = z_rotation_speed_;
+    float32 rot_to_idle_speed = z_rotation_to_idle_speed_;
+    float32 constraint_degrees = z_rotation_constraint_degrees;
+
+    ImGui::SliderFloat("Max Degrees", &z_rotation_constraint_degrees, 10.0f, 70.0f);
+    ImGui::SliderFloat("Rotation Speed", &z_rotation_speed_, 0.0001f, 0.01f, "%.4f");
+    ImGui::SliderFloat("Back To Idle Speed", &z_rotation_to_idle_speed_, 0.0001f, 0.01f, "%.4f");
+
+    if (z_rotation_speed_ != rot_speed ||
+        z_rotation_to_idle_speed_ != rot_to_idle_speed ||
+        constraint_degrees != z_rotation_constraint_degrees) {
+      setupLerpQuaternionConstraints();
+    }
+
+    ImGui::TreePop();
+  }
+  ImGui::PopID();
 }
 
 

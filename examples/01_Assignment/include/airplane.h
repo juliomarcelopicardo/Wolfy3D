@@ -80,25 +80,6 @@ public:
   /// Back 3rd person camera node.
   Entity back_camera_;
 
-  /* Parameters */
-  /// Propeller rotation speed
-  float32 prop_rotation_speed_;
-  /// Plane Z axis rotation speed.
-  float32 z_rotation_speed_;
-  /// Plane Z rotation to idle speed. Speed used to come back to idle after rotating.
-  float32 z_rotation_to_idle_speed_;
-  /// Z axis rotation limit in degrees.
-  float32 z_rotation_constraint_degrees;
-  /// Plane X axis rotation speed.
-  float32 x_rotation_speed_;
-  /// Plane X rotation to idle speed. Speed used to come back to idle after rotating.
-  float32 x_rotation_to_idle_speed_;
-  /// X axis rotation limit in degrees.
-  float32 x_rotation_constraint_degrees;
-
-
-
-
 private:
 
 /*******************************************************************************
@@ -142,8 +123,14 @@ private:
   /// Input update.
   void updateInput();
 
-  /* Debug ImGui */
-  void debugImgui(const float32& delta_time);
+  /* ImGui update */
+
+  /// Main update function of ImGui.
+  void updateImGui();
+  /// Update function for the rotation in X axis.
+  void updateImGuiRotationX();
+  /// Update function for the rotation in Z axis.
+  void updateImGuiRotationZ();
 
 /*******************************************************************************
 ***                           Private Attributes                             ***
@@ -161,7 +148,8 @@ private:
   Geo geo_prop_;
   /// Turret geometry.
   Geo geo_turret_;
-  
+ 
+
   /* Rotation constraints */
   /// Save the z rotation quaternion.
   DirectX::XMFLOAT4 z_quaternion_rotation_;
@@ -177,6 +165,24 @@ private:
   float32 x_rotation_alpha_;
   /// Quaternion rotation when the plane is in idle or not moving.
   DirectX::XMFLOAT4 quaternion_idle_rotation;
+
+
+  /* Parameters */
+  /// Propeller rotation speed
+  float32 prop_rotation_speed_;
+  /// Plane Z axis rotation speed.
+  float32 z_rotation_speed_;
+  /// Plane Z rotation to idle speed. Speed used to come back to idle after rotating.
+  float32 z_rotation_to_idle_speed_;
+  /// Z axis rotation limit in degrees.
+  float32 z_rotation_constraint_degrees;
+  /// Plane X axis rotation speed.
+  float32 x_rotation_speed_;
+  /// Plane X rotation to idle speed. Speed used to come back to idle after rotating.
+  float32 x_rotation_to_idle_speed_;
+  /// X axis rotation limit in degrees.
+  float32 x_rotation_constraint_degrees;
+
 
   /* Input */
 
