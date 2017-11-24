@@ -1,0 +1,196 @@
+/** Copyright Julio Picardo 2017-18, all rights reserved.
+*
+*  @project Wolfy3D
+*  @authors Julio Marcelo Picardo <juliomarcelopicardo@gmail.com>
+*
+*/
+
+
+#ifndef __AIRPLANE_H__
+#define __AIRPLANE_H__ 1
+
+#include <vector>
+#include "core/geo.h"
+#include "Wolfy3D.h"
+#include "core/core.h"
+#include "core/entity.h"
+
+namespace W3D {
+  
+class Airplane {
+
+public:
+  
+/*******************************************************************************
+***                        Constructor and destructor                        ***
+*******************************************************************************/
+
+  /// Default class constructor
+  Airplane();
+  /// Default class destructor
+	~Airplane();
+
+/*******************************************************************************
+***                               Public methods                             ***
+*******************************************************************************/
+  
+  ///--------------------------------------------------------------------------
+  /// @fn   void init();
+  ///
+  /// @brief  Initializes all the elements of the class.
+  ///--------------------------------------------------------------------------
+  void init();
+
+  ///--------------------------------------------------------------------------
+  /// @fn   void update(const float32& delta_time);
+  ///
+  /// @param delta_time Delta time, time in miliseconds between frames.
+  /// @brief updates all the elements of the class.
+  ///--------------------------------------------------------------------------
+  void update(const float32& delta_time);
+
+
+/*******************************************************************************
+***                          Setters and Getters                             ***
+*******************************************************************************/
+
+
+
+/*******************************************************************************
+***                       Public  Attributes                                 ***
+*******************************************************************************/
+
+
+  /* Hierarchy */
+
+  /// Object Root node.
+  Entity root_;
+  /// Plane root node.
+  Entity plane_root_;
+  /// Plane node.
+  Entity plane_;
+  /// Prop node.
+  Entity prop_;
+  /// Turret node.
+  Entity turret_;
+  ///  Gun node.
+  Entity gun_;
+  /// Bullet spawn point.
+  Entity bullet_spawn_point_;
+  /// Back 3rd person camera node.
+  Entity back_camera_;
+
+  /* Parameters */
+  /// Propeller rotation speed
+  float32 prop_rotation_speed_;
+  /// Plane Z axis rotation speed.
+  float32 z_rotation_speed_;
+  /// Plane Z rotation to idle speed. Speed used to come back to idle after rotating.
+  float32 z_rotation_to_idle_speed_;
+  /// Z axis rotation limit in degrees.
+  float32 z_rotation_constraint_degrees;
+  /// Plane X axis rotation speed.
+  float32 x_rotation_speed_;
+  /// Plane X rotation to idle speed. Speed used to come back to idle after rotating.
+  float32 x_rotation_to_idle_speed_;
+  /// X axis rotation limit in degrees.
+  float32 x_rotation_constraint_degrees;
+
+
+
+
+private:
+
+/*******************************************************************************
+***                             Private methods                              ***
+*******************************************************************************/
+
+  /// Private copy constructor.
+  Airplane(const Airplane& copy);
+  /// Private operator of assignment.
+  Airplane operator=(const Airplane& copy);
+
+  /* Init methods */
+
+  /// Initialize the geometries.
+  void initGeometries();
+  /// Initialize hierarchy nodes.
+  void initHierarchy();
+  /// Initialize the transforms.
+  void initTransforms();
+  /// Initialize the render components.
+  void initRenderComponents();
+  /// Will set the quaternion constraints.
+  void setupLerpQuaternionConstraints();
+
+
+
+  /* Transformation update */
+  
+  /// Rotations update.
+  void updateRotations(const float32& delta_time);
+  /// Update Lerping values.
+  void updateRotationLerpingValues(const float32& delta_time);
+  /// Update Z rotation lerping Values.
+  void updateRotationLerpingValuesZ(const float32& delta_time);
+  /// Update X rotation lerping Values.
+  void updateRotationLerpingValuesX(const float32& delta_time);
+  
+
+  /* Input update */
+
+  /// Input update.
+  void updateInput();
+
+  /* Debug ImGui */
+  void debugImgui(const float32& delta_time);
+
+/*******************************************************************************
+***                           Private Attributes                             ***
+*******************************************************************************/
+
+  /* Render Properties */
+  
+  /// Material used to render the plane. 
+  MaterialDiffuse material_;
+    /// Main body of the plane geometry.
+  Geo geo_plane_;
+  /// Gun geometry.
+  Geo geo_gun_;
+  /// Prop geometry.
+  Geo geo_prop_;
+  /// Turret geometry.
+  Geo geo_turret_;
+  
+  /* Rotation constraints */
+  /// Save the z rotation quaternion.
+  DirectX::XMFLOAT4 z_quaternion_rotation_;
+  /// Quaternion limits where 0 is the negative and 1 the positive.
+  DirectX::XMFLOAT4 z_quaternion_limit_[2];
+  /// Alpha lerp Z axis rotation. Values will go between -1 and 1
+  float32 z_rotation_alpha_;
+  /// Save the X rotation quaternion.
+  DirectX::XMFLOAT4 x_quaternion_rotation_;
+  /// Quaternion limits where 0 is the negative and 1 the positive.
+  DirectX::XMFLOAT4 x_quaternion_limit_[2];
+  /// Alpha lerp Z axis rotation. Values will go between -1 and 1
+  float32 x_rotation_alpha_;
+  /// Quaternion rotation when the plane is in idle or not moving.
+  DirectX::XMFLOAT4 quaternion_idle_rotation;
+
+  /* Input */
+
+  /// A key pressed.
+  bool is_A_key_pressed_;
+  /// D key pressed.
+  bool is_D_key_pressed_;
+  /// W key pressed.
+  bool is_W_key_pressed_;
+  /// S key pressed.
+  bool is_S_key_pressed_;
+
+}; /* Airplane */
+
+}; /* W3D */
+
+#endif
