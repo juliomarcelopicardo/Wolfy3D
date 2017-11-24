@@ -14,6 +14,7 @@
 #include "Wolfy3D.h"
 #include "core/core.h"
 #include "core/entity.h"
+#include "bullet.h"
 
 namespace W3D {
   
@@ -61,6 +62,8 @@ public:
 *******************************************************************************/
 
   /* Skin */
+  
+  /// Albedo color.
   DirectX::XMFLOAT4 color_;
 
   /* Hierarchy */
@@ -84,6 +87,15 @@ public:
   /// Back 3rd person camera node.
   Entity back_camera_;
 
+  /* Bullets */
+
+  /// Bullet pull.
+  std::vector<Bullet> bullet_;
+  /// Number of bullets
+  uint32 num_bullets_;
+  /// Bullet index
+  uint32 bullet_index_;
+
 private:
 
 /*******************************************************************************
@@ -94,6 +106,8 @@ private:
   Airplane(const Airplane& copy);
   /// Private operator of assignment.
   Airplane operator=(const Airplane& copy);
+
+
 
   /* Init methods */
 
@@ -108,6 +122,11 @@ private:
   /// Will set the quaternion constraints.
   void setupLerpQuaternionConstraints();
 
+
+  /* Bullets */
+
+  /// Fires a bullet
+  void fire();
 
 
   /* Transformation update */
@@ -128,6 +147,7 @@ private:
 
   /// Input update.
   void updateInput();
+
 
   /* ImGui update */
 
@@ -224,6 +244,10 @@ private:
   bool is_S_key_pressed_;
   /// Spacebar down.
   bool is_SpaceBar_key_down_;
+  /// Right mouse button (Fire)
+  bool is_right_mouse_button_down_;
+
+
 
 }; /* Airplane */
 

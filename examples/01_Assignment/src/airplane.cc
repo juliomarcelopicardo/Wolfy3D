@@ -44,6 +44,9 @@ Airplane::Airplane() {
   forward_acceleration_ = 0.00001f;
   turret_rotation_speed_ = 0.001f;
   gun_rotation_speed_ = 0.002f;
+  num_bullets_ = 20;
+  bullet_.resize(num_bullets_);
+  bullet_index_ = 0;
 }
 
 Airplane::~Airplane() {
@@ -60,10 +63,11 @@ void Airplane::init() {
   initTransforms();
   initRenderComponents();
   setupLerpQuaternionConstraints();
+  
 }
 
 void Airplane::update(const float32& delta_time) {
-  
+
   updateInput();
   if (is_SpaceBar_key_down_) {
     is_plane_engine_active_ = true;
@@ -72,6 +76,12 @@ void Airplane::update(const float32& delta_time) {
   updateRotations(delta_time);
   updateTranslations(delta_time);
   updateImGui();
+  if (is_right_mouse_button_down_) {
+    fire();
+  }
+  for (uint32 i = 0; i < num_bullets_; ++i) {
+    bullet_[i].update(delta_time);
+  }
 }
 
 
@@ -83,7 +93,9 @@ void Airplane::update(const float32& delta_time) {
 ***                              Initializations                             ***
 *******************************************************************************/
 
-void Airplane::initGeometries() {  
+
+
+void Airplane::initGeometries() {
   geo_plane_.initFromFile("../data/geometries/plane/plane.x");
   geo_prop_.initFromFile("../data/geometries/plane/prop.x");
   geo_turret_.initFromFile("../data/geometries/plane/turret.x");
@@ -133,6 +145,27 @@ void Airplane::setupLerpQuaternionConstraints() {
   quaternion_idle_rotation = plane_.transform().quaternion_rotation_float4();
 }
 
+
+/*******************************************************************************
+***                                Bullets                                   ***
+*******************************************************************************/
+
+void Airplane::fire() {
+  auto* bullet = &bullet_[bullet_index_];
+
+  bullet->is_active_ = true;
+  bullet->root_.transform().set_quaternion_rotation(gun_.transform().quaternion_world_rotation_float4());
+  bullet->root_.transform().set_position(bullet_spawn_point_.transform().world_position_float3());
+  bullet->projectile_velocity_ = gun_.transform().world_forward_float3();
+  bullet->projectile_velocity_.x = bullet->projectile_velocity_.x * bullet->projectile_speed_ + traslation_velocity_.x ;
+  bullet->projectile_velocity_.y = bullet->projectile_velocity_.y * bullet->projectile_speed_ + traslation_velocity_.y;
+  bullet->projectile_velocity_.z = bullet->projectile_velocity_.z * bullet->projectile_speed_ + traslation_velocity_.z;
+
+  bullet_index_++;
+  if (bullet_index_ >= num_bullets_) {
+    bullet_index_ = 0;
+  }
+}
 
 /*******************************************************************************
 ***                         Transformation updates                           ***
@@ -268,6 +301,7 @@ void Airplane::updateInput() {
   is_W_key_pressed_ = Input::IsKeyboardButtonPressed(Input::kKeyboardButton_W);
   is_S_key_pressed_ = Input::IsKeyboardButtonPressed(Input::kKeyboardButton_S);
   is_SpaceBar_key_down_ = Input::IsKeyboardButtonDown(Input::kKeyboardButton_SpaceBar);
+  is_right_mouse_button_down_ = Input::IsMouseButtonDown(Input::kMouseButton_Right);
 }
 
 /*******************************************************************************
