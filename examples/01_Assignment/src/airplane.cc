@@ -42,6 +42,8 @@ Airplane::Airplane() {
   forward_speed_ = 0.0f;
   traslation_velocity_ = { 0.0f, 0.0f, 0.0f };
   forward_acceleration_ = 0.00001f;
+  turret_rotation_speed_ = 0.001f;
+  gun_rotation_speed_ = 0.002f;
 }
 
 Airplane::~Airplane() {
@@ -137,6 +139,12 @@ void Airplane::setupLerpQuaternionConstraints() {
 void Airplane::updateRotations(const float32& delta_time) {
     // PROP 
     prop_.transform().rotate(0.0f, 0.0f, prop_rotation_speed_ * delta_time * forward_speed_);
+
+    // TURRET
+    turret_.transform().rotate(0.0f, turret_rotation_speed_ * delta_time, 0.0f);
+
+    // GUN
+    gun_.transform().set_euler_rotation((DirectX::XMScalarSin((float32)Time() * gun_rotation_speed_) * 0.20f - 0.20f), 0.0f, 0.0f);
 
   if (is_plane_engine_active_ && forward_speed_ == max_forward_speed_) {
     // PLANE
@@ -274,6 +282,8 @@ void Airplane::updateImGui() {
     ImGui::SliderFloat("Prop Max Rotation Speed", &prop_rotation_speed_, 0.01f, 2.0f, "%.3f");
     ImGui::SliderFloat("Y Max Rotation Speed", &y_rotation_speed_, 0.001f, 0.1f, "%.4f");
     ImGui::SliderFloat("Y Max Traslation Speed", &up_traslation_speed_, 0.001f, 0.1f, "%.4f");
+    ImGui::SliderFloat("Turret Rotation Speed", &turret_rotation_speed_, 0.001f, 0.1f, "%.4f");
+    ImGui::SliderFloat("Gun Rotation Speed", &gun_rotation_speed_, 0.0001f, 0.01f, "%.4f");
     updateImGuiRotationX();
     updateImGuiRotationZ();
 

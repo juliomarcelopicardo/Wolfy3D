@@ -190,6 +190,10 @@ private:
   float32 x_rotation_constraint_degrees;
   /// Y axis max rotation speed.
   float32 y_rotation_speed_;
+  /// Turret rotation speed.
+  float32 turret_rotation_speed_;
+  /// Gun Rotation speed.
+  float32 gun_rotation_speed_;
 
   /* Traslation Parameters */
   
