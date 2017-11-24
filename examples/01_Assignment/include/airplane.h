@@ -116,6 +116,8 @@ private:
   void updateRotationLerpingValuesZ(const float32& delta_time);
   /// Update X rotation lerping Values.
   void updateRotationLerpingValuesX(const float32& delta_time);
+  /// Update translations.
+  void updateTranslations(const float32& delta_time);
   
 
   /* Input update */
@@ -151,6 +153,7 @@ private:
  
 
   /* Rotation constraints */
+
   /// Save the z rotation quaternion.
   DirectX::XMFLOAT4 z_quaternion_rotation_;
   /// Quaternion limits where 0 is the negative and 1 the positive.
@@ -167,7 +170,8 @@ private:
   DirectX::XMFLOAT4 quaternion_idle_rotation;
 
 
-  /* Parameters */
+  /* Rotation Parameters */
+
   /// Propeller rotation speed
   float32 prop_rotation_speed_;
   /// Plane Z axis rotation speed.
@@ -182,7 +186,23 @@ private:
   float32 x_rotation_to_idle_speed_;
   /// X axis rotation limit in degrees.
   float32 x_rotation_constraint_degrees;
+  /// Y axis max rotation speed.
+  float32 y_rotation_speed_;
 
+  /* Traslation Parameters */
+  
+  /// Max ascension / descension speed.
+  float32 up_traslation_speed_;
+  /// If active will be able to accelerate and rotate.
+  bool is_plane_engine_active_;
+  /// Max forward speed.
+  float32 max_forward_speed_;
+  /// forward speed.
+  float32 forward_speed_;
+  /// Traslation Velocity vector.
+  DirectX::XMFLOAT3 traslation_velocity_;
+  /// Forward acceleration.
+  float32 forward_acceleration_;
 
   /* Input */
 
@@ -194,6 +214,8 @@ private:
   bool is_W_key_pressed_;
   /// S key pressed.
   bool is_S_key_pressed_;
+  /// Spacebar down.
+  bool is_SpaceBar_key_down_;
 
 }; /* Airplane */
 

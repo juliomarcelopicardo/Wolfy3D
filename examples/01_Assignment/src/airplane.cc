@@ -16,8 +16,9 @@ namespace W3D {
 ***                        Constructor and destructor                        ***
 *******************************************************************************/
 
+
 Airplane::Airplane() {
-  prop_rotation_speed_ = 0.055f;
+  prop_rotation_speed_ = 1.0f;
   z_rotation_constraint_degrees = 50.0f;
   z_rotation_alpha_ = 0.0f;
   z_rotation_speed_ = 0.001f;
@@ -33,6 +34,13 @@ Airplane::Airplane() {
   x_quaternion_limit_[1] = { 0.0f, 0.0f, 0.0f, 1.0f };
   x_quaternion_rotation_ = { 0.0f, 0.0f, 0.0f, 1.0f };
   quaternion_idle_rotation = { 0.0f, 0.0f, 0.0f, 1.0f };
+  y_rotation_speed_ = 0.001f;
+  up_traslation_speed_ = 0.01f;
+  is_plane_engine_active_ = false;
+  max_forward_speed_ = 0.015f;
+  forward_speed_ = 0.0f;
+  traslation_velocity_ = { 0.0f, 0.0f, 0.0f };
+  forward_acceleration_ = 0.000001f;
 }
 
 Airplane::~Airplane() {
@@ -54,13 +62,22 @@ void Airplane::init() {
 void Airplane::update(const float32& delta_time) {
   
   updateInput();
+  if (is_SpaceBar_key_down_) {
+    is_plane_engine_active_ = true;
+  }
+
   updateRotations(delta_time);
+  updateTranslations(delta_time);
   updateImGui();
 }
 
 
 /*******************************************************************************
 ***                              Private methods                             ***
+*******************************************************************************/
+
+/*******************************************************************************
+***                              Initializations                             ***
 *******************************************************************************/
 
 void Airplane::initGeometries() {  
@@ -110,16 +127,27 @@ void Airplane::setupLerpQuaternionConstraints() {
   quaternion_idle_rotation = plane_.transform().quaternion_rotation_float4();
 }
 
+
+/*******************************************************************************
+***                         Transformation updates                           ***
+*******************************************************************************/
+
 void Airplane::updateRotations(const float32& delta_time) {
+    // PROP 
+    prop_.transform().rotate(0.0f, 0.0f, prop_rotation_speed_ * delta_time * forward_speed_);
 
-  // PROP 
-  prop_.transform().rotate(0.0f, 0.0f, prop_rotation_speed_ * delta_time);
+  if (is_plane_engine_active_ && forward_speed_ == max_forward_speed_) {
+    // PLANE
+    updateRotationLerpingValues(delta_time);
+    DirectX::XMVECTOR rot_z = DirectX::XMLoadFloat4(&z_quaternion_rotation_);
+    DirectX::XMVECTOR rot_x = DirectX::XMLoadFloat4(&x_quaternion_rotation_);
+    plane_.transform().set_quaternion_rotation(DirectX::XMQuaternionNormalize(DirectX::XMQuaternionMultiply(rot_z, rot_x)));
 
-  // PLANE
-  updateRotationLerpingValues(delta_time);
-  DirectX::XMVECTOR rot_z = DirectX::XMLoadFloat4(&z_quaternion_rotation_);
-  DirectX::XMVECTOR rot_x = DirectX::XMLoadFloat4(&x_quaternion_rotation_);
-  plane_.transform().set_quaternion_rotation(DirectX::XMQuaternionNormalize(DirectX::XMQuaternionMultiply(rot_z, rot_x)));
+    // PLANE ROOT
+    if (z_rotation_alpha_ != 0.0f) {
+      root_.transform().worldRotate(0.0f, -z_rotation_alpha_ * y_rotation_speed_ * delta_time, 0.0f);
+    }
+  }
 }
 
 void Airplane::updateRotationLerpingValues(const float32 & delta_time) {
@@ -162,11 +190,11 @@ void Airplane::updateRotationLerpingValuesZ(const float32 & delta_time) {
 void Airplane::updateRotationLerpingValuesX(const float32 & delta_time) {
 
   // If any key is pressed -> rotate
-  if (is_W_key_pressed_) {
+  if (is_S_key_pressed_) {
     x_rotation_alpha_ -= x_rotation_speed_ * delta_time;
     if (x_rotation_alpha_ < -1.0f) { x_rotation_alpha_ = -1.0f; }
   }
-  else if (is_S_key_pressed_) {
+  else if (is_W_key_pressed_) {
     x_rotation_alpha_ += x_rotation_speed_ * delta_time;
     if (x_rotation_alpha_ > 1.0f) { x_rotation_alpha_ = 1.0f; }
   }
@@ -191,18 +219,56 @@ void Airplane::updateRotationLerpingValuesX(const float32 & delta_time) {
   }
 }
 
+void Airplane::updateTranslations(const float32 & delta_time) {
+
+  traslation_velocity_ = { 0.0f, 0.0f, 0.0f };
+
+  if (is_plane_engine_active_) {
+
+    if (forward_speed_ < max_forward_speed_) {
+      forward_speed_ += delta_time * forward_acceleration_;
+    }
+    else {
+      forward_speed_ = max_forward_speed_;
+    }
+
+    traslation_velocity_ = plane_root_.transform().world_forward_float3();
+    traslation_velocity_.x *= forward_speed_ * delta_time;
+    traslation_velocity_.y *= forward_speed_ * delta_time;
+    traslation_velocity_.z *= forward_speed_ * delta_time;
+
+    if (x_rotation_alpha_ != 0.0f) {
+      traslation_velocity_.y += -x_rotation_alpha_ * up_traslation_speed_ * delta_time;
+    }
+
+    root_.transform().worldTraslate(traslation_velocity_);
+  }
+}
+
+
+/*******************************************************************************
+***                               Input Update                               ***
+*******************************************************************************/
+
 void Airplane::updateInput() {
   is_A_key_pressed_ = Input::IsKeyboardButtonPressed(Input::kKeyboardButton_A);
   is_D_key_pressed_ = Input::IsKeyboardButtonPressed(Input::kKeyboardButton_D);
   is_W_key_pressed_ = Input::IsKeyboardButtonPressed(Input::kKeyboardButton_W);
   is_S_key_pressed_ = Input::IsKeyboardButtonPressed(Input::kKeyboardButton_S);
+  is_SpaceBar_key_down_ = Input::IsKeyboardButtonDown(Input::kKeyboardButton_SpaceBar);
 }
+
+/*******************************************************************************
+***                              ImGui Update                                ***
+*******************************************************************************/
 
 void Airplane::updateImGui() {
   ImGui::PushID(this);
   if (ImGui::TreeNode("AirPlane")) {
     
-    ImGui::SliderFloat("Prop Rotation Speed", &prop_rotation_speed_, 0.01f, 0.1f, "%.3f");
+    ImGui::SliderFloat("Prop Max Rotation Speed", &prop_rotation_speed_, 0.01f, 2.0f, "%.3f");
+    ImGui::SliderFloat("Y Max Rotation Speed", &y_rotation_speed_, 0.001f, 0.1f, "%.4f");
+    ImGui::SliderFloat("Y Max Traslation Speed", &up_traslation_speed_, 0.001f, 0.1f, "%.4f");
     updateImGuiRotationX();
     updateImGuiRotationZ();
 
@@ -212,16 +278,14 @@ void Airplane::updateImGui() {
 }
 
 void Airplane::updateImGuiRotationX() {
-  ImGui::PushID("XRotation");
-  if (ImGui::TreeNode("X Rotation")) {
 
     float32 rot_speed = x_rotation_speed_;
     float32 rot_to_idle_speed = x_rotation_to_idle_speed_;
     float32 constraint_degrees = x_rotation_constraint_degrees;
 
-    ImGui::SliderFloat("Max Degrees", &x_rotation_constraint_degrees, 10.0f, 70.0f);
-    ImGui::SliderFloat("Rotation Speed", &x_rotation_speed_, 0.0001f, 0.01f, "%.4f");
-    ImGui::SliderFloat("Back To Idle Speed", &x_rotation_to_idle_speed_, 0.0001f, 0.01f, "%.4f");
+    ImGui::SliderFloat("X Constraint Degrees", &x_rotation_constraint_degrees, 10.0f, 70.0f);
+    ImGui::SliderFloat("X Max Rotation Speed", &x_rotation_speed_, 0.0001f, 0.01f, "%.4f");
+    ImGui::SliderFloat("X Max Back To Idle Speed", &x_rotation_to_idle_speed_, 0.0001f, 0.01f, "%.4f");
 
     if (x_rotation_speed_ != rot_speed ||
         x_rotation_to_idle_speed_ != rot_to_idle_speed ||
@@ -229,22 +293,17 @@ void Airplane::updateImGuiRotationX() {
       setupLerpQuaternionConstraints();
     }
 
-    ImGui::TreePop();
-  }
-  ImGui::PopID();
 }
 
 void Airplane::updateImGuiRotationZ() {
-  ImGui::PushID("ZRotation");
-  if (ImGui::TreeNode("Z Rotation")) {
 
     float32 rot_speed = z_rotation_speed_;
     float32 rot_to_idle_speed = z_rotation_to_idle_speed_;
     float32 constraint_degrees = z_rotation_constraint_degrees;
 
-    ImGui::SliderFloat("Max Degrees", &z_rotation_constraint_degrees, 10.0f, 70.0f);
-    ImGui::SliderFloat("Rotation Speed", &z_rotation_speed_, 0.0001f, 0.01f, "%.4f");
-    ImGui::SliderFloat("Back To Idle Speed", &z_rotation_to_idle_speed_, 0.0001f, 0.01f, "%.4f");
+    ImGui::SliderFloat("Z Constraint Degrees", &z_rotation_constraint_degrees, 10.0f, 70.0f);
+    ImGui::SliderFloat("Z Max Rotation Speed", &z_rotation_speed_, 0.0001f, 0.01f, "%.4f");
+    ImGui::SliderFloat("Z Max Back To Idle Speed", &z_rotation_to_idle_speed_, 0.0001f, 0.01f, "%.4f");
 
     if (z_rotation_speed_ != rot_speed ||
         z_rotation_to_idle_speed_ != rot_to_idle_speed ||
@@ -252,9 +311,6 @@ void Airplane::updateImGuiRotationZ() {
       setupLerpQuaternionConstraints();
     }
 
-    ImGui::TreePop();
-  }
-  ImGui::PopID();
 }
 
 
