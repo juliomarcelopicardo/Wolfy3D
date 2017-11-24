@@ -32,6 +32,8 @@ namespace W3D {
 
   void Wnd::init(const int32 width, const int32 height, const char * name) {
 
+    auto& core = Core::instance();
+
     instance_handle_ = GetModuleHandle(NULL);
     width_ = width;
     height_ = height;
@@ -39,8 +41,9 @@ namespace W3D {
     setupWindowClassInfo();
     setupWindowHandle(name);
 
-    Core::instance().d3d_.init();
-    Core::instance().init();
+    core.d3d_.init();
+    core.init();
+    core.cam_.setupPerspective(core.cam_.fovy_, width_ / height_, core.cam_.z_near_, core.cam_.z_far_);
 
     is_opened_ = true;
   }
