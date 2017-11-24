@@ -26,8 +26,8 @@ Cam::Cam() {
   movement_speed_ = 0.005f;
   rotation_speed_ = 0.005f;
   last_mouse_position_ = { 0.0f, 0.0f };
-  is_navigation_enabled_ = false;
-  setupPerspective(DirectX::XMConvertToRadians(45.0f), 1024.0f / 978.0f, 0.1f, 100.0f);
+  is_navigation_enabled_ = true;
+  setupPerspective(45.0f, 1024.0f / 978.0f, 0.1f, 1000.0f);
   setupView();
 }
 
@@ -44,16 +44,24 @@ void Cam::setupPerspective(const float32 field_of_view,
                            const float32 z_near,
                            const float32 z_far) {
 
+  fovy_ = field_of_view;
+  aspect_ = aspect_ratio;
+  z_near_ = z_near;
+  z_far_ = z_far;
   DirectX::XMMATRIX projection = DirectX::XMMatrixPerspectiveFovLH(field_of_view, aspect_ratio, z_near, z_far);
   DirectX::XMStoreFloat4x4(&projection_matrix_, projection);
 }
 
 
-void Cam::setupOrthographic(const float32 left, const float32 right_vector, 
+void Cam::setupOrthographic(const float32 left, const float32 right, 
                             const float32 bottom, const float32 top, 
                             const float32 z_near, const float32 z_far) {
   
-  DirectX::XMMATRIX projection = DirectX::XMMatrixOrthographicOffCenterLH(left, right_vector, bottom, top, z_near, z_far);
+  fovy_ = DirectX::XMConvertToRadians(45.0f);
+  aspect_ = (right - left) / (top - bottom);
+  z_near_ = z_near;
+  z_far_ = z_far;
+  DirectX::XMMATRIX projection = DirectX::XMMatrixOrthographicOffCenterLH(left, right, bottom, top, z_near, z_far);
   DirectX::XMStoreFloat4x4(&projection_matrix_, projection);
 }
 
