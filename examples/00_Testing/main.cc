@@ -85,6 +85,7 @@ int32 main() {
   mat_assesment.texture_asphalt_ = &assesment_texture[3];
 
   struct Robot {
+
     Geo geo_body;
     Geo geo_left_ankle;
     Geo geo_left_elbow;
@@ -683,7 +684,7 @@ int32 main() {
   root.addChild(&terrain);
   
 
-  //plane_root.transform().set_rotation(0.0f, DirectX::XM_PI, 0.0f);
+  plane_root.transform().set_euler_rotation(0.0f, DirectX::XM_PI, 0.0f);
   char textico[256];
   sprintf_s(textico, "Iniciando ventana con dimensiones %d x %d", Window::Width(), Window::Height());
   auto& cam = Core::instance().cam_;
