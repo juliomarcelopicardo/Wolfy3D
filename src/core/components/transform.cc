@@ -129,7 +129,8 @@ DirectX::XMVECTOR TransformComponent::euler_world_rotation_vector() {
 }
 
 DirectX::XMVECTOR TransformComponent::quaternion_world_rotation_vector() {
-  DirectX::XMVECTOR quat = DirectX::XMQuaternionRotationMatrix(global_model_matrix());
+  DirectX::XMVECTOR temp, quat;
+  DirectX::XMMatrixDecompose(&temp, &quat, &temp, DirectX::XMMatrixTranspose(global_model_matrix()));
   return DirectX::XMQuaternionNormalize(quat);
 }
 
@@ -143,7 +144,7 @@ DirectX::XMFLOAT3 TransformComponent::euler_world_rotation_float3() {
 
 DirectX::XMFLOAT4 TransformComponent::quaternion_world_rotation_float4() {
   DirectX::XMVECTOR temp, quat;
-  DirectX::XMMatrixDecompose(&temp, &quat, &temp, global_model_matrix());
+  DirectX::XMMatrixDecompose(&temp, &quat, &temp, DirectX::XMMatrixTranspose(global_model_matrix()));
   DirectX::XMFLOAT4 quaternions;
   DirectX::XMStoreFloat4(&quaternions, DirectX::XMQuaternionNormalize(quat));
   return quaternions;
