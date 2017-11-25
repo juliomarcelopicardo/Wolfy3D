@@ -24,8 +24,14 @@ class Material {
   ~Material();
 
   virtual void setupSuperMaterial() = 0;
+  void set_light_sensitivity(const bool is_light_sensitive);
 
+ protected:
+
+  uint32 is_light_sensitive_;
+ 
  private:
+
   Material(const Material& copy);
   Material& operator=(const Material& copy);
 };
@@ -96,7 +102,7 @@ private:
 
 
 /*
-MATERIAL ASSESMENT SUBCLASS
+MATERIAL TERRAIN SUBCLASS
 */
 class MaterialTerrain : public Material {
 
@@ -106,10 +112,10 @@ public:
 
   void setupSuperMaterial() override;
 
-  class Texture* texture_materialmap_;
-  class Texture* texture_grass_;
-  class Texture* texture_moss_;
-  class Texture* texture_asphalt_;
+  Texture* texture_materialmap_;
+  Texture* texture_grass_;
+  Texture* texture_moss_;
+  Texture* texture_asphalt_;
 
 private:
 
@@ -118,6 +124,9 @@ private:
   MaterialTerrain(const MaterialTerrain& copy);
   MaterialTerrain& operator=(const MaterialTerrain& copy);
 };
+
+
+
 
 }; /* W3D */
 

@@ -34,9 +34,8 @@ struct MaterialSettings {
   MaterialType type;
   uint32 num_textures;
   float32 time;
+  uint32 is_light_sensitive;
   // ESTO ES PORQUE LOS CONSTANT BUFFER TIENEN QUE IR EN BLOQUES DE 16Bytes
-  float32 padding;
-  //float32 padding2;
 };
 
 class SuperMaterial {

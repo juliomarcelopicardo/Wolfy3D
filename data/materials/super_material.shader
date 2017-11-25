@@ -10,7 +10,7 @@ cbuffer CustomConstantBuffer {
   unsigned int type;
   unsigned int num_textures;
   float timer;
-  float time2;
+  unsigned int is_light_sensitive;
 };
 
 /* 
@@ -50,6 +50,8 @@ Texture2D texture_asphalt : register(t4);
 #define NORMALS 2
 #define TERRAIN 3
 
+#define TRUE 1
+#define FALSE 0
 
 /*
 VERTEX SHADER
@@ -113,7 +115,10 @@ PIXEL/FRAGMENT SHADER
 */
 float4 PixelShaderFunction(PixelInfo pixel_info) : SV_TARGET {
   
-  float4 color = pixel_info.Color * albedo_color * CalculateLightDiffuseColor(pixel_info.Normal);
+  float4 color = pixel_info.Color * albedo_color;
+  if (is_light_sensitive == TRUE) {
+    color *= CalculateLightDiffuseColor(pixel_info.Normal);
+  }
 
   switch (type) {
 

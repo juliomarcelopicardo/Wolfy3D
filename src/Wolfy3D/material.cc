@@ -19,9 +19,16 @@ namespace W3D {
 ***                      MATERIAL INTERFACE BASE CLASS                       ***
 *******************************************************************************/
 
-Material::Material() {}
+Material::Material() {
+  is_light_sensitive_ = 1;
+}
 
 Material::~Material() {}
+
+void Material::set_light_sensitivity(const bool is_light_sensitive) {
+  if (is_light_sensitive) { is_light_sensitive_ = 1; }
+  else { is_light_sensitive_ = 0; }
+}
 
 /*******************************************************************************
 ***                      MATERIAL TEXTURED SUB CLASS                       ***
@@ -29,6 +36,7 @@ Material::~Material() {}
 
 MaterialTextured::MaterialTextured() : Material() {
   texture_ = nullptr;
+  is_light_sensitive_ = 0;
 }
 
 MaterialTextured::~MaterialTextured() {
@@ -41,6 +49,7 @@ void MaterialTextured::setupSuperMaterial() {
   super_mat.settings_.type = MaterialType::kMaterialType_OneTexture;
   super_mat.settings_.num_textures = 1;
   super_mat.settings_.albedo_color = { 1.0f, 1.0f, 1.0f, 1.0f };
+  super_mat.settings_.is_light_sensitive = is_light_sensitive_;
   
   if (texture_ && texture_->texture_handle_) {
     texture_->use();
@@ -72,6 +81,7 @@ void MaterialDiffuse::setupSuperMaterial() {
   super_mat.settings_.type = MaterialType::kMaterialType_Diffuse;
   super_mat.settings_.num_textures = 0;
   super_mat.settings_.albedo_color = color;
+  super_mat.settings_.is_light_sensitive = is_light_sensitive_;
 }
 
 void MaterialDiffuse::set_color(const DirectX::XMFLOAT4& rgba) {
@@ -99,6 +109,7 @@ void MaterialNormals::setupSuperMaterial() {
   super_mat.settings_.type = MaterialType::kMaterialType_Normals;
   super_mat.settings_.num_textures = 0;
   super_mat.settings_.albedo_color = { 1.0f, 1.0f, 1.0f, 1.0f };
+  super_mat.settings_.is_light_sensitive = is_light_sensitive_;
 }
 
 
@@ -116,12 +127,15 @@ void MaterialTerrain::setupSuperMaterial() {
   super_mat.settings_.type = MaterialType::kMaterialType_Terrain;
   super_mat.settings_.num_textures = 4;
   super_mat.settings_.albedo_color = { 1.0f, 1.0f, 1.0f, 1.0f };
+  super_mat.settings_.is_light_sensitive = is_light_sensitive_;
 
   texture_materialmap_->use(1, false);
   texture_grass_->use(2);
   texture_moss_->use(3);
   texture_asphalt_->use(4);
 }
+
+
 
 
 }; /* W3D */
