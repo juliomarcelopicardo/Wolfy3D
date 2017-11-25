@@ -74,15 +74,16 @@ int32 main() {
   
 
   Texture assesment_texture[4];
-  assesment_texture[0].load("./../data/textures/materialmap.dds");
-  assesment_texture[1].load("./../data/textures/grass.dds");
-  assesment_texture[2].load("./../data/textures/moss.dds");
-  assesment_texture[3].load("./../data/textures/asphalt.dds");
-  MaterialAssesment mat_assesment;
+  assesment_texture[0].load("./../data/textures/terrain/materialmap.dds");
+  assesment_texture[1].load("./../data/textures/terrain/grass.dds");
+  assesment_texture[2].load("./../data/textures/terrain/moss.dds");
+  assesment_texture[3].load("./../data/textures/terrain/asphalt.dds");
+  MaterialTerrain mat_assesment;
   mat_assesment.texture_materialmap_ = &assesment_texture[0];
   mat_assesment.texture_grass_ = &assesment_texture[1];
   mat_assesment.texture_moss_ = &assesment_texture[2];
   mat_assesment.texture_asphalt_ = &assesment_texture[3];
+
 
   struct Robot {
 
@@ -638,9 +639,9 @@ int32 main() {
     bool is_running;
 
     void init(Robot* r) {
-      idle.init("../data/animations/RobotIdleAnimDAE.txt");
-      attack.init("../data/animations/RobotAttackAnimDAE.txt");
-      die.init("../data/animations/RobotDieAnimDAE.txt");
+      idle.init("../data/animations/robot/RobotIdleAnimDAE.txt");
+      attack.init("../data/animations/robot/RobotAttackAnimDAE.txt");
+      die.init("../data/animations/robot/RobotDieAnimDAE.txt");
       robot = r;
     }
 
@@ -670,18 +671,24 @@ int32 main() {
   //geo_prop.initFromFile("./../data/geometries/plane/prop.x");
   //geo_gun.initFromFile("./../data/geometries/plane/gun.x");
   //geo_turret.initFromFile("./../data/geometries/plane/turret.x");
-  geo_terrain.initTerrain("./../data/textures/Heightmap.bmp", { 100.0f, 7.0f, 100.0f });
+  geo_terrain.initTerrain("./../data/textures/terrain/Heightmap.bmp", { 100.0f, 7.0f, 100.0f });
 
-  texture.load("./../data/textures/texture.png");
+  texture.load("./../data/textures/skybox_test.jpg");
   texture2.load("./../data/textures/turtle.png");
   mat_texture.set_texture(&texture);
 
+
   Entity plane_root, plane, prop, turret, gun, cam_node, terrain, root;
 
+  Geo geo_skybox;
+  geo_skybox.initSkyBoxCube({ 100.0f, 100.0f, 100.0f });
+  Entity skybox;
+  root.addChild(&skybox);
+  skybox.addComponent(ComponentType::kComponentType_Render, &mat_texture, &geo_skybox);
   
   terrain.addComponent(kComponentType_Render, &mat_assesment, &geo_terrain);
   terrain.transform().set_position(-50.0f, -10.0f, -30.0f);
-  root.addChild(&terrain);
+  //root.addChild(&terrain);
   
 
   plane_root.transform().set_euler_rotation(0.0f, DirectX::XM_PI, 0.0f);

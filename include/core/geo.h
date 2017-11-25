@@ -55,6 +55,18 @@ class Geo {
                 const DirectX::XMFLOAT4 color = { 1.0f, 1.0f, 1.0f, 1.0f });
 
   ///--------------------------------------------------------------------------
+  /// @fn   bool initSkyBoxCube(const DirectX::XMFLOAT3 size = { 1.0f, 1.0f, 1.0f },
+  ///                           const DirectX::XMFLOAT4 color = { 1.0f, 1.0f, 1.0f, 1.0f });
+  ///
+  /// @brief  Initializes the Geometry.
+  /// @param  size Size of the cube.
+  /// @param  color Color of the geometry.
+  /// @return true if successfully initialized, false otherwise.
+  ///--------------------------------------------------------------------------
+  bool initSkyBoxCube(const DirectX::XMFLOAT3 size = { 1.0f, 1.0f, 1.0f },
+                      const DirectX::XMFLOAT4 color = { 1.0f, 1.0f, 1.0f, 1.0f });
+
+  ///--------------------------------------------------------------------------
   /// @fn   bool initTerrain(const char* height_map_filename, const float max_height);
   ///
   /// @brief  Initializes the Geometry. Terrain.

@@ -238,6 +238,115 @@ bool Geo::initCube(const DirectX::XMFLOAT3 size,
   return true;
 }
 
+bool Geo::initSkyBoxCube(const DirectX::XMFLOAT3 size, const DirectX::XMFLOAT4 color) {
+  // CUBO de ejemplo
+  num_vertices_ = 24;
+  num_indices_ = 36;
+
+  // Rellenamos info de vertices e indices.
+  vertex_data_.resize(num_vertices_);
+  vertex_index_.resize(num_indices_);
+
+  DirectX::XMFLOAT3 h_size = { size.x * 0.5f, size.y * 0.5f, size.z * 0.5f };
+  DirectX::XMFLOAT3 normal_x = { 1.0f, 0.0f, 0.0f };
+  DirectX::XMFLOAT3 normal_y = { 0.0f, 1.0f, 0.0f };
+  DirectX::XMFLOAT3 normal_z = { 0.0f, 0.0f, 1.0f };
+  DirectX::XMFLOAT3 normal_x_neg = { -1.0f, 0.0f, 0.0f };
+  DirectX::XMFLOAT3 normal_y_neg = { 0.0f, -1.0f, 0.0f };
+  DirectX::XMFLOAT3 normal_z_neg = { 0.0f, 0.0f, -1.0f };
+  DirectX::XMFLOAT2 uv_top_l = { 0.0f, 0.0f };
+  DirectX::XMFLOAT2 uv_top_r = { 1.0f, 0.0f };
+  DirectX::XMFLOAT2 uv_bot_r = { 1.0f, 1.0f };
+  DirectX::XMFLOAT2 uv_bot_l = { 0.0f, 1.0f };
+  float32 uv_div = 1.0f / 3.0f;
+  float32 uv_div2 = uv_div * 2.0f;
+
+  // FACE Z + 
+  vertex_data_[0] = { { -h_size.x, h_size.y, h_size.z }, normal_z_neg, { 0.25f, uv_div }, color };
+  vertex_data_[1] = { { h_size.x, h_size.y, h_size.z }, normal_z_neg, { 0.50f, uv_div }, color };
+  vertex_data_[2] = { { h_size.x, -h_size.y, h_size.z }, normal_z_neg, { 0.50f, uv_div2 }, color };
+  vertex_data_[3] = { { -h_size.x, -h_size.y, h_size.z }, normal_z_neg, { 0.25f, uv_div2 }, color };
+
+  // FACE X+
+  vertex_data_[4] = { { h_size.x, h_size.y, h_size.z }, normal_x_neg, { 0.50f, uv_div }, color };
+  vertex_data_[5] = { { h_size.x, h_size.y, -h_size.z }, normal_x_neg, { 0.75f, uv_div }, color };
+  vertex_data_[6] = { { h_size.x, -h_size.y, -h_size.z }, normal_x_neg, { 0.75f, uv_div2 }, color };
+  vertex_data_[7] = { { h_size.x, -h_size.y, h_size.z }, normal_x_neg, { 0.50f, uv_div2 }, color };
+
+  // FACE Z -
+  vertex_data_[8] = { { h_size.x, h_size.y, -h_size.z }, normal_z, { 0.75f, uv_div }, color };
+  vertex_data_[9] = { { -h_size.x, h_size.y, -h_size.z }, normal_z, { 1.0f, uv_div }, color };
+  vertex_data_[10] = { { -h_size.x, -h_size.y, -h_size.z }, normal_z, { 1.0f, uv_div2 }, color };
+  vertex_data_[11] = { { h_size.x, -h_size.y, -h_size.z }, normal_z, { 0.75f, uv_div2 }, color };
+
+  // FACE X- 
+  vertex_data_[12] = { { -h_size.x, h_size.y, -h_size.z }, normal_x, { 0.0f, uv_div }, color };
+  vertex_data_[13] = { { -h_size.x, h_size.y, h_size.z }, normal_x, { 0.25f, uv_div }, color };
+  vertex_data_[14] = { { -h_size.x, -h_size.y, h_size.z }, normal_x, { 0.25f, uv_div2 }, color };
+  vertex_data_[15] = { { -h_size.x, -h_size.y, -h_size.z }, normal_x, { 0.0f, uv_div2 }, color };
+
+  // FACE Y -
+  vertex_data_[16] = { { -h_size.x, -h_size.y, h_size.z }, normal_y, { 0.25f, uv_div2 }, color };
+  vertex_data_[17] = { { h_size.x, -h_size.y, h_size.z }, normal_y, { 0.50f, uv_div2 }, color };
+  vertex_data_[18] = { { h_size.x, -h_size.y, -h_size.z }, normal_y, { 0.50f, 1.0f }, color };
+  vertex_data_[19] = { { -h_size.x, -h_size.y, -h_size.z }, normal_y, { 0.25f, 1.0f }, color };
+
+  // FACE Y +
+  vertex_data_[20] = { { -h_size.x, h_size.y, -h_size.z }, normal_y_neg, { 0.25f, 0.0f }, color };
+  vertex_data_[21] = { { h_size.x, h_size.y, -h_size.z }, normal_y_neg, { 0.50f, 0.0f }, color };
+  vertex_data_[22] = { { h_size.x, h_size.y, h_size.z }, normal_y_neg, { 0.50f, uv_div }, color };
+  vertex_data_[23] = { { -h_size.x, h_size.y, h_size.z }, normal_y_neg, { 0.25f, uv_div  }, color };
+
+  vertex_index_[0] = 0;
+  vertex_index_[1] = 1;
+  vertex_index_[2] = 2;
+  vertex_index_[3] = 0;
+  vertex_index_[4] = 2;
+  vertex_index_[5] = 3;
+
+  vertex_index_[6] = 4;
+  vertex_index_[7] = 5;
+  vertex_index_[8] = 6;
+  vertex_index_[9] = 4;
+  vertex_index_[10] = 6;
+  vertex_index_[11] = 7;
+
+  vertex_index_[12] = 8;
+  vertex_index_[13] = 9;
+  vertex_index_[14] = 10;
+  vertex_index_[15] = 8;
+  vertex_index_[16] = 10;
+  vertex_index_[17] = 11;
+
+  vertex_index_[18] = 12;
+  vertex_index_[19] = 13;
+  vertex_index_[20] = 14;
+  vertex_index_[21] = 12;
+  vertex_index_[22] = 14;
+  vertex_index_[23] = 15;
+
+  vertex_index_[24] = 16;
+  vertex_index_[25] = 17;
+  vertex_index_[26] = 18;
+  vertex_index_[27] = 16;
+  vertex_index_[28] = 18;
+  vertex_index_[29] = 19;
+
+  vertex_index_[30] = 20;
+  vertex_index_[31] = 21;
+  vertex_index_[32] = 22;
+  vertex_index_[33] = 20;
+  vertex_index_[34] = 22;
+  vertex_index_[35] = 23;
+
+  topology_ = D3D10_PRIMITIVE_TOPOLOGY_TRIANGLELIST;
+
+  if (!createVertexBuffer()) { return false; }
+  if (!createIndexBuffer()) { return false; }
+
+  return true;
+}
+
 bool Geo::initTerrain(const char * height_map_filename, 
                                const DirectX::XMFLOAT3 grid_size, 
                                const DirectX::XMFLOAT4 color) {
