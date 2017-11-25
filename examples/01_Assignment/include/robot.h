@@ -6,8 +6,8 @@
 */
 
 
-#ifndef __TERRAIN_H__
-#define __TERRAIN_H__ 1
+#ifndef __ROBOT_H__
+#define __ROBOT_H__ 1
 
 #include <vector>
 #include "Wolfy3D.h"
@@ -18,7 +18,7 @@
 
 namespace W3D {
   
-class Terrain {
+class Robot {
 
 public:
   
@@ -27,9 +27,9 @@ public:
 *******************************************************************************/
 
   /// Default class constructor
-  Terrain();
+  Robot();
   /// Default class destructor
-	~Terrain();
+	~Robot();
 
 /*******************************************************************************
 ***                               Public methods                             ***
@@ -45,8 +45,8 @@ public:
   ///--------------------------------------------------------------------------
   /// @fn   void update(const float32& delta_time);
   ///
-  /// @param delta_time Delta time, time in miliseconds between frames.
   /// @brief updates all the elements of the class.
+  /// @param delta_time Delta time, time in miliseconds between frames.
   ///--------------------------------------------------------------------------
   void update(const float32& delta_time);
 
@@ -55,7 +55,15 @@ public:
 ***                          Setters and Getters                             ***
 *******************************************************************************/
 
-
+  ///--------------------------------------------------------------------------
+  /// @fn   void set_material_color(const float32 r, const float32 g, const float32 b);
+  ///
+  /// @brief Material albedo color setter.
+  /// @param r Red component of the color.
+  /// @param g Green component of the color.
+  /// @param b Blue component of the color.
+  ///--------------------------------------------------------------------------
+  void set_material_color(const float32 r, const float32 g, const float32 b);
 
 /*******************************************************************************
 ***                           Public  Attributes                             ***
@@ -64,8 +72,41 @@ public:
 
   /* Hierarchy */
 
-  /// Object Root node.
+  /// Class root.
   Entity root_;
+
+  /// Root node.
+  Entity robot_root_;
+  /// Body node.
+  Entity body_;
+  /// Left Ankle node.
+  Entity left_ankle_;
+  /// Left Elbow node.
+  Entity left_elbow_;
+  /// Left Hip node.
+  Entity left_hip_;
+  /// Left Knee node.
+  Entity left_knee_;
+  /// Left Shoulder node.
+  Entity left_shoulder_;
+  /// Left Wrist node.
+  Entity left_wrist_;
+  /// Right Ankle node.
+  Entity right_ankle_;
+  /// Right Elbow node.
+  Entity right_elbow_;
+  /// Right Hip node.
+  Entity right_hip_;
+  /// Right Knee node.
+  Entity right_knee_;
+  /// Right Shoulder node.
+  Entity right_shoulder_;
+  /// Right Wrist node.
+  Entity right_wrist_;
+  /// Neck node.
+  Entity neck_;
+  /// Pelvis node.
+  Entity pelvis_presley_;
 
 
 
@@ -78,16 +119,18 @@ private:
 *******************************************************************************/
 
   /// Private copy constructor.
-  Terrain(const Terrain& copy);
+  Robot(const Robot& copy);
   /// Private operator of assignment.
-  Terrain operator=(const Terrain& copy);
+  Robot operator=(const Robot& copy);
 
 /* Init methods */
 
-/// Initialize the geometries.
+  /// Initialize the geometries.
   void initGeometries();
+  /// Initialize the names of the nodes.
+  void initNames();
   /// Initialize textures used in the material.
-  void initTextures();
+  void initHierarchy();
   /// Initialize the transforms.
   void initTransforms();
   /// Initialize the material.
@@ -96,28 +139,57 @@ private:
   void initRenderComponents();
 
 
+  /// Main update function of ImGui.
+  void updateImGui();
+  /// Generate imgui stats of a node.
+  void generateNodeStatsImGui(Entity* entity);
+  /// Generate recursively all the info from the root_entity and it's children.
+  void generateRootTreeStatsImGui(Entity* root_entity);
+
 /*******************************************************************************
 ***                           Private Attributes                             ***
 *******************************************************************************/
 
 
+
   /* Render Properties */
   
-  /// Material used to render the plane. 
-  MaterialTerrain material_;
-  /// Terrain geometry.
-  Geo geo_terrain_;
-  /// Texture used as the material map.
-  Texture map_;
-  /// Texture used as grass.
-  Texture grass_;
-  /// Texture moss.
-  Texture moss_;
-  /// Texture used to render asphalt.
-  Texture asphalt_;
+  /// Body geometry.
+  Geo geo_body_;
+  /// Left Ankle geometry.
+  Geo geo_left_ankle_;
+  /// Left Elbow geometry.
+  Geo geo_left_elbow_;
+  /// Left Hip geometry.
+  Geo geo_left_hip_;
+  /// Left Knee geometry.
+  Geo geo_left_knee_;
+  /// Left Shoulder geometry.
+  Geo geo_left_shoulder_;
+  /// Left Wrist geometry.
+  Geo geo_left_wrist_;
+  /// Right Ankle geometry.
+  Geo geo_right_ankle_;
+  /// Right Elbow geometry.
+  Geo geo_right_elbow_;
+  /// Right Hip geometry.
+  Geo geo_right_hip_;
+  /// Right Knee geometry.
+  Geo geo_right_knee_;
+  /// Right Shoulder geometry.
+  Geo geo_right_shoulder_;
+  /// Right Wrist geometry.
+  Geo geo_right_wrist_;
+  /// Neck geometry.
+  Geo geo_neck_;
+  /// Pelvis geometry.
+  Geo geo_pelvis_presley_;
+
+  /// Material used to render. 
+  MaterialDiffuse material_;
 
 
-}; /* Terrain */
+}; /* Robot */
 
 }; /* W3D */
 

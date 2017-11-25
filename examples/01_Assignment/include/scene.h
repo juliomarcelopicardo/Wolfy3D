@@ -14,6 +14,7 @@
 #include "terrain.h"
 #include "bullet.h"
 #include "skybox.h"
+#include "robot.h"
 
 namespace W3D {
 
@@ -83,6 +84,8 @@ public:
   Terrain terrain_;
   /// Skybox object.
   SkyBox sky_box_;
+  /// Red Robot.
+  Robot red_robot_;
 
   /// Land track node.
   Entity landing_track_;
@@ -101,13 +104,23 @@ private:
   Scene operator=(const Scene& copy);
 
 
+  /* Camera Modes */
+
   /// Depending on the camera mode, will set the camera position and target.
   void updateCameraMode();
   /// Update inputs.
   void switchCameraMode();
+  
+
+  /* Robots */
+  
+  /// Init Robots
+  void initRobots();
+  /// Update Robots
+  void updateRobots(const float32 delta_time);
 
 /*******************************************************************************
-***                       Private Attributes                                 ***
+***                           Private Attributes                             ***
 *******************************************************************************/
 
   enum CameraMode {

@@ -27,6 +27,7 @@ void Scene::init() {
   plane_.init();
   terrain_.init();
   sky_box_.init();
+  initRobots();
 
   root_.transform().set_position(0.0f, 0.0f, 0.0f);
   root_.addChild(&sky_box_.root_);
@@ -34,10 +35,16 @@ void Scene::init() {
   root_.addChild(&terrain_.root_);
   root_.addChild(&landing_track_);
   landing_track_.addChild(&landing_track_camera_);
+
   for (uint32 i = 0; i < plane_.num_bullets_; ++i) {
     plane_.bullet_[i].init();
     root_.addChild(&plane_.bullet_[i].root_);
   }
+
+
+  
+  // DELETERRR
+  //robot_.root_.transform().set_position(plane_.root_.transform().position_float3());
 
   landing_track_.transform().set_position(319.0f, 2.5f, 500.0f);
   landing_track_camera_.transform().set_position(0.0f, 7.0f, 15.0f);
@@ -45,6 +52,7 @@ void Scene::init() {
 
 void Scene::update(const float32 delta_time) {
   plane_.update(delta_time);
+  updateRobots(delta_time);
   landing_track_.transform().rotate(0.0f, delta_time * 0.0005f, 0.0f);
   updateCameraMode();
   sky_box_.root_.transform().set_position(plane_.root_.transform().position_float3().x,
@@ -54,44 +62,7 @@ void Scene::update(const float32 delta_time) {
 
 void Scene::render() {}
 
-void Scene::updateCameraMode() {
-  auto& camera = Core::instance().cam_;
 
-  if (Input::IsKeyboardButtonDown(Input::kKeyboardButton_Tab)) {
-    switchCameraMode();
-  }
-
-  switch (camera_mode_) {
-    case kCameraMode_Plane3rdPerson: {
-      camera.set_position(plane_.back_camera_.transform().world_position_float3());
-      camera.set_target(plane_.plane_.transform().world_position_float3());
-    } break;
-    case kCameraMode_LandingTrack: {
-      camera.set_position(landing_track_camera_.transform().world_position_float3());
-      camera.set_target(landing_track_.transform().world_position_float3());
-    } break;
-    case kCameraMode_PlaneGun: {
-      camera.set_position(plane_.gun_camera_.transform().world_position_float3());
-      camera.set_target(plane_.turret_.transform().world_position_float3());
-    } break;
-  };
-
-}
-
-void Scene::switchCameraMode() {
-  auto& camera = Core::instance().cam_;
-  switch (camera_mode_) {
-    case kCameraMode_Plane3rdPerson: {
-      camera_mode_ = kCameraMode_LandingTrack;
-    } break;
-    case kCameraMode_LandingTrack: {
-      camera_mode_ = kCameraMode_PlaneGun;
-    } break;
-    case kCameraMode_PlaneGun: {
-      camera_mode_ = kCameraMode_Plane3rdPerson;
-    } break;
-  };
-}
 
 /*******************************************************************************
 ***                            Setters and Getters                           ***
@@ -102,5 +73,55 @@ void Scene::switchCameraMode() {
 ***                              Private methods                             ***
 *******************************************************************************/
 
+void Scene::updateCameraMode() {
+  auto& camera = Core::instance().cam_;
+
+  if (Input::IsKeyboardButtonDown(Input::kKeyboardButton_Tab)) {
+    switchCameraMode();
+  }
+
+  switch (camera_mode_) {
+  case kCameraMode_Plane3rdPerson: {
+    camera.set_position(plane_.back_camera_.transform().world_position_float3());
+    camera.set_target(plane_.plane_.transform().world_position_float3());
+  } break;
+  case kCameraMode_LandingTrack: {
+    camera.set_position(landing_track_camera_.transform().world_position_float3());
+    camera.set_target(landing_track_.transform().world_position_float3());
+  } break;
+  case kCameraMode_PlaneGun: {
+    camera.set_position(plane_.gun_camera_.transform().world_position_float3());
+    camera.set_target(plane_.turret_.transform().world_position_float3());
+  } break;
+  };
+
+}
+
+void Scene::switchCameraMode() {
+  auto& camera = Core::instance().cam_;
+  switch (camera_mode_) {
+  case kCameraMode_Plane3rdPerson: {
+    camera_mode_ = kCameraMode_LandingTrack;
+  } break;
+  case kCameraMode_LandingTrack: {
+    camera_mode_ = kCameraMode_PlaneGun;
+  } break;
+  case kCameraMode_PlaneGun: {
+    camera_mode_ = kCameraMode_Plane3rdPerson;
+  } break;
+  };
+}
+
+void Scene::initRobots() {
+  red_robot_.init();
+  root_.addChild(&red_robot_.root_);
+  red_robot_.set_material_color(1.0f, 0.0f, 0.0f);
+  red_robot_.root_.transform().set_position(405.0f, 2.5f, 462.0f);
+  red_robot_.root_.transform().set_euler_rotation(-0.0f, 0.2f, 0.0f);
+}
+
+void Scene::updateRobots(const float32 delta_time) {
+  red_robot_.update(delta_time);
+}
 
 }; /* W3D */
