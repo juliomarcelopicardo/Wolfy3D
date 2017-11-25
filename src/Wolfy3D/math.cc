@@ -22,8 +22,8 @@ DirectX::XMFLOAT4 ConvertEulerToQuaternionFloat4(DirectX::XMFLOAT3 euler) {
   quat_y = DirectX::XMQuaternionRotationAxis(DirectX::XMVectorSet(0.0f, 1.0f, 0.0f, 0.0f), euler.y);
   quat_z = DirectX::XMQuaternionRotationAxis(DirectX::XMVectorSet(0.0f, 0.0f, 1.0f, 0.0f), euler.z);
     
-  temp = DirectX::XMQuaternionNormalize(DirectX::XMQuaternionMultiply(quat_z, quat_x));
-  temp = DirectX::XMQuaternionNormalize(DirectX::XMQuaternionMultiply(temp, quat_y));
+  temp = DirectX::XMQuaternionNormalize(DirectX::XMQuaternionMultiply(quat_x, quat_y));
+  temp = DirectX::XMQuaternionNormalize(DirectX::XMQuaternionMultiply(temp, quat_z));
     
   DirectX::XMStoreFloat4(&result, temp);
   return result;
@@ -40,8 +40,8 @@ DirectX::XMFLOAT4 ConvertEulerToQuaternionFloat4(DirectX::XMVECTOR euler) {
   quat_y = DirectX::XMQuaternionRotationAxis(DirectX::XMVectorSet(0.0f, 1.0f, 0.0f, 0.0f), radians.y);
   quat_z = DirectX::XMQuaternionRotationAxis(DirectX::XMVectorSet(0.0f, 0.0f, 1.0f, 0.0f), radians.z);
 
-  temp = DirectX::XMQuaternionNormalize(DirectX::XMQuaternionMultiply(quat_z, quat_x));
-  temp = DirectX::XMQuaternionNormalize(DirectX::XMQuaternionMultiply(temp, quat_y));
+  temp = DirectX::XMQuaternionNormalize(DirectX::XMQuaternionMultiply(quat_x, quat_y));
+  temp = DirectX::XMQuaternionNormalize(DirectX::XMQuaternionMultiply(temp, quat_z));
 
   DirectX::XMStoreFloat4(&result, temp);
   return result;
@@ -55,8 +55,8 @@ DirectX::XMVECTOR ConvertEulerToQuaternionVector(DirectX::XMFLOAT3 euler) {
   quat_y = DirectX::XMQuaternionRotationAxis(DirectX::XMVectorSet(0.0f, 1.0f, 0.0f, 0.0f), euler.y);
   quat_z = DirectX::XMQuaternionRotationAxis(DirectX::XMVectorSet(0.0f, 0.0f, 1.0f, 0.0f), euler.z);
     
-  result = DirectX::XMQuaternionNormalize(DirectX::XMQuaternionMultiply(quat_z, quat_x));
-  result = DirectX::XMQuaternionNormalize(DirectX::XMQuaternionMultiply(result, quat_y));
+  result = DirectX::XMQuaternionNormalize(DirectX::XMQuaternionMultiply(quat_x, quat_y));
+  result = DirectX::XMQuaternionNormalize(DirectX::XMQuaternionMultiply(result, quat_z));
 
   return result;
 }
@@ -71,8 +71,8 @@ DirectX::XMVECTOR ConvertEulerToQuaternionVector(DirectX::XMVECTOR euler) {
   quat_y = DirectX::XMQuaternionRotationAxis(DirectX::XMVectorSet(0.0f, 1.0f, 0.0f, 0.0f), radians.y);
   quat_z = DirectX::XMQuaternionRotationAxis(DirectX::XMVectorSet(0.0f, 0.0f, 1.0f, 0.0f), radians.z);
 
-  result = DirectX::XMQuaternionNormalize(DirectX::XMQuaternionMultiply(quat_z, quat_x));
-  result = DirectX::XMQuaternionNormalize(DirectX::XMQuaternionMultiply(result, quat_y));
+  result = DirectX::XMQuaternionNormalize(DirectX::XMQuaternionMultiply(quat_x, quat_y));
+  result = DirectX::XMQuaternionNormalize(DirectX::XMQuaternionMultiply(result, quat_z));
 
   return result;
 }
