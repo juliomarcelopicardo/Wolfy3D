@@ -51,6 +51,8 @@ bool Texture::load(const char* texture_path) {
 
   if (FAILED(result)) {
     MessageBox(NULL, "Error loading texture", "ERROR", MB_OK);
+    sampler_state_ = Core::instance().error_texture_.sampler_state_;
+    texture_handle_ = Core::instance().error_texture_.texture_handle_;
     return false;
   }
 

@@ -26,8 +26,10 @@ Scene::~Scene() {}
 void Scene::init() {
   plane_.init();
   terrain_.init();
+  sky_box_.init();
 
   root_.transform().set_position(0.0f, 0.0f, 0.0f);
+  root_.addChild(&sky_box_.root_);
   root_.addChild(&plane_.root_);
   root_.addChild(&terrain_.root_);
   root_.addChild(&landing_track_);
@@ -45,6 +47,9 @@ void Scene::update(const float32 delta_time) {
   plane_.update(delta_time);
   landing_track_.transform().rotate(0.0f, delta_time * 0.0005f, 0.0f);
   updateCameraMode();
+  sky_box_.root_.transform().set_position(plane_.root_.transform().position_float3().x,
+                                          0.0f, 
+                                          plane_.root_.transform().position_float3().z);
 }
 
 void Scene::render() {}

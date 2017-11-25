@@ -6,60 +6,49 @@
 */
 
 
-#ifndef __SCENE_H__
-#define __SCENE_H__ 1
+#ifndef __SKYBOX_H__
+#define __SKYBOX_H__ 1
 
+#include <vector>
 #include "Wolfy3D.h"
-#include "airplane.h"
-#include "terrain.h"
-#include "bullet.h"
-#include "skybox.h"
+#include "core/texture.h"
+#include "core/geo.h"
+#include "core/core.h"
+#include "core/entity.h"
 
 namespace W3D {
-
-
-/// Class to manage all the scene which will be rendered.
-class Scene {
+  
+class SkyBox {
 
 public:
   
-
 /*******************************************************************************
 ***                        Constructor and destructor                        ***
 *******************************************************************************/
 
   /// Default class constructor
-  Scene();
+  SkyBox();
   /// Default class destructor
-	~Scene();
+	~SkyBox();
 
 /*******************************************************************************
-***                             Public methods                               ***
+***                               Public methods                             ***
 *******************************************************************************/
   
   ///--------------------------------------------------------------------------
   /// @fn   void init();
   ///
-  /// @brief  Initializes all the elements of the scene.
+  /// @brief  Initializes all the elements of the class.
   ///--------------------------------------------------------------------------
   void init();
 
   ///--------------------------------------------------------------------------
-  /// @fn   void update();
+  /// @fn   void update(const float32& delta_time);
   ///
-  /// @param delta_time Delta time, miliseconds between frames.
-  /// @brief updates all the elements of the scene.
+  /// @param delta_time Delta time, time in miliseconds between frames.
+  /// @brief updates all the elements of the class.
   ///--------------------------------------------------------------------------
-  void update(const float32 delta_time);
-
-  ///--------------------------------------------------------------------------
-  /// @fn   void render();
-  ///
-  /// @brief  Renderize all the elementrs of the scene.
-  ///--------------------------------------------------------------------------
-  void render();
-
-
+  void update(const float32& delta_time);
 
 
 /*******************************************************************************
@@ -69,58 +58,61 @@ public:
 
 
 /*******************************************************************************
-***                          Public  Attributes                              ***
+***                       Public  Attributes                                 ***
 *******************************************************************************/
 
-  /// Main root of the whole scene. Will be the node rendered recursively.
+
+  /* Hierarchy */
+
+  /// Object Root node.
   Entity root_;
 
-  /* Scene objects */
 
-  /// Airplane object.
-  Airplane plane_;
-  /// Terrain object.
-  Terrain terrain_;
-  /// Skybox object.
-  SkyBox sky_box_;
 
-  /// Land track node.
-  Entity landing_track_;
-  /// Landing track camera_;
-  Entity landing_track_camera_;
+
 
 private:
 
 /*******************************************************************************
-***                              Private methods                             ***
+***                             Private methods                              ***
 *******************************************************************************/
-  
-/// Private copy constructor.
-  Scene(const Scene& copy);
+
+  /// Private copy constructor.
+  SkyBox(const SkyBox& copy);
   /// Private operator of assignment.
-  Scene operator=(const Scene& copy);
+  SkyBox operator=(const SkyBox& copy);
 
+/* Init methods */
 
-  /// Depending on the camera mode, will set the camera position and target.
-  void updateCameraMode();
-  /// Update inputs.
-  void switchCameraMode();
+/// Initialize the geometries.
+  void initGeometries();
+  /// Initialize textures used in the material.
+  void initTextures();
+  /// Initialize the transforms.
+  void initTransforms();
+  /// Initialize the material.
+  void initMaterials();
+  /// Initialize the render components.
+  void initRenderComponents();
+
 
 /*******************************************************************************
-***                       Private Attributes                                 ***
+***                           Private Attributes                             ***
 *******************************************************************************/
 
-  enum CameraMode {
-    kCameraMode_Plane3rdPerson = 0,
-    kCameraMode_LandingTrack = 1,
-    kCameraMode_PlaneGun = 2,
-  };
 
-  /// Will set will camera will be rendering the scene.
-  CameraMode camera_mode_;
+  /* Render Properties */
+  
+  /// Material used to render the box. 
+  MaterialTextured material_;
+  /// SkyBox geometry.
+  Geo geometry_;
+  /// Texture used as the skybox cube background.
+  Texture texture_;;
 
 
-}; /* Scene */
+}; /* SkyBox */
 
 }; /* W3D */
+
 #endif
