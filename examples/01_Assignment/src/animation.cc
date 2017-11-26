@@ -57,6 +57,7 @@ Animation::Animation(const Animation& copy) {
   neck = copy.neck;
   pelvis_presley = copy.pelvis_presley;
   speed = copy.speed;
+  robot = copy.robot;
 }
 
 Animation& Animation::operator=(const Animation& copy) {
@@ -77,6 +78,7 @@ Animation& Animation::operator=(const Animation& copy) {
   neck = copy.neck;
   pelvis_presley = copy.pelvis_presley;
   speed = copy.speed;
+  robot = copy.robot;
   return *this;
 }
 /*******************************************************************************

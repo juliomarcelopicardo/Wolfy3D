@@ -274,7 +274,7 @@ int32 main() {
       destiny = step_values[step_destiny];
     }
 
-    void startNewStep() {
+    void startNextStep() {
       step_destiny += 1;
       if (step_destiny == num_steps) {
         step_destiny = 0;
@@ -296,7 +296,7 @@ int32 main() {
       }
       // Check if we need to change to the next step.
       if (timer > timer_limit) {
-        startNewStep();
+        startNextStep();
       }
 
       // retorno la rotacion que corresponde.
