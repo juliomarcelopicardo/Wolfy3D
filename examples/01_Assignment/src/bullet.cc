@@ -18,7 +18,7 @@ namespace W3D {
 
 Bullet::Bullet() {
   is_active_ = false;
-  projectile_speed_ = 0.01f;
+  projectile_speed_ = 0.04f;
 }
 
 Bullet::~Bullet() {}
