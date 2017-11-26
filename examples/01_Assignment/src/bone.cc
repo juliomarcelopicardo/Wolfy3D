@@ -22,7 +22,10 @@ namespace W3D {
 ***                        Constructor and destructor                        ***
 *******************************************************************************/
 
-Bone::Bone() {}
+Bone::Bone() {
+  translation.mode = StepsInfo::Mode::kMode_Translation;
+  rotation.mode = StepsInfo::Mode::kMode_Rotation;
+}
 
 Bone::~Bone() {}
 
@@ -73,8 +76,8 @@ void Bone::start(const bool apply_blending,
 void Bone::convertEulerAnglesIntoQuaternion() {
   for (uint32 i = 0; i < rotation.num_steps; ++i) {
     DirectX::XMFLOAT3 rot = { rotation.step_values[i].x,
-      rotation.step_values[i].y,
-      rotation.step_values[i].z };
+                              rotation.step_values[i].y,
+                              rotation.step_values[i].z };
 
     rotation.step_values[i] = Math::ConvertEulerToQuaternionFloat4(rot);
   }

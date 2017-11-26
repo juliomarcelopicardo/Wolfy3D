@@ -31,9 +31,26 @@ void Robot::init() {
   initGeometries();
   initMaterials();
   initRenderComponents();
+  initAnimations();
 }
 
 void Robot::update(const float32& delta_time) {
+  if (Input::IsKeyboardButtonDown(Input::kKeyboardButton_Left)) {
+    anim_controller_.current_animation = &anim_controller_.attack;
+    anim_controller_.current_animation->start(true, 0.5f);
+  }
+
+  if (Input::IsKeyboardButtonDown(Input::kKeyboardButton_Right)) {
+    anim_controller_.current_animation = &anim_controller_.idle;
+    anim_controller_.current_animation->start(true, 0.5f);
+  }
+
+  if (Input::IsKeyboardButtonDown(Input::kKeyboardButton_Up)) {
+    anim_controller_.current_animation = &anim_controller_.die;
+    anim_controller_.current_animation->start(true, 0.5f);
+  }
+
+  anim_controller_.update(delta_time * 0.001f);
   updateImGui();
 }
 
@@ -145,6 +162,11 @@ void Robot::initRenderComponents() {
   right_hip_.addComponent(kComponentType_Render, &material_, &geo_right_hip_);
   right_knee_.addComponent(kComponentType_Render, &material_, &geo_right_knee_);
   right_ankle_.addComponent(kComponentType_Render, &material_, &geo_right_ankle_);
+}
+
+void Robot::initAnimations() {
+  anim_controller_.robot = this;
+  anim_controller_.init();
 }
 
 

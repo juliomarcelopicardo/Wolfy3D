@@ -15,6 +15,7 @@
 #include "core/geo.h"
 #include "core/core.h"
 #include "core/entity.h"
+#include "animation_controller.h"
 
 namespace W3D {
   
@@ -108,7 +109,8 @@ public:
   /// Pelvis node.
   Entity pelvis_presley_;
 
-
+  /// Animation controller
+  AnimationController anim_controller_;
 
 
 
@@ -137,6 +139,8 @@ private:
   void initMaterials();
   /// Initialize the render components.
   void initRenderComponents();
+  /// Initialize the animation controller.
+  void initAnimations();
 
 
   /// Main update function of ImGui.

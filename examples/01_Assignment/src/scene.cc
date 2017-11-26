@@ -116,7 +116,8 @@ void Scene::initRobots() {
   red_robot_.init();
   root_.addChild(&red_robot_.root_);
   red_robot_.set_material_color(1.0f, 0.0f, 0.0f);
-  red_robot_.root_.transform().set_position(405.0f, 2.5f, 462.0f);
+  //red_robot_.root_.transform().set_position(405.0f, 2.5f, 462.0f);
+  red_robot_.root_.transform().set_position(plane_.root_.transform().world_position_float3());
   red_robot_.root_.transform().set_euler_rotation(-0.0f, 0.2f, 0.0f);
 }
 
