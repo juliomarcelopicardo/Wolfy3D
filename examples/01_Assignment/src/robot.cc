@@ -63,6 +63,12 @@ void Robot::set_material_color(const float32 r, const float32 g, const float32 b
   material_.set_color(r, g, b);
 }
 
+void Robot::set_animations_speed(const float32 speed) {
+  anim_controller_.attack.speed = speed;
+  anim_controller_.idle.speed = speed;
+  anim_controller_.die.speed = speed;
+}
+
 
 
 /*******************************************************************************

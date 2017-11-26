@@ -126,6 +126,16 @@ private:
   void updateRobots(const float32 delta_time);
   /// Active Robots animations
   void activeRobots();
+  /// Sets the animation speed of the robots.
+  void setRototsAnimationSpeed(const float32 speed);
+
+
+  /* Animations debug mode */
+  
+  /// Enable debug mode
+  void enableAnimationsDebugMode();
+  /// Disable Animations debug mode.
+  void disableAnimationsDebugMode();
 
 /*******************************************************************************
 ***                           Private Attributes                             ***
@@ -144,6 +154,19 @@ private:
   /// Will set will camera will be rendering the scene.
   CameraMode camera_mode_;
 
+
+  /* Animations Debug Mode */
+
+  /// Sets if the debug mode for tha 
+  bool is_debug_mode_active_;
+  /// Debug mode animation speed scale.
+  float32 debug_mode_speed_;
+  /// Speed of the animations before entering debug mode.
+  float32 last_speed_saved_;
+  /// Keyframe speed to jump between steps.
+  float32 key_frame_step_time_;
+  /// Animations current speed.
+  float32 animations_speed_;
 
 }; /* Scene */
 

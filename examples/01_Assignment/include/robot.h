@@ -66,6 +66,14 @@ public:
   ///--------------------------------------------------------------------------
   void set_material_color(const float32 r, const float32 g, const float32 b);
 
+  ///--------------------------------------------------------------------------
+  /// @fn   void set_animations_speed(const float32 speed);
+  ///
+  /// @brief Sets the animations speed.
+  /// @param speed Speed factor scale of the animations.
+  ///--------------------------------------------------------------------------
+  void set_animations_speed(const float32 speed);
+
 /*******************************************************************************
 ***                           Public  Attributes                             ***
 *******************************************************************************/
@@ -145,6 +153,8 @@ private:
   /// Initialize the animation controller.
   void initAnimations();
 
+
+  /* Imgui methods */
 
   /// Main update function of ImGui.
   void updateImGui();

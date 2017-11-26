@@ -15,6 +15,11 @@ namespace W3D {
 
 Scene::Scene() {
   camera_mode_ = kCameraMode_Plane3rdPerson;
+  debug_mode_speed_ = 1.0f;
+  key_frame_step_time_ = 0.166666f;
+  is_debug_mode_active_ = false;
+  last_speed_saved_ = 1.0f;
+  animations_speed_ = 1.0f;
 }
 
 Scene::~Scene() {}
@@ -41,11 +46,6 @@ void Scene::init() {
     root_.addChild(&plane_.bullet_[i].root_);
   }
 
-
-  
-  // DELETERRR
-  //robot_.root_.transform().set_position(plane_.root_.transform().position_float3());
-
   landing_track_.transform().set_position(319.0f, 2.5f, 500.0f);
   landing_track_camera_.transform().set_position(0.0f, 7.0f, 15.0f);
 }
@@ -55,7 +55,6 @@ void Scene::update(const float32 delta_time) {
       !plane_.is_plane_engine_active_) {
     plane_.is_plane_engine_active_ = true;
     activeRobots();
-
   }
   plane_.update(delta_time);
   updateRobots(delta_time);
@@ -149,25 +148,28 @@ void Scene::switchCameraMode() {
 void Scene::initRobots() {
   red_robot_.init();
   root_.addChild(&red_robot_.root_);
+  red_robot_.root_.name_ = "Red Robot";
   red_robot_.set_material_color(1.0f, 0.0f, 0.0f);
   red_robot_.root_.transform().set_position(376.0f, 2.5f, 471.0f);
-  //red_robot_.root_.transform().set_position(plane_.root_.transform().world_position_float3());
   red_robot_.root_.transform().set_euler_rotation(-0.0f, 0.2f, 0.0f);
 
   blue_robot_.init();
   root_.addChild(&blue_robot_.root_);
+  blue_robot_.root_.name_ = "Blue Robot";
   blue_robot_.set_material_color(0.0f, 0.0f, 1.0f);
   blue_robot_.root_.transform().set_position(452.0f, 2.5f, 479.0f);
   blue_robot_.root_.transform().set_euler_rotation(-0.0f, -2.733f, 0.0f);
 
   green_robot_.init();
   root_.addChild(&green_robot_.root_);
+  green_robot_.root_.name_ = "Green Robot";
   green_robot_.set_material_color(0.0f, 1.0f, 0.0f);
   green_robot_.root_.transform().set_position(444.0f, 2.5f, 452.0f);
   green_robot_.root_.transform().set_euler_rotation(-0.0f, 0.2f, 0.0f);
 
   yellow_robot_.init();
   root_.addChild(&yellow_robot_.root_);
+  yellow_robot_.root_.name_ = "Yellow Robot";
   yellow_robot_.set_material_color(1.0f, 1.0f, 0.0f);
   yellow_robot_.root_.transform().set_position(386.0f, 2.5f, 497.0f);
   yellow_robot_.root_.transform().set_euler_rotation(-0.0f, -2.733f, 0.0f);
@@ -190,5 +192,27 @@ void Scene::activeRobots() {
   yellow_robot_.anim_controller_.current_animation = &yellow_robot_.anim_controller_.idle;
   yellow_robot_.anim_controller_.current_animation->start(true, 0.5f);
 }
+
+void Scene::setRototsAnimationSpeed(const float32 speed) {
+  red_robot_.set_animations_speed(speed);
+  blue_robot_.set_animations_speed(speed);
+  yellow_robot_.set_animations_speed(speed);
+  green_robot_.set_animations_speed(speed);
+}
+
+void Scene::enableAnimationsDebugMode() {
+  is_debug_mode_active_ = true;
+  last_speed_saved_ = animations_speed_;
+  animations_speed_ = debug_mode_speed_;
+  setRototsAnimationSpeed(animations_speed_);
+}
+
+void Scene::disableAnimationsDebugMode() {
+  is_debug_mode_active_ = false;
+  animations_speed_ = last_speed_saved_;
+  setRototsAnimationSpeed(animations_speed_);
+}
+
+
 
 }; /* W3D */
