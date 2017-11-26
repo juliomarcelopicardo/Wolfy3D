@@ -86,6 +86,12 @@ public:
   SkyBox sky_box_;
   /// Red Robot.
   Robot red_robot_;
+  /// Blue Robot.
+  Robot blue_robot_;
+  /// Green Robot.
+  Robot green_robot_;
+  /// Yellow Robot.
+  Robot yellow_robot_;
 
   /// Land track node.
   Entity landing_track_;
@@ -118,6 +124,8 @@ private:
   void initRobots();
   /// Update Robots
   void updateRobots(const float32 delta_time);
+  /// Active Robots animations
+  void activeRobots();
 
 /*******************************************************************************
 ***                           Private Attributes                             ***
@@ -127,6 +135,10 @@ private:
     kCameraMode_Plane3rdPerson = 0,
     kCameraMode_LandingTrack = 1,
     kCameraMode_PlaneGun = 2,
+    kCameraMode_RedRobot = 3,
+    kCameraMode_GreenRobot = 4,
+    kCameraMode_BlueRobot = 5,
+    kCameraMode_YellowRobot = 6,
   };
 
   /// Will set will camera will be rendering the scene.

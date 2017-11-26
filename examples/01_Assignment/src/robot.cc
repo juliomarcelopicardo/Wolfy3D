@@ -89,6 +89,7 @@ void Robot::initGeometries() {
 
 void Robot::initHierarchy() {
   root_.addChild(&robot_root_);
+  root_.addChild(&camera_node_);
   robot_root_.addChild(&pelvis_presley_);
   pelvis_presley_.addChild(&body_);
   body_.addChild(&left_shoulder_);
@@ -108,6 +109,7 @@ void Robot::initHierarchy() {
 
 void Robot::initNames() {
   root_.name_ = "Red Robot";
+  camera_node_.name_ = "Camera Node";
   robot_root_.name_ = "Robot root";
   pelvis_presley_.name_ = "Pelvis";
   body_.name_ = "Body";
@@ -128,6 +130,7 @@ void Robot::initNames() {
 
 void Robot::initTransforms() {
   root_.transform().set_scale(0.5f);
+  camera_node_.transform().set_position(0.0f, 5.0f, 30.0f);
   robot_root_.transform().set_position(0.1027778f, 7.5644722f, 0.000000f);
   pelvis_presley_.transform().set_position(-0.0250011f, 1.5250000f, -0.0000005f);
   body_.transform().set_position(0.0500099f, 4.3749992f, 0.0000003f);

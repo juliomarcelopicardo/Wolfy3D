@@ -109,6 +109,9 @@ public:
   /// Pelvis node.
   Entity pelvis_presley_;
 
+  /// Camera designed to see the robot animations.
+  Entity camera_node_;
+
   /// Animation controller
   AnimationController anim_controller_;
 

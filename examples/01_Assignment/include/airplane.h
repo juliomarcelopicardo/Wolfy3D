@@ -61,6 +61,9 @@ public:
 ***                       Public  Attributes                                 ***
 *******************************************************************************/
 
+  /// If active will be able to accelerate and rotate.
+  bool is_plane_engine_active_;
+
   /* Skin */
   
   /// Albedo color.
@@ -221,8 +224,6 @@ private:
   
   /// Max ascension / descension speed.
   float32 up_traslation_speed_;
-  /// If active will be able to accelerate and rotate.
-  bool is_plane_engine_active_;
   /// Max forward speed.
   float32 max_forward_speed_;
   /// forward speed.
@@ -242,8 +243,6 @@ private:
   bool is_W_key_pressed_;
   /// S key pressed.
   bool is_S_key_pressed_;
-  /// Spacebar down.
-  bool is_SpaceBar_key_down_;
   /// Right mouse button (Fire)
   bool is_right_mouse_button_down_;
 

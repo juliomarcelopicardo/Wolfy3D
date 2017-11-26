@@ -51,6 +51,12 @@ void Scene::init() {
 }
 
 void Scene::update(const float32 delta_time) {
+  if (Input::IsKeyboardButtonDown(Input::kKeyboardButton_SpaceBar) && 
+      !plane_.is_plane_engine_active_) {
+    plane_.is_plane_engine_active_ = true;
+    activeRobots();
+
+  }
   plane_.update(delta_time);
   updateRobots(delta_time);
   landing_track_.transform().rotate(0.0f, delta_time * 0.0005f, 0.0f);
@@ -93,6 +99,22 @@ void Scene::updateCameraMode() {
     camera.set_position(plane_.gun_camera_.transform().world_position_float3());
     camera.set_target(plane_.turret_.transform().world_position_float3());
   } break;
+  case kCameraMode_RedRobot: {
+    camera.set_position(red_robot_.camera_node_.transform().world_position_float3());
+    camera.set_target(red_robot_.body_.transform().world_position_float3());
+  } break;
+  case kCameraMode_BlueRobot: {
+    camera.set_position(blue_robot_.camera_node_.transform().world_position_float3());
+    camera.set_target(blue_robot_.body_.transform().world_position_float3());
+  } break;
+  case kCameraMode_YellowRobot: {
+    camera.set_position(yellow_robot_.camera_node_.transform().world_position_float3());
+    camera.set_target(yellow_robot_.body_.transform().world_position_float3());
+  } break;
+  case kCameraMode_GreenRobot: {
+    camera.set_position(green_robot_.camera_node_.transform().world_position_float3());
+    camera.set_target(green_robot_.body_.transform().world_position_float3());
+  } break;
   };
 
 }
@@ -107,6 +129,18 @@ void Scene::switchCameraMode() {
     camera_mode_ = kCameraMode_PlaneGun;
   } break;
   case kCameraMode_PlaneGun: {
+    camera_mode_ = kCameraMode_RedRobot;
+  } break;
+  case kCameraMode_RedRobot: {
+    camera_mode_ = kCameraMode_GreenRobot;
+  } break;
+  case kCameraMode_GreenRobot: {
+    camera_mode_ = kCameraMode_BlueRobot;
+  } break;
+  case kCameraMode_BlueRobot: {
+    camera_mode_ = kCameraMode_YellowRobot;
+  } break;
+  case kCameraMode_YellowRobot: {
     camera_mode_ = kCameraMode_Plane3rdPerson;
   } break;
   };
@@ -116,13 +150,45 @@ void Scene::initRobots() {
   red_robot_.init();
   root_.addChild(&red_robot_.root_);
   red_robot_.set_material_color(1.0f, 0.0f, 0.0f);
-  //red_robot_.root_.transform().set_position(405.0f, 2.5f, 462.0f);
-  red_robot_.root_.transform().set_position(plane_.root_.transform().world_position_float3());
+  red_robot_.root_.transform().set_position(376.0f, 2.5f, 471.0f);
+  //red_robot_.root_.transform().set_position(plane_.root_.transform().world_position_float3());
   red_robot_.root_.transform().set_euler_rotation(-0.0f, 0.2f, 0.0f);
+
+  blue_robot_.init();
+  root_.addChild(&blue_robot_.root_);
+  blue_robot_.set_material_color(0.0f, 0.0f, 1.0f);
+  blue_robot_.root_.transform().set_position(452.0f, 2.5f, 479.0f);
+  blue_robot_.root_.transform().set_euler_rotation(-0.0f, -2.733f, 0.0f);
+
+  green_robot_.init();
+  root_.addChild(&green_robot_.root_);
+  green_robot_.set_material_color(0.0f, 1.0f, 0.0f);
+  green_robot_.root_.transform().set_position(444.0f, 2.5f, 452.0f);
+  green_robot_.root_.transform().set_euler_rotation(-0.0f, 0.2f, 0.0f);
+
+  yellow_robot_.init();
+  root_.addChild(&yellow_robot_.root_);
+  yellow_robot_.set_material_color(1.0f, 1.0f, 0.0f);
+  yellow_robot_.root_.transform().set_position(386.0f, 2.5f, 497.0f);
+  yellow_robot_.root_.transform().set_euler_rotation(-0.0f, -2.733f, 0.0f);
 }
 
 void Scene::updateRobots(const float32 delta_time) {
   red_robot_.update(delta_time);
+  blue_robot_.update(delta_time);
+  yellow_robot_.update(delta_time);
+  green_robot_.update(delta_time);
+}
+
+void Scene::activeRobots() {
+  red_robot_.anim_controller_.current_animation = &red_robot_.anim_controller_.idle;
+  red_robot_.anim_controller_.current_animation->start(true, 0.5f);
+  blue_robot_.anim_controller_.current_animation = &blue_robot_.anim_controller_.idle;
+  blue_robot_.anim_controller_.current_animation->start(true, 0.5f);
+  green_robot_.anim_controller_.current_animation = &green_robot_.anim_controller_.idle;
+  green_robot_.anim_controller_.current_animation->start(true, 0.5f);
+  yellow_robot_.anim_controller_.current_animation = &yellow_robot_.anim_controller_.idle;
+  yellow_robot_.anim_controller_.current_animation->start(true, 0.5f);
 }
 
 }; /* W3D */

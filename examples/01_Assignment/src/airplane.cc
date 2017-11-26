@@ -69,10 +69,6 @@ void Airplane::init() {
 void Airplane::update(const float32& delta_time) {
 
   updateInput();
-  if (is_SpaceBar_key_down_) {
-    is_plane_engine_active_ = true;
-  }
-
   updateRotations(delta_time);
   updateTranslations(delta_time);
   updateImGui();
@@ -300,7 +296,6 @@ void Airplane::updateInput() {
   is_D_key_pressed_ = Input::IsKeyboardButtonPressed(Input::kKeyboardButton_D);
   is_W_key_pressed_ = Input::IsKeyboardButtonPressed(Input::kKeyboardButton_W);
   is_S_key_pressed_ = Input::IsKeyboardButtonPressed(Input::kKeyboardButton_S);
-  is_SpaceBar_key_down_ = Input::IsKeyboardButtonDown(Input::kKeyboardButton_SpaceBar);
   is_right_mouse_button_down_ = Input::IsMouseButtonDown(Input::kMouseButton_Right);
 }
 
