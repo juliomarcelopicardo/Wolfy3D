@@ -280,7 +280,7 @@ int32 main() {
         step_destiny = 0;
       }
       timer = 0.0f;
-      timer_limit = step_timers[step_destiny]; // Ya que son todos iguales x y z
+      timer_limit = step_timers[step_destiny];
       origin = destiny;
       destiny = step_values[step_destiny];
     }
@@ -701,6 +701,7 @@ int32 main() {
 
 
   float debug_speed = 1.0f;
+  float keyframe_time_10 = 0.0f;
 
   Robot robot;
   robot.init(mat);
@@ -710,6 +711,10 @@ int32 main() {
   anim_controller.init(&robot);
 
   // enter the main loop:
+
+  bool debug_mode = false;
+  float last_speed_saved = anim_controller.attack.speed;
+
 
   while (Window::StartFrame() && Window::IsOpened() &&
     !Input::IsKeyboardButtonDown(Input::kKeyboardButton_Escape)) {
@@ -722,6 +727,35 @@ int32 main() {
     if ((float32)delta > 10) {
       OutputDebugString(delta_);
     }
+
+    if (Input::IsKeyboardButtonDown(Input::kKeyboardButton_SpaceBar)) {
+      if (!debug_mode) {
+        debug_mode = true;
+        last_speed_saved = debug_speed;
+        anim_controller.attack.speed = 1.0f;
+        anim_controller.die.speed = 1.0f;
+        anim_controller.idle.speed = 1.0f;
+        debug_speed = 1.0f;
+        
+      }
+      else {
+        debug_mode = false;
+        anim_controller.attack.speed = last_speed_saved;
+        anim_controller.die.speed = last_speed_saved;
+        anim_controller.idle.speed = last_speed_saved;
+        debug_speed = last_speed_saved;
+      }
+    }
+
+    if (debug_mode) {
+      if (Input::IsKeyboardButtonDown(Input::kKeyboardButton_Down)) {
+        anim_controller.update(0.166666f);
+      }
+    }
+    else {
+      anim_controller.update((float32)delta * 0.001);
+    }
+
 
     if (Input::IsKeyboardButtonDown(Input::kKeyboardButton_Left)) {
       anim_controller.current_animation = &anim_controller.attack;
@@ -738,7 +772,7 @@ int32 main() {
       anim_controller.current_animation->play(true, anim_controller.robot, 0.5f);
     }
 
-    anim_controller.update((float32)delta * 0.001);
+    //anim_controller.update((float32)delta * 0.001);
     //anim_controller.update(0.001);
     cam.render(&root);
 
