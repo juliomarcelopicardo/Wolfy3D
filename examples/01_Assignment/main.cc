@@ -25,12 +25,10 @@ void Init(Scene& scene) {
 void Update(Scene& scene, const float32 delta_time) {
   auto& camera = Core::instance().cam_;
 
-  Window::StartFrame();
+  Window::StartFrame(delta_time * 0.001f);
   
   scene.update(delta_time);
 
-
-  //camera.update();
   camera.render(&scene.root_);
 
   Window::EndFrame();

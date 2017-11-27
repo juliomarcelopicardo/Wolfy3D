@@ -102,18 +102,12 @@ void Scene::updateCameraMode() {
     camera.set_position(red_robot_.camera_node_.transform().world_position_float3());
     camera.set_target(red_robot_.body_.transform().world_position_float3());
   } break;
+  case kCameraMode_GreenRobot: {} break;
   case kCameraMode_BlueRobot: {
     camera.set_position(blue_robot_.camera_node_.transform().world_position_float3());
     camera.set_target(blue_robot_.body_.transform().world_position_float3());
   } break;
-  case kCameraMode_YellowRobot: {
-    camera.set_position(yellow_robot_.camera_node_.transform().world_position_float3());
-    camera.set_target(yellow_robot_.body_.transform().world_position_float3());
-  } break;
-  case kCameraMode_GreenRobot: {
-    camera.set_position(green_robot_.camera_node_.transform().world_position_float3());
-    camera.set_target(green_robot_.body_.transform().world_position_float3());
-  } break;
+  case kCameraMode_YellowRobot: {} break;
   };
 
 }
@@ -132,12 +126,16 @@ void Scene::switchCameraMode() {
   } break;
   case kCameraMode_RedRobot: {
     camera_mode_ = kCameraMode_GreenRobot;
+    camera.moveTo(green_robot_.camera_node_.transform().world_position_float3(),
+                  green_robot_.body_.transform().world_position_float3());
   } break;
   case kCameraMode_GreenRobot: {
     camera_mode_ = kCameraMode_BlueRobot;
   } break;
   case kCameraMode_BlueRobot: {
     camera_mode_ = kCameraMode_YellowRobot;
+    camera.moveTo(yellow_robot_.camera_node_.transform().world_position_float3(),
+                  yellow_robot_.body_.transform().world_position_float3());
   } break;
   case kCameraMode_YellowRobot: {
     camera_mode_ = kCameraMode_Plane3rdPerson;
