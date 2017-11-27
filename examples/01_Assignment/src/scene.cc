@@ -176,11 +176,56 @@ void Scene::initRobots() {
 }
 
 void Scene::updateRobots(const float32 delta_time) {
+  float32 delta = delta_time;
   checkDistancesBetweenRobotsAndPlane();
-  red_robot_.update(delta_time);
-  blue_robot_.update(delta_time);
-  yellow_robot_.update(delta_time);
-  green_robot_.update(delta_time);
+  if (Input::IsKeyboardButtonDown(Input::kKeyboardButton_Num1)) {
+    red_robot_.anim_controller_.current_animation = &red_robot_.anim_controller_.idle;
+    red_robot_.anim_controller_.current_animation->start(true, 0.5f);
+    blue_robot_.anim_controller_.current_animation = &blue_robot_.anim_controller_.idle;
+    blue_robot_.anim_controller_.current_animation->start(true, 0.5f);
+    yellow_robot_.anim_controller_.current_animation = &yellow_robot_.anim_controller_.idle;
+    yellow_robot_.anim_controller_.current_animation->start(true, 0.5f);
+    green_robot_.anim_controller_.current_animation = &green_robot_.anim_controller_.idle;
+    green_robot_.anim_controller_.current_animation->start(true, 0.5f);
+  }
+  if (Input::IsKeyboardButtonDown(Input::kKeyboardButton_Num2)) {
+    red_robot_.anim_controller_.current_animation = &red_robot_.anim_controller_.attack;
+    red_robot_.anim_controller_.current_animation->start(true, 0.5f);
+    blue_robot_.anim_controller_.current_animation = &blue_robot_.anim_controller_.attack;
+    blue_robot_.anim_controller_.current_animation->start(true, 0.5f);
+    yellow_robot_.anim_controller_.current_animation = &yellow_robot_.anim_controller_.attack;
+    yellow_robot_.anim_controller_.current_animation->start(true, 0.5f);
+    green_robot_.anim_controller_.current_animation = &green_robot_.anim_controller_.attack;
+    green_robot_.anim_controller_.current_animation->start(true, 0.5f);
+  }
+  if (Input::IsKeyboardButtonDown(Input::kKeyboardButton_Num3)) {
+    red_robot_.anim_controller_.current_animation = &red_robot_.anim_controller_.die;
+    red_robot_.anim_controller_.current_animation->start(true, 0.5f);
+    blue_robot_.anim_controller_.current_animation = &blue_robot_.anim_controller_.die;
+    blue_robot_.anim_controller_.current_animation->start(true, 0.5f);
+    yellow_robot_.anim_controller_.current_animation = &yellow_robot_.anim_controller_.die;
+    yellow_robot_.anim_controller_.current_animation->start(true, 0.5f);
+    green_robot_.anim_controller_.current_animation = &green_robot_.anim_controller_.die;
+    green_robot_.anim_controller_.current_animation->start(true, 0.5f);
+  }
+  if (Input::IsKeyboardButtonDown(Input::kKeyboardButton_Enter)) {
+    if (is_debug_mode_active_) {
+      disableAnimationsDebugMode();
+    }
+    else {
+      enableAnimationsDebugMode();
+    }
+  }
+  if (is_debug_mode_active_) {
+    delta = 0.0f;
+    if (Input::IsMouseButtonDown(Input::kMouseButton_Middle)) {
+      delta = 166.0f;
+    }
+  }
+  red_robot_.update(delta);
+  blue_robot_.update(delta);
+  yellow_robot_.update(delta);
+  green_robot_.update(delta);
 }
 
 void Scene::activeRobots() {

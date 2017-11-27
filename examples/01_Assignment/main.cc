@@ -53,9 +53,6 @@ int32 main() {
     uint64 tick = Time();
     uint64 delta_time = tick - last_time_updated;
 
-    if(Input::IsKeyboardButtonDown(Input::kKeyboardButton_Num5)) {
-      printf("");
-    }
     Update(scene, (float32)delta_time);
 
     last_time_updated = tick;
