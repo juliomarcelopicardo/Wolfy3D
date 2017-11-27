@@ -130,12 +130,14 @@ private:
   void setRototsAnimationSpeed(const float32 speed);
 
 
-  /* Animations debug mode */
+  /* Animations */
   
   /// Enable debug mode
   void enableAnimationsDebugMode();
   /// Disable Animations debug mode.
   void disableAnimationsDebugMode();
+  /// Checks if the distance between the robot and the plane is enough to attack.
+  void checkDistancesBetweenRobotsAndPlane();
 
 /*******************************************************************************
 ***                           Private Attributes                             ***
@@ -167,6 +169,7 @@ private:
   float32 key_frame_step_time_;
   /// Animations current speed.
   float32 animations_speed_;
+
 
 }; /* Scene */
 

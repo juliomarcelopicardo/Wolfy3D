@@ -16,7 +16,10 @@ namespace W3D {
 ***                        Constructor and destructor                        ***
 *******************************************************************************/
 
-Robot::Robot() {}
+Robot::Robot() {
+  is_near_to_plane_ = false;
+  distance_to_change_animations_ = 30.0f;
+}
 
 Robot::~Robot() {}
 
@@ -52,6 +55,28 @@ void Robot::update(const float32& delta_time) {
 
   anim_controller_.update(delta_time * 0.001f);
   updateImGui();
+}
+
+void Robot::checkDistanceToPlane(const DirectX::XMVECTOR& plane_pos) {
+  DirectX::XMFLOAT3 distance;
+  DirectX::XMVECTOR temp;
+
+  temp = DirectX::XMVectorSubtract(plane_pos, root_.transform().world_position_vector());
+  DirectX::XMStoreFloat3(&distance, DirectX::XMVector3Length(temp));
+  if (distance.x < distance_to_change_animations_) {
+    if (!is_near_to_plane_ && anim_controller_.current_animation) {
+      anim_controller_.current_animation = &anim_controller_.attack;
+      anim_controller_.current_animation->start();
+    }
+    is_near_to_plane_ = true;
+  }
+  else {
+    if (is_near_to_plane_ && anim_controller_.current_animation) {
+      anim_controller_.current_animation = &anim_controller_.idle;
+      anim_controller_.current_animation->start();
+    }
+    is_near_to_plane_ = false;
+  }
 }
 
 

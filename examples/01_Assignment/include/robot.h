@@ -51,6 +51,14 @@ public:
   ///--------------------------------------------------------------------------
   void update(const float32& delta_time);
 
+  ///--------------------------------------------------------------------------
+  /// @fn   void checkDistanceToPlane(const DirectX::XMVECTOR& plane_pos);
+  ///
+  /// @brief checks if the distance to the plane is enough to attack.
+  /// @param plane_pos Plane position in world.
+  ///--------------------------------------------------------------------------
+  void checkDistanceToPlane(const DirectX::XMVECTOR& plane_pos);
+
 
 /*******************************************************************************
 ***                          Setters and Getters                             ***
@@ -205,6 +213,10 @@ private:
   /// Material used to render. 
   MaterialDiffuse material_;
 
+  /// Distance to robot is enough to attack.
+  bool is_near_to_plane_;
+  /// Distance between robots and plane to change animations.
+  float32 distance_to_change_animations_;
 
 }; /* Robot */
 

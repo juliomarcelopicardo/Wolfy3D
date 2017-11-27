@@ -176,6 +176,7 @@ void Scene::initRobots() {
 }
 
 void Scene::updateRobots(const float32 delta_time) {
+  checkDistancesBetweenRobotsAndPlane();
   red_robot_.update(delta_time);
   blue_robot_.update(delta_time);
   yellow_robot_.update(delta_time);
@@ -213,6 +214,16 @@ void Scene::disableAnimationsDebugMode() {
   setRototsAnimationSpeed(animations_speed_);
 }
 
+
+void Scene::checkDistancesBetweenRobotsAndPlane() {
+
+  DirectX::XMVECTOR plane_pos = plane_.root_.transform().world_position_vector();
+
+  red_robot_.checkDistanceToPlane(plane_pos);
+  green_robot_.checkDistanceToPlane(plane_pos);
+  yellow_robot_.checkDistanceToPlane(plane_pos);
+  blue_robot_.checkDistanceToPlane(plane_pos);
+}
 
 
 }; /* W3D */
