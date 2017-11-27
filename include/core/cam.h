@@ -108,13 +108,26 @@ class Cam {
   void render(class Entity* obj);
 
   ///--------------------------------------------------------------------------
-  /// @fn   void update();
+  /// @fn   void update(const float32& delta);
   ///
   /// @brief Update the camera data when movement is active
+  /// @param delta delta_time.
   ///--------------------------------------------------------------------------
-  void update();
+  void update(const float32& delta);
 
-
+  ///--------------------------------------------------------------------------
+  /// @fn   moveTo(const DirectX::XMFLOAT3& position,
+  ///              const DirectX::XMFLOAT3& target,
+  ///              const float32 lerping_duration = 1.0f);
+  ///
+  /// @brief Moves to a new position applying a linear interpolation.
+  /// @param position Destiny location.
+  /// @param target Destiny target.
+  /// @param lerping_duration duration in seconds of the interpolation.
+  ///--------------------------------------------------------------------------
+  void moveTo(const DirectX::XMFLOAT3& position,
+              const DirectX::XMFLOAT3& target,
+              const float32 lerping_duration = 1.0f);
 
   /*******************************************************************************
   ***                            Setters & Getters                             ***
@@ -128,7 +141,7 @@ class Cam {
   void set_transform(Entity entity);
 
   ///--------------------------------------------------------------------------
-  /// @fn   set_position(const float32 x, const float32 y, const float32 z)
+  /// @fn   set_position(const float32 x, const float32 y, const float32 z, const bool cancel_lerping);
   ///
   /// @brief Sets the position of the camera.
   ///
@@ -136,46 +149,55 @@ class Cam {
   /// @param Y position in the world Y axis.
   /// @param Z position in the world Z axis.
   ///--------------------------------------------------------------------------
-  void set_position(const float32 x, const float32 y, const float32 z);
+  void set_position(const float32 x, const float32 y, const float32 z, const bool cancel_lerping = true);
 
   ///--------------------------------------------------------------------------
-  /// @fn   void set_position(const DirectX::XMVECTOR position);
+  /// @fn   void set_position(const DirectX::XMVECTOR position, const bool cancel_lerping);
   ///
   /// @brief  Transform position setter.
+  /// @param  Position to set.
+  /// @param  cancel_lerping will cancel the interpolation if its active.
   ///--------------------------------------------------------------------------
-  void set_position(const DirectX::XMVECTOR position);
+  void set_position(const DirectX::XMVECTOR position, const bool cancel_lerping = true);
 
   ///--------------------------------------------------------------------------
-  /// @fn   void set_position(const DirectX::XMFLOAT3 position);
+  /// @fn   void set_position(const DirectX::XMFLOAT3 position, const bool cancel_lerping);
   ///
   /// @brief  Transform position setter.
+  /// @param  Position to set.
+  /// @param  cancel_lerping will cancel the interpolation if its active.
   ///--------------------------------------------------------------------------
-  void set_position(const DirectX::XMFLOAT3 position);
+  void set_position(const DirectX::XMFLOAT3 position, const bool cancel_lerping = true);
 
   ///--------------------------------------------------------------------------
-  /// @fn   set_target(const float32 x, const float32 y, const float32 z)
+  /// @fn   set_target(const float32 x, const float32 y, const float32 z, const bool cancel_lerping)
   ///
   /// @brief Sets the target of the camera.
   ///
   /// @param X target position in the world X axis.
   /// @param Y target position in the world Y axis.
   /// @param Z target position in the world Z axis.
+  /// @param  cancel_lerping will cancel the interpolation if its active.
   ///--------------------------------------------------------------------------
-  void set_target(const float32 x, const float32 y, const float32 z);
+  void set_target(const float32 x, const float32 y, const float32 z, const bool cancel_lerping = true);
 
   ///--------------------------------------------------------------------------
-  /// @fn   void set_position(const DirectX::XMVECTOR target);
+  /// @fn   void set_position(const DirectX::XMVECTOR target, const bool cancel_lerping);
   ///
   /// @brief  Transform target setter.
+  /// @param  target Target to set.
+  /// @param  cancel_lerping will cancel the interpolation if its active.
   ///--------------------------------------------------------------------------
-  void set_target(const DirectX::XMVECTOR target_vector);
+  void set_target(const DirectX::XMVECTOR target, const bool cancel_lerping = true);
 
   ///--------------------------------------------------------------------------
-  /// @fn   void set_target(const DirectX::XMFLOAT3 target);
+  /// @fn   void set_target(const DirectX::XMFLOAT3 target, const bool cancel_lerping);
   ///
-  /// @brief  Transform target setter.
+  /// @brief  Transform target setter.  
+  /// @param  target Target to set.
+  /// @param  cancel_lerping will cancel the interpolation if its active.
   ///--------------------------------------------------------------------------
-  void set_target(const DirectX::XMFLOAT3 target_vector);
+  void set_target(const DirectX::XMFLOAT3 target, const bool cancel_lerping = true);
 
   ///--------------------------------------------------------------------------
   /// @fn   DirectX::XMVECTOR position_vector()
@@ -343,7 +365,23 @@ class Cam {
   DirectX::XMFLOAT4X4 view_matrix_;
   /// Mouse position in the previous frame.
   DirectX::XMFLOAT2 last_mouse_position_;
+  
+  /* Lerp */
 
+  /// Origin position of the lerp.
+  DirectX::XMFLOAT3 origin_position_;
+  /// Origin target of the lerp.
+  DirectX::XMFLOAT3 origin_target_;
+  /// Destiny position of the lerp.
+  DirectX::XMFLOAT3 destiny_position_;
+  /// Destiny target of the lerp.
+  DirectX::XMFLOAT3 destiny_target_;
+  /// Sets if the camera is blending or lerping between transforms.
+  bool is_lerping_;
+  /// Timer for the lerping in seconds.
+  float32 timer_;
+  /// Timer limit in seconds.
+  float32 timer_limit_;
 
 /*******************************************************************************
 ***                              Private methods                             ***
@@ -353,18 +391,28 @@ class Cam {
   Cam& operator=(const Cam& copy);
 
   ///--------------------------------------------------------------------------
-  /// @fn   void translate();
+  /// @fn   void translate(const float32& delta);
   ///
-  /// @brief Update the camera position when movement is active
+  /// @brief Update the camera position when movement is active.
+  /// @param delta delta_time.
   ///--------------------------------------------------------------------------
-  bool translate();
+  bool translate(const float32& delta);
 
   ///--------------------------------------------------------------------------
-  /// @fn   void rotate();
+  /// @fn   void rotate(const float32& delta);
   ///
-  /// @brief Update the camera rotation when movement is active
+  /// @brief Update the camera rotation when movement is active.
+  /// @param delta delta_time.
   ///--------------------------------------------------------------------------
-  bool rotate();
+  bool rotate(const float32& delta);
+
+  ///--------------------------------------------------------------------------
+  /// @fn   void updateLerping(const float32& delta);
+  ///
+  /// @brief Updates de lerping values and the transformation if needed.
+  /// @param delta delta seconds.
+  ///--------------------------------------------------------------------------
+  void updateLerping(const float32& delta);
 
 }; /* Cam */
 

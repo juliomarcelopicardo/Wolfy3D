@@ -23,6 +23,13 @@ namespace W3D {
 Cam::Cam() {
   position_ = { 0.0f, 0.0f, 10.0f };
   target_ = { 0.0f, 0.0f, 0.0f };
+  origin_position_ = { 0.0f, 0.0f, 0.0f };
+  origin_target_ = { 0.0f, 0.0f, 0.0f };
+  destiny_position_ = { 0.0f, 0.0f, 0.0f };
+  destiny_target_ = { 0.0f, 0.0f, 0.0f };
+  is_lerping_ = false;
+  timer_ = 0.0f;
+  timer_limit_ = 0.0f;
   movement_speed_ = 0.005f;
   rotation_speed_ = 0.005f;
   last_mouse_position_ = { 0.0f, 0.0f };
@@ -98,6 +105,20 @@ void Cam::render(Entity* entity) {
 ***                            Setters & Getters                             ***
 *******************************************************************************/
 
+void Cam::moveTo(const DirectX::XMFLOAT3 & position, 
+                 const DirectX::XMFLOAT3 & target, 
+                 const float32 lerping_duration) {
+  if (lerping_duration > 0.0f) {
+    is_lerping_ = true;
+    origin_position_ = position_;
+    origin_target_ = target_;
+    destiny_position_ = position;
+    destiny_target_ = target;
+    timer_ = 0.0f;
+    timer_limit_ = lerping_duration;
+  }
+}
+
 void Cam::set_transform(Entity entity) {
   position_ = entity.transform().world_position_float3();
   target_ = entity.transform().world_forward_float3();
@@ -109,33 +130,39 @@ void Cam::set_transform(Entity entity) {
   DirectX::XMStoreFloat4x4(&view_matrix_, view);
 }
 
-void Cam::set_position(const float32 x, const float32 y, const float32 z) {
+void Cam::set_position(const float32 x, const float32 y, const float32 z, const bool cancel_lerping) {
+  if (cancel_lerping) { is_lerping_ = false; }
   position_ = { x, y, z };
   setupView();
 }
 
-void Cam::set_position(const DirectX::XMVECTOR position) {
+void Cam::set_position(const DirectX::XMVECTOR position, const bool cancel_lerping) {
+  if (cancel_lerping) { is_lerping_ = false; }
   DirectX::XMStoreFloat3(&position_, position);
   setupView();
 }
 
-void Cam::set_position(const DirectX::XMFLOAT3 position) {
+void Cam::set_position(const DirectX::XMFLOAT3 position, const bool cancel_lerping) {
+  if (cancel_lerping) { is_lerping_ = false; }
   position_ = position;
   setupView();
 }
 
-void Cam::set_target(const float32 x, const float32 y, const float32 z) {
+void Cam::set_target(const float32 x, const float32 y, const float32 z, const bool cancel_lerping) {
+  if (cancel_lerping) { is_lerping_ = false; }
   target_ = { x, y, z };
   setupView();
 }
 
-void Cam::set_target(const DirectX::XMVECTOR target_vector) {
-  DirectX::XMStoreFloat3(&target_, target_vector);
+void Cam::set_target(const DirectX::XMVECTOR target, const bool cancel_lerping) {
+  if (cancel_lerping) { is_lerping_ = false; }
+  DirectX::XMStoreFloat3(&target_, target);
   setupView();
 }
 
-void Cam::set_target(const DirectX::XMFLOAT3 target_vector) {
-  target_ = target_vector;
+void Cam::set_target(const DirectX::XMFLOAT3 target, const bool cancel_lerping) {
+  if (cancel_lerping) { is_lerping_ = false; }
+  target_ = target;
   setupView();
 }
 
@@ -213,24 +240,26 @@ DirectX::XMFLOAT4X4 Cam::view_float4x4() {
   return view_matrix_;
 }
 
-void Cam::update() {
+void Cam::update(const float32& delta) {
   if (is_navigation_enabled_) {
-    if (translate()) {
+    if (translate(delta)) {
       setupView();
+      is_lerping_ = false;
     }
-    if (rotate()) {
+    if (rotate(delta)) {
       setupView();
+      is_lerping_ = false;
     }
   }
-
+  updateLerping(delta);
 }
 
-bool Cam::translate() {
+bool Cam::translate(const float32& delta) {
   auto& input = Core::instance().input_;
 
   if (input.isMouseButtonPressed(Input::kMouseButton_Right)) {
     if (input.isKeyboardButtonPressed(Input::kKeyboardButton_A)) {
-      DirectX::XMVECTOR scaled_right = DirectX::XMVectorScale(right_vector(), movement_speed_);
+      DirectX::XMVECTOR scaled_right = DirectX::XMVectorScale(right_vector(), movement_speed_ * delta);
       DirectX::XMStoreFloat3(&position_, DirectX::XMVectorSubtract(DirectX::XMLoadFloat3(&position_), scaled_right));
       DirectX::XMStoreFloat3(&target_, DirectX::XMVectorSubtract(DirectX::XMLoadFloat3(&target_), scaled_right));
       return true;
@@ -240,31 +269,31 @@ bool Cam::translate() {
       DirectX::XMStoreFloat3(&r, right_vector());
       DirectX::XMStoreFloat3(&u, up_vector());
       DirectX::XMStoreFloat3(&f, forward_vector());
-      DirectX::XMVECTOR scaled_right = DirectX::XMVectorScale(right_vector(), movement_speed_);
+      DirectX::XMVECTOR scaled_right = DirectX::XMVectorScale(right_vector(), movement_speed_ * delta);
       DirectX::XMStoreFloat3(&position_, DirectX::XMVectorAdd(DirectX::XMLoadFloat3(&position_), scaled_right));
       DirectX::XMStoreFloat3(&target_, DirectX::XMVectorAdd(DirectX::XMLoadFloat3(&target_), scaled_right));
       return true;
     }
     if (input.isKeyboardButtonPressed(Input::kKeyboardButton_W)) {
-      DirectX::XMVECTOR scaled_fwd = DirectX::XMVectorScale(forward_vector(), movement_speed_);
+      DirectX::XMVECTOR scaled_fwd = DirectX::XMVectorScale(forward_vector(), movement_speed_ * delta);
       DirectX::XMStoreFloat3(&position_, DirectX::XMVectorAdd(DirectX::XMLoadFloat3(&position_), scaled_fwd));
       DirectX::XMStoreFloat3(&target_, DirectX::XMVectorAdd(DirectX::XMLoadFloat3(&target_), scaled_fwd));
       return true;
     }
     if (input.isKeyboardButtonPressed(Input::kKeyboardButton_S)) {
-      DirectX::XMVECTOR scaled_fwd = DirectX::XMVectorScale(forward_vector(), movement_speed_);
+      DirectX::XMVECTOR scaled_fwd = DirectX::XMVectorScale(forward_vector(), movement_speed_ * delta);
       DirectX::XMStoreFloat3(&position_, DirectX::XMVectorSubtract(DirectX::XMLoadFloat3(&position_), scaled_fwd));
       DirectX::XMStoreFloat3(&target_, DirectX::XMVectorSubtract(DirectX::XMLoadFloat3(&target_), scaled_fwd));
       return true;
     }
     if (input.isKeyboardButtonPressed(Input::kKeyboardButton_Q)) {
-      DirectX::XMVECTOR scaled_up = DirectX::XMVectorScale(up_vector(), movement_speed_);
+      DirectX::XMVECTOR scaled_up = DirectX::XMVectorScale(up_vector(), movement_speed_ * delta);
       DirectX::XMStoreFloat3(&position_, DirectX::XMVectorSubtract(DirectX::XMLoadFloat3(&position_), scaled_up));
       DirectX::XMStoreFloat3(&target_, DirectX::XMVectorSubtract(DirectX::XMLoadFloat3(&target_), scaled_up));
       return true;
     }
     if (input.isKeyboardButtonPressed(Input::kKeyboardButton_E)) {
-      DirectX::XMVECTOR scaled_up = DirectX::XMVectorScale(up_vector(), movement_speed_);
+      DirectX::XMVECTOR scaled_up = DirectX::XMVectorScale(up_vector(), movement_speed_ * delta);
       DirectX::XMStoreFloat3(&position_, DirectX::XMVectorAdd(DirectX::XMLoadFloat3(&position_), scaled_up));
       DirectX::XMStoreFloat3(&target_, DirectX::XMVectorAdd(DirectX::XMLoadFloat3(&target_), scaled_up));
       return true;
@@ -273,7 +302,7 @@ bool Cam::translate() {
   return false;
 }
 
-bool Cam::rotate() {
+bool Cam::rotate(const float32& delta) {
   
   auto& input = Core::instance().input_;
   DirectX::XMFLOAT2 diff = { 0.0f, 0.0f };
@@ -288,8 +317,8 @@ bool Cam::rotate() {
       diff = { input.mouse_position_.x - last_mouse_position_.x, 
                input.mouse_position_.y - last_mouse_position_.y };
       
-      DirectX::XMMATRIX rot_mat_horizontal = DirectX::XMMatrixRotationAxis(up_vector(), diff.x * rotation_speed_);
-      DirectX::XMMATRIX rot_mat_vertical = DirectX::XMMatrixRotationAxis(right_vector(), diff.y * rotation_speed_);
+      DirectX::XMMATRIX rot_mat_horizontal = DirectX::XMMatrixRotationAxis(up_vector(), diff.x * rotation_speed_ * delta);
+      DirectX::XMMATRIX rot_mat_vertical = DirectX::XMMatrixRotationAxis(right_vector(), diff.y * rotation_speed_ * delta);
       DirectX::XMMATRIX rot_result = DirectX::XMMatrixMultiply(rot_mat_horizontal, rot_mat_vertical);
       DirectX::XMFLOAT3 dir;
       DirectX::XMStoreFloat3(&dir, DirectX::XMVector4Transform(forward_vector(), rot_result));
@@ -306,6 +335,23 @@ bool Cam::rotate() {
   
 
   return false;
+}
+
+void Cam::updateLerping(const float32& delta) {
+  if (is_lerping_) {
+    timer_ += delta;
+    if (timer_ > timer_limit_) {
+      // Stop blending.
+      is_lerping_ = false;
+      set_position(destiny_position_);
+      set_target(destiny_target_);
+    }
+    else {
+      set_position(Math::LerpFloat3(origin_position_, destiny_position_, timer_ / timer_limit_), false);
+      set_target(Math::LerpFloat3(origin_target_, destiny_target_, timer_ / timer_limit_), false);
+    }
+  }
+
 }
 
 }; /* W3D */
