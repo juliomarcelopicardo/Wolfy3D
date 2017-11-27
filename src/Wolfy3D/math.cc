@@ -213,6 +213,33 @@ DirectX::XMFLOAT4 LerpFloat4(DirectX::XMVECTOR origin,
   return result;
 }
 
+DirectX::XMFLOAT3 LerpFloat3(DirectX::XMFLOAT3 origin, 
+                             DirectX::XMFLOAT3 destiny, 
+                             float32 alpha) {
+
+  DirectX::XMFLOAT3 result;
+  result = { origin.x + (destiny.x - origin.x) * alpha,
+             origin.y + (destiny.y - origin.y) * alpha,
+             origin.z + (destiny.z - origin.z) * alpha };
+
+  return result;
+}
+
+DirectX::XMFLOAT3 LerpFloat3(DirectX::XMVECTOR origin, 
+                             DirectX::XMVECTOR destiny, 
+                             float32 alpha) {
+
+  DirectX::XMFLOAT3 result, orig, dest;
+  DirectX::XMStoreFloat3(&orig, origin);
+  DirectX::XMStoreFloat3(&dest, destiny);
+
+  result = { orig.x + (dest.x - orig.x) * alpha,
+             orig.y + (dest.y - orig.y) * alpha,
+             orig.z + (dest.z - orig.z) * alpha };
+
+  return result;
+}
+
 
 #pragma endregion
 

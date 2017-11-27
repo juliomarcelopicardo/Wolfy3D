@@ -161,6 +161,28 @@ DirectX::XMFLOAT4 LerpFloat4(DirectX::XMFLOAT4 origin, DirectX::XMFLOAT4 destiny
 ///--------------------------------------------------------------------------
 DirectX::XMFLOAT4 LerpFloat4(DirectX::XMVECTOR origin, DirectX::XMVECTOR destiny, float32 alpha);
 
+///--------------------------------------------------------------------------
+/// @fn   DirectX::XMFLOAT3 LerpFloat3(DirectX::XMFLOAT3 origin, DirectX::XMFLOAT3 destiny, float32 alpha);
+///
+/// @brief  interpolation (simple lerp).
+/// @param origin Origin of the interpolation.
+/// @param destiny Destiny of the interpolation.
+/// @param alpha Values between 0.0f and 1.0f where 0 is origin and 1 is destiny.
+/// @return  lerp result.
+///--------------------------------------------------------------------------
+DirectX::XMFLOAT3 LerpFloat3(DirectX::XMFLOAT3 origin, DirectX::XMFLOAT3 destiny, float32 alpha);
+
+///--------------------------------------------------------------------------
+/// @fn   DirectX::XMFLOAT3 LerpFloat3(DirectX::XMVECTOR origin, DirectX::XMVECTOR destiny, float32 alpha);
+///
+/// @brief  interpolation (simple lerp).
+/// @param origin Origin of the interpolation.
+/// @param destiny Destiny of the interpolation.
+/// @param alpha Values between 0.0f and 1.0f where 0 is origin and 1 is destiny.
+/// @return  lerp result.
+///--------------------------------------------------------------------------
+DirectX::XMFLOAT3 LerpFloat3(DirectX::XMVECTOR origin, DirectX::XMVECTOR destiny, float32 alpha);
+
 #pragma endregion
 
 }; /* Math */
