@@ -406,7 +406,7 @@ public:
 #pragma endregion
 
   
-#pragma region FORWARD
+#pragma region FORWARD/RIGHT/UP VECTORS
   
   ///--------------------------------------------------------------------------
   /// @fn   DirectX::XMVECTOR world_forward_vector();
@@ -439,6 +439,70 @@ public:
   /// @return forward vector of the local matrix.
   ///--------------------------------------------------------------------------
   DirectX::XMFLOAT3 forward_float3();
+
+  ///--------------------------------------------------------------------------
+  /// @fn   DirectX::XMVECTOR world_right_vector();
+  ///
+  /// @brief World object right vector getter.
+  /// @return World right vector.
+  ///--------------------------------------------------------------------------
+  DirectX::XMVECTOR world_right_vector();
+
+  ///--------------------------------------------------------------------------
+  /// @fn   DirectX::XMVECTOR right_vector();
+  ///
+  /// @brief right vector of local matrix getter.
+  /// @return right vector of local matrix.
+  ///--------------------------------------------------------------------------
+  DirectX::XMVECTOR right_vector();
+
+  ///--------------------------------------------------------------------------
+  /// @fn   DirectX::XMFLOAT3 world_right_float3();
+  ///
+  /// @brief World right vector getter.
+  /// @return World right vector.
+  ///--------------------------------------------------------------------------
+  DirectX::XMFLOAT3 world_right_float3();
+
+  ///--------------------------------------------------------------------------
+  /// @fn   DirectX::XMFLOAT3 right_float3()
+  ///
+  /// @brief right vector of the local matrix getter.
+  /// @return right vector of the local matrix.
+  ///--------------------------------------------------------------------------
+  DirectX::XMFLOAT3 right_float3();
+
+  ///--------------------------------------------------------------------------
+  /// @fn   DirectX::XMVECTOR world_up_vector();
+  ///
+  /// @brief World object up vector getter.
+  /// @return World up vector.
+  ///--------------------------------------------------------------------------
+  DirectX::XMVECTOR world_up_vector();
+
+  ///--------------------------------------------------------------------------
+  /// @fn   DirectX::XMVECTOR up_vector();
+  ///
+  /// @brief up vector of local matrix getter.
+  /// @return up vector of local matrix.
+  ///--------------------------------------------------------------------------
+  DirectX::XMVECTOR up_vector();
+
+  ///--------------------------------------------------------------------------
+  /// @fn   DirectX::XMFLOAT3 world_up_float3();
+  ///
+  /// @brief World up vector getter.
+  /// @return World up vector.
+  ///--------------------------------------------------------------------------
+  DirectX::XMFLOAT3 world_up_float3();
+
+  ///--------------------------------------------------------------------------
+  /// @fn   DirectX::XMFLOAT3 up_float3()
+  ///
+  /// @brief up vector of the local matrix getter.
+  /// @return up vector of the local matrix.
+  ///--------------------------------------------------------------------------
+  DirectX::XMFLOAT3 up_float3();
 
 #pragma endregion
   

@@ -318,7 +318,7 @@ void TransformComponent::rotate(const DirectX::XMVECTOR rotation) {
 #pragma endregion
 
 
-#pragma region FORWARD
+#pragma region FORWARD/RIGHT/UP VECTORS
 
 DirectX::XMVECTOR TransformComponent::world_forward_vector() {
   return DirectX::XMVector4Normalize(DirectX::XMVector4Transform({ 0.0f, 0.0f, 1.0f, 0.0f }, DirectX::XMMatrixTranspose(global_model_matrix())));
@@ -339,6 +339,52 @@ DirectX::XMFLOAT3 TransformComponent::world_forward_float3() {
 DirectX::XMFLOAT3 TransformComponent::forward_float3() {
   DirectX::XMFLOAT3 fwd_float3;
   DirectX::XMStoreFloat3(&fwd_float3, DirectX::XMVector4Normalize(DirectX::XMVector4Transform({ 0.0f, 0.0f, 1.0f, 0.0f },
+    DirectX::XMMatrixTranspose(local_model_matrix()))));
+  return fwd_float3;
+}
+
+DirectX::XMVECTOR TransformComponent::world_right_vector() {
+  return DirectX::XMVector4Normalize(DirectX::XMVector4Transform({ 1.0f, 0.0f, 0.0f, 0.0f }, DirectX::XMMatrixTranspose(global_model_matrix())));
+}
+
+DirectX::XMVECTOR TransformComponent::right_vector() {
+  calculateLocalModelMatrix();
+  return DirectX::XMVector4Normalize(DirectX::XMVector4Transform({ 1.0f, 0.0f, 0.0f, 0.0f }, DirectX::XMMatrixTranspose(local_model_matrix())));
+}
+
+DirectX::XMFLOAT3 TransformComponent::world_right_float3() {
+  DirectX::XMFLOAT3 fwd_float3;
+  DirectX::XMStoreFloat3(&fwd_float3, DirectX::XMVector4Normalize(DirectX::XMVector4Transform({ 1.0f, 0.0f, 0.0f, 0.0f },
+    DirectX::XMMatrixTranspose(global_model_matrix()))));
+  return fwd_float3;
+}
+
+DirectX::XMFLOAT3 TransformComponent::right_float3() {
+  DirectX::XMFLOAT3 fwd_float3;
+  DirectX::XMStoreFloat3(&fwd_float3, DirectX::XMVector4Normalize(DirectX::XMVector4Transform({ 1.0f, 0.0f, 0.0f, 0.0f },
+    DirectX::XMMatrixTranspose(local_model_matrix()))));
+  return fwd_float3;
+}
+
+DirectX::XMVECTOR TransformComponent::world_up_vector() {
+  return DirectX::XMVector4Normalize(DirectX::XMVector4Transform({ 0.0f, 1.0f, 0.0f, 0.0f }, DirectX::XMMatrixTranspose(global_model_matrix())));
+}
+
+DirectX::XMVECTOR TransformComponent::up_vector() {
+  calculateLocalModelMatrix();
+  return DirectX::XMVector4Normalize(DirectX::XMVector4Transform({ 0.0f, 1.0f, 0.0f, 0.0f }, DirectX::XMMatrixTranspose(local_model_matrix())));
+}
+
+DirectX::XMFLOAT3 TransformComponent::world_up_float3() {
+  DirectX::XMFLOAT3 fwd_float3;
+  DirectX::XMStoreFloat3(&fwd_float3, DirectX::XMVector4Normalize(DirectX::XMVector4Transform({ 0.0f, 1.0f, 0.0f, 0.0f },
+    DirectX::XMMatrixTranspose(global_model_matrix()))));
+  return fwd_float3;
+}
+
+DirectX::XMFLOAT3 TransformComponent::up_float3() {
+  DirectX::XMFLOAT3 fwd_float3;
+  DirectX::XMStoreFloat3(&fwd_float3, DirectX::XMVector4Normalize(DirectX::XMVector4Transform({ 0.0f, 1.0f, 0.0f, 0.0f },
     DirectX::XMMatrixTranspose(local_model_matrix()))));
   return fwd_float3;
 }
