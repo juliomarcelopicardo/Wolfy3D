@@ -175,6 +175,10 @@ class CoreInput {
   ButtonStatus keyboard_Right_button_;
   /// Keyboard Escape button status.
   ButtonStatus keyboard_Escape_button_;
+  /// Keyboard Enter button status.
+  ButtonStatus keyboard_Enter_button_;
+  /// Keyboard Number button status
+  ButtonStatus keyboard_Number_button_[10];
   /// Mouse wheel status
   float mouse_wheel_;
   /// Mouse cursor position.

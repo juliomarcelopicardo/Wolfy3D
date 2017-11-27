@@ -43,19 +43,21 @@ CoreInput::~CoreInput() {}
 ButtonStatus* CoreInput::getButton(const int32 key_id) {
 
   switch (key_id) {
-    case W3D::Input::kKeyboardButton_W: return &keyboard_W_button_; break;
-    case W3D::Input::kKeyboardButton_A: return &keyboard_A_button_; break;
-    case W3D::Input::kKeyboardButton_S: return &keyboard_S_button_; break;
-    case W3D::Input::kKeyboardButton_D: return &keyboard_D_button_; break;
-    case W3D::Input::kKeyboardButton_Q: return &keyboard_Q_button_; break;
-    case W3D::Input::kKeyboardButton_E: return &keyboard_E_button_; break;
-    case W3D::Input::kKeyboardButton_Tab: return &keyboard_Tab_button_; break;
-    case W3D::Input::kKeyboardButton_Escape: return &keyboard_Escape_button_; break;
-    case W3D::Input::kKeyboardButton_SpaceBar: return &keyboard_SpaceBar_button_; break;
-    case W3D::Input::kKeyboardButton_Up: return &keyboard_Up_button_; break;
-    case W3D::Input::kKeyboardButton_Down: return &keyboard_Down_button_; break;
-    case W3D::Input::kKeyboardButton_Left: return &keyboard_Left_button_; break;
-    case W3D::Input::kKeyboardButton_Right: return &keyboard_Right_button_; break;
+    case Input::kKeyboardButton_W: return &keyboard_W_button_; break;
+    case Input::kKeyboardButton_A: return &keyboard_A_button_; break;
+    case Input::kKeyboardButton_S: return &keyboard_S_button_; break;
+    case Input::kKeyboardButton_D: return &keyboard_D_button_; break;
+    case Input::kKeyboardButton_Q: return &keyboard_Q_button_; break;
+    case Input::kKeyboardButton_E: return &keyboard_E_button_; break;
+    case Input::kKeyboardButton_Tab: return &keyboard_Tab_button_; break;
+    case Input::kKeyboardButton_Escape: return &keyboard_Escape_button_; break;
+    case Input::kKeyboardButton_SpaceBar: return &keyboard_SpaceBar_button_; break;
+    case Input::kKeyboardButton_Up: return &keyboard_Up_button_; break;
+    case Input::kKeyboardButton_Down: return &keyboard_Down_button_; break;
+    case Input::kKeyboardButton_Left: return &keyboard_Left_button_; break;
+    case Input::kKeyboardButton_Right: return &keyboard_Right_button_; break;
+    case Input::kKeyboardButton_Enter: return &keyboard_Enter_button_; break;
+
   }
   return nullptr;
 }
@@ -77,6 +79,7 @@ void CoreInput::resetInputButtonsStatus() {
   keyboard_Right_button_.resetStatus();
   keyboard_Escape_button_.resetStatus();
   keyboard_SpaceBar_button_.resetStatus();
+  keyboard_Enter_button_.resetStatus();
 }
 
 
@@ -98,6 +101,7 @@ void CoreInput::refreshButtonsUp() {
   keyboard_Right_button_.is_up = false;
   keyboard_Escape_button_.is_up = false;
   keyboard_SpaceBar_button_.is_up = false;
+  keyboard_Enter_button_.is_up = false;
 }
 
 bool CoreInput::isMouseButtonDown(Input::MouseButton button) {
@@ -196,6 +200,12 @@ bool CoreInput::isKeyboardButtonDown(Input::KeyboardButton button) {
         return true;
       }
     break;
+    case Input::kKeyboardButton_Enter:
+      if (keyboard_Enter_button_.is_down) {
+        keyboard_Enter_button_.is_down = false;
+        return true;
+      }
+    break;
   }
   return false;
 }
@@ -215,6 +225,7 @@ bool CoreInput::isKeyboardButtonUp(Input::KeyboardButton button) {
   case Input::kKeyboardButton_Down: return keyboard_Down_button_.is_up; break;
   case Input::kKeyboardButton_Left: return keyboard_Left_button_.is_up; break;
   case Input::kKeyboardButton_Right: return keyboard_Right_button_.is_up; break;
+  case Input::kKeyboardButton_Enter: return keyboard_Enter_button_.is_up; break;
   }
   return false;
 }
@@ -234,6 +245,7 @@ bool CoreInput::isKeyboardButtonPressed(Input::KeyboardButton button) {
   case Input::kKeyboardButton_Down: return keyboard_Down_button_.is_pressed; break;
   case Input::kKeyboardButton_Left: return keyboard_Left_button_.is_pressed; break;
   case Input::kKeyboardButton_Right: return keyboard_Right_button_.is_pressed; break;
+  case Input::kKeyboardButton_Enter: return keyboard_Enter_button_.is_pressed; break;
   }
   return false;
 }

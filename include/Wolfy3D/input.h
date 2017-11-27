@@ -34,6 +34,17 @@ enum KeyboardButton {
   kKeyboardButton_Left = 37,
   kKeyboardButton_Right = 39,
   kKeyboardButton_SpaceBar = 32,
+  kKeyboardButton_Enter = 13,
+  kKeyboardButton_Num0 = 48,
+  kKeyboardButton_Num1 = 49,
+  kKeyboardButton_Num2 = 50,
+  kKeyboardButton_Num3 = 51,
+  kKeyboardButton_Num4 = 52,
+  kKeyboardButton_Num5 = 53,
+  kKeyboardButton_Num6 = 54,
+  kKeyboardButton_Num7 = 55,
+  kKeyboardButton_Num8 = 56,
+  kKeyboardButton_Num9 = 57,
 };
 
 //--------------------------------------------------------------------------
