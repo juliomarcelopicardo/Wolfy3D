@@ -23,8 +23,8 @@ void Close() {
 	Core::instance().window_.shutdown();
 }
 
-bool StartFrame() {
-  return Core::instance().window_.startFrame();
+bool StartFrame(const float32 delta_seconds = 0.016f) {
+  return Core::instance().window_.startFrame(delta_seconds);
 }
 
 void EndFrame() {

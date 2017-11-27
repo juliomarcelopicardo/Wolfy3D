@@ -82,7 +82,7 @@ class Wnd {
 
   void endFrame();
 
-  bool startFrame();
+  bool startFrame(const float32 delta_seconds = 0.016f);
 
 /*******************************************************************************
 ***                               Private                                    ***

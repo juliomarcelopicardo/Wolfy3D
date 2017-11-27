@@ -48,12 +48,12 @@ void Wnd::init(const int32 width, const int32 height, const char * name) {
   is_opened_ = true;
 }
 
-bool Wnd::startFrame() {
+bool Wnd::startFrame(const float32 delta_seconds) {
   Core::instance().input_.refreshButtonsUp();
   if (!updateMessages()) {
     return false;
   }
-  Core::instance().cam_.update();
+  Core::instance().cam_.update(delta_seconds);
   Core::instance().d3d_.startRenderFrame();
   return true;
 }
