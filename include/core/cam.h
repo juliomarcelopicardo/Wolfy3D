@@ -11,6 +11,7 @@
 #include "Wolfy3D.h"
 #include "DirectXMath.h"
 #include <vector>
+#include "core/entity.h"
 
 namespace W3D {
   
@@ -118,6 +119,13 @@ class Cam {
   /*******************************************************************************
   ***                            Setters & Getters                             ***
   *******************************************************************************/
+
+  ///--------------------------------------------------------------------------
+  /// @fn   void set_transform(Entity entity);
+  ///
+  /// @brief  Transform setter using a entity to get its position, target and up.
+  ///--------------------------------------------------------------------------
+  void set_transform(Entity entity);
 
   ///--------------------------------------------------------------------------
   /// @fn   set_position(const float32 x, const float32 y, const float32 z)

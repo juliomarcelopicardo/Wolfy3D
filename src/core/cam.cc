@@ -98,6 +98,17 @@ void Cam::render(Entity* entity) {
 ***                            Setters & Getters                             ***
 *******************************************************************************/
 
+void Cam::set_transform(Entity entity) {
+  position_ = entity.transform().world_position_float3();
+  target_ = entity.transform().world_forward_float3();
+  target_.x += position_.x, target_.y += position_.y; target_.z += position_.z;
+
+  DirectX::XMMATRIX view = DirectX::XMMatrixLookAtLH(DirectX::XMLoadFloat3(&position_), 
+                                                     DirectX::XMLoadFloat3(&target_), 
+                                                     entity.transform().world_up_vector());
+  DirectX::XMStoreFloat4x4(&view_matrix_, view);
+}
+
 void Cam::set_position(const float32 x, const float32 y, const float32 z) {
   position_ = { x, y, z };
   setupView();
