@@ -6,6 +6,7 @@
 */
 
 #include "scene.h"
+#include "imgui/imgui.h"
 
 namespace W3D {
 
@@ -51,6 +52,7 @@ void Scene::init() {
 }
 
 void Scene::update(const float32 delta_time) {
+  updateImgui();
   if (Input::IsKeyboardButtonDown(Input::kKeyboardButton_SpaceBar) && 
       !plane_.is_plane_engine_active_) {
     plane_.is_plane_engine_active_ = true;
@@ -216,7 +218,7 @@ void Scene::updateRobots(const float32 delta_time) {
   }
   if (is_debug_mode_active_) {
     delta = 0.0f;
-    if (Input::IsMouseButtonDown(Input::kMouseButton_Middle)) {
+    if (Input::IsKeyboardButtonDown(Input::kKeyboardButton_E)) {
       delta = 166.0f;
     }
   }
@@ -266,6 +268,55 @@ void Scene::checkDistancesBetweenRobotsAndPlane() {
   green_robot_.checkDistanceToPlane(plane_pos);
   yellow_robot_.checkDistanceToPlane(plane_pos);
   blue_robot_.checkDistanceToPlane(plane_pos);
+}
+
+void Scene::updateImgui() {
+  ImGui::PushID(this);
+
+  ImGui::Text("Real 3D Techniques assignment (first semester).");
+  ImGui::Text("Made by Julio Marcelo Picardo. Student Number: 27026027.");
+  ImGui::Separator();
+  ImGui::Text("INSTRUCTIONS:");
+  ImGui::Text("   KEY         - ACTION");
+  ImGui::BulletText("SPACEBAR    - Start scene and turn on the plane engine to start flying.");
+  ImGui::BulletText("A-S-W-D     - Airplane navigation.");
+  ImGui::BulletText("MOUSE RIGHT - Fire.");
+  ImGui::BulletText("TAB         - Switch between camera modes.");
+  ImGui::BulletText("1-2-3       - Select default robots animation (1-Idle, 2-Attack, 3-Die).");
+  ImGui::BulletText("ENTER       - Enable / Disable animations debug mode.");
+  ImGui::BulletText("E           - In debug mode, jump to the next animation key frame");
+  ImGui::Separator();
+
+  if (ImGui::TreeNode("Scene and Animations")) {
+
+    if (!is_debug_mode_active_) {
+
+      float32 temp = animations_speed_;
+      ImGui::SliderFloat("Animations Speed", &temp, 0.1f, 5.0f);
+      if (temp != animations_speed_) {
+        animations_speed_ = temp;
+        setRototsAnimationSpeed(animations_speed_);
+      }
+      
+      if (ImGui::Button("Active Debug Mode")) {
+        enableAnimationsDebugMode();
+      }
+
+    }
+    else {
+      ImGui::BulletText("Press Mouse Wheel Button to debug animations steps.");
+      if (ImGui::Button("Disable Debug Mode")) {
+        disableAnimationsDebugMode();
+      }
+    }
+
+    //ImGui::Combo("Select Default Animation")
+    ImGui::TreePop();
+  }
+
+
+
+  ImGui::PopID();
 }
 
 

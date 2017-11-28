@@ -716,7 +716,7 @@ int32 main() {
   float last_speed_saved = anim_controller.attack.speed;
 
 
-  while (Window::StartFrame() && Window::IsOpened() &&
+  while (Window::StartFrame(1.0f) && Window::IsOpened() &&
     !Input::IsKeyboardButtonDown(Input::kKeyboardButton_Escape)) {
     static uint64 last_time_updated = Time();
     uint64 tick = Time();

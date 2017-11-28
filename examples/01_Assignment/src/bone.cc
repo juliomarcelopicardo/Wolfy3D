@@ -118,7 +118,7 @@ void Bone::setupAxisRotation(Axis axis, tinyxml2::XMLNode* root) {
     std::istream_iterator<float64>(),
     std::back_inserter(temp));
 
-  for (int i = 0; i < rotation.num_steps; i++) {
+  for (uint32 i = 0; i < rotation.num_steps; i++) {
     rotation.step_timers[i] = temp[i];
   }
 
@@ -131,7 +131,7 @@ void Bone::setupAxisRotation(Axis axis, tinyxml2::XMLNode* root) {
     std::istream_iterator<float64>(),
     std::back_inserter(temp));
 
-  for (int i = 0; i < rotation.num_steps; i++) {
+  for (uint32 i = 0; i < rotation.num_steps; i++) {
     switch (axis) {
     case Bone::kAxis_X: { rotation.step_values[i].x = DirectX::XMConvertToRadians(temp[i]); } break;
     case Bone::kAxis_Y: { rotation.step_values[i].y = DirectX::XMConvertToRadians(temp[i]); } break;
@@ -169,7 +169,7 @@ void Bone::setupTranslation(tinyxml2::XMLNode* root) {
     std::istream_iterator<float64>(),
     std::back_inserter(temp));
 
-  for (int i = 0; i < translation.num_steps; i++) {
+  for (uint32 i = 0; i < translation.num_steps; i++) {
     translation.step_timers[i] = temp[i];
   }
 
@@ -183,12 +183,12 @@ void Bone::setupTranslation(tinyxml2::XMLNode* root) {
 
   uint32 num_positions = temp.size() / 3;
   uint32 index = 0;
-  for (int i = 0; i < num_positions; i++) {
-    translation.step_values[i].x = temp[index] * 0.1;
+  for (uint32 i = 0; i < num_positions; i++) {
+    translation.step_values[i].x = temp[index] * 0.1f;
     index++;
-    translation.step_values[i].y = temp[index] * 0.1;
+    translation.step_values[i].y = temp[index] * 0.1f;
     index++;
-    translation.step_values[i].z = temp[index] * 0.1;
+    translation.step_values[i].z = temp[index] * 0.1f;
     index++;
     translation.step_values[i].w = 1.0f;
   }

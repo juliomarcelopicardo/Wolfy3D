@@ -139,6 +139,12 @@ private:
   /// Checks if the distance between the robot and the plane is enough to attack.
   void checkDistancesBetweenRobotsAndPlane();
 
+
+  /* ImGui */
+
+  /// Updates all the Imguie framework to debug and test the scene.
+  void updateImgui();
+
 /*******************************************************************************
 ***                           Private Attributes                             ***
 *******************************************************************************/
