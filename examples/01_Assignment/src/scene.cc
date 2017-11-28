@@ -19,8 +19,8 @@ Scene::Scene() {
   debug_mode_speed_ = 1.0f;
   key_frame_step_time_ = 0.166666f;
   is_debug_mode_active_ = false;
-  last_speed_saved_ = 1.0f;
-  animations_speed_ = 1.0f;
+  last_speed_saved_ = 2.0f;
+  animations_speed_ = 2.0f;
 }
 
 Scene::~Scene() {}
@@ -53,7 +53,7 @@ void Scene::init() {
 
 void Scene::update(const float32 delta_time) {
   updateImgui();
-  if (Input::IsKeyboardButtonDown(Input::kKeyboardButton_SpaceBar) && 
+  if (Input::IsKeyboardButtonDown(Input::kKeyboardButton_Enter) && 
       !plane_.is_plane_engine_active_) {
     plane_.is_plane_engine_active_ = true;
     activeRobots();
@@ -83,7 +83,7 @@ void Scene::render() {}
 void Scene::updateCameraMode() {
   auto& camera = Core::instance().cam_;
 
-  if (Input::IsKeyboardButtonDown(Input::kKeyboardButton_Tab)) {
+  if (Input::IsKeyboardButtonDown(Input::kKeyboardButton_C)) {
     switchCameraMode();
   }
 
@@ -173,6 +173,7 @@ void Scene::initRobots() {
   yellow_robot_.set_material_color(1.0f, 1.0f, 0.0f);
   yellow_robot_.root_.transform().set_position(386.0f, 2.5f, 497.0f);
   yellow_robot_.root_.transform().set_euler_rotation(-0.0f, -2.733f, 0.0f);
+  setRototsAnimationSpeed(animations_speed_);
 }
 
 void Scene::updateRobots(const float32 delta_time) {
@@ -208,7 +209,7 @@ void Scene::updateRobots(const float32 delta_time) {
     green_robot_.anim_controller_.current_animation = &green_robot_.anim_controller_.die;
     green_robot_.anim_controller_.current_animation->start(true, 0.5f);
   }
-  if (Input::IsKeyboardButtonDown(Input::kKeyboardButton_Enter)) {
+  if (Input::IsKeyboardButtonDown(Input::kKeyboardButton_Tab)) {
     if (is_debug_mode_active_) {
       disableAnimationsDebugMode();
     }
@@ -219,8 +220,11 @@ void Scene::updateRobots(const float32 delta_time) {
   if (is_debug_mode_active_) {
     delta = 0.0f;
     if (Input::IsKeyboardButtonDown(Input::kKeyboardButton_E)) {
-      delta = 166.0f;
+      delta = 166.0f; // Jump directly to the next key frame.
     }
+  }
+  if (Input::IsKeyboardButtonPressed(Input::kKeyboardButton_F)) {
+    delta = delta_time / 5.0f / animations_speed_; // 2fps 
   }
   red_robot_.update(delta);
   blue_robot_.update(delta);
@@ -278,13 +282,14 @@ void Scene::updateImgui() {
   ImGui::Separator();
   ImGui::Text("INSTRUCTIONS:");
   ImGui::Text("   KEY         - ACTION");
-  ImGui::BulletText("SPACEBAR    - Start scene and turn on the plane engine to start flying.");
-  ImGui::BulletText("A-S-W-D     - Airplane navigation.");
-  ImGui::BulletText("MOUSE RIGHT - Fire.");
-  ImGui::BulletText("TAB         - Switch between camera modes.");
+  ImGui::BulletText("ENTER       - Start scene and turn on the plane engine to start flying.");
+  ImGui::BulletText("Q-A-O-P     - Airplane navigation.");
+  ImGui::BulletText("SPACEBAR    - Fire.");
+  ImGui::BulletText("C           - Switch between camera modes.");
   ImGui::BulletText("1-2-3       - Select default robots animation (1-Idle, 2-Attack, 3-Die).");
-  ImGui::BulletText("ENTER       - Enable / Disable animations debug mode.");
-  ImGui::BulletText("E           - In debug mode, jump to the next animation key frame");
+  ImGui::BulletText("TAB         - Enable / Disable animations debug mode.");
+  ImGui::BulletText("E           - In debug mode, jump to the next animation step (10 per anim)");
+  ImGui::BulletText("F           - If held down, will slowmotion the animations to 2fps");
   ImGui::Separator();
 
   if (ImGui::TreeNode("Scene and Animations")) {

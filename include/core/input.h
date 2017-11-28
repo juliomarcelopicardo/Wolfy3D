@@ -161,6 +161,14 @@ class CoreInput {
   ButtonStatus keyboard_Q_button_;
   /// Keyboard E button status.
   ButtonStatus keyboard_E_button_;
+  /// Keyboard C button status.
+  ButtonStatus keyboard_C_button_;
+  /// Keyboard F button status.
+  ButtonStatus keyboard_F_button_;
+  /// Keyboard O button status.
+  ButtonStatus keyboard_O_button_;
+  /// Keyboard P button status.
+  ButtonStatus keyboard_P_button_;
   /// Keyboard Tab button status.
   ButtonStatus keyboard_Tab_button_;
   /// Keyboard SpaceBar button status.

@@ -72,7 +72,7 @@ void Airplane::update(const float32& delta_time) {
   updateRotations(delta_time);
   updateTranslations(delta_time);
   updateImGui();
-  if (is_right_mouse_button_down_) {
+  if (is_space_bar_key_down_) {
     fire();
   }
   for (uint32 i = 0; i < num_bullets_; ++i) {
@@ -199,11 +199,11 @@ void Airplane::updateRotationLerpingValues(const float32 & delta_time) {
 void Airplane::updateRotationLerpingValuesZ(const float32 & delta_time) {
   
   // If any key is pressed -> rotate
-  if (is_D_key_pressed_) {
+  if (is_P_key_pressed_) {
     z_rotation_alpha_ -= z_rotation_speed_ * delta_time;
     if (z_rotation_alpha_ < -1.0f) { z_rotation_alpha_ = -1.0f; }
   }
-  else if (is_A_key_pressed_) {
+  else if (is_O_key_pressed_) {
     z_rotation_alpha_ += z_rotation_speed_ * delta_time;
     if (z_rotation_alpha_ > 1.0f) { z_rotation_alpha_ = 1.0f; }
   }
@@ -231,11 +231,11 @@ void Airplane::updateRotationLerpingValuesZ(const float32 & delta_time) {
 void Airplane::updateRotationLerpingValuesX(const float32 & delta_time) {
 
   // If any key is pressed -> rotate
-  if (is_S_key_pressed_) {
+  if (is_Q_key_pressed_) {
     x_rotation_alpha_ -= x_rotation_speed_ * delta_time;
     if (x_rotation_alpha_ < -1.0f) { x_rotation_alpha_ = -1.0f; }
   }
-  else if (is_W_key_pressed_) {
+  else if (is_A_key_pressed_) {
     x_rotation_alpha_ += x_rotation_speed_ * delta_time;
     if (x_rotation_alpha_ > 1.0f) { x_rotation_alpha_ = 1.0f; }
   }
@@ -292,11 +292,11 @@ void Airplane::updateTranslations(const float32 & delta_time) {
 *******************************************************************************/
 
 void Airplane::updateInput() {
+  is_Q_key_pressed_ = Input::IsKeyboardButtonPressed(Input::kKeyboardButton_Q);
+  is_P_key_pressed_ = Input::IsKeyboardButtonPressed(Input::kKeyboardButton_P);
   is_A_key_pressed_ = Input::IsKeyboardButtonPressed(Input::kKeyboardButton_A);
-  is_D_key_pressed_ = Input::IsKeyboardButtonPressed(Input::kKeyboardButton_D);
-  is_W_key_pressed_ = Input::IsKeyboardButtonPressed(Input::kKeyboardButton_W);
-  is_S_key_pressed_ = Input::IsKeyboardButtonPressed(Input::kKeyboardButton_S);
-  is_right_mouse_button_down_ = Input::IsMouseButtonDown(Input::kMouseButton_Right);
+  is_O_key_pressed_ = Input::IsKeyboardButtonPressed(Input::kKeyboardButton_O);
+  is_space_bar_key_down_ = Input::IsKeyboardButtonDown(Input::kKeyboardButton_SpaceBar);
 }
 
 /*******************************************************************************

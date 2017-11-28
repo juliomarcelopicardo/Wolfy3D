@@ -235,16 +235,16 @@ private:
 
   /* Input */
 
-  /// A key pressed.
-  bool is_A_key_pressed_;
-  /// D key pressed.
-  bool is_D_key_pressed_;
+  /// Q key pressed.
+  bool is_Q_key_pressed_;
+  /// P key pressed.
+  bool is_P_key_pressed_;
   /// W key pressed.
-  bool is_W_key_pressed_;
-  /// S key pressed.
-  bool is_S_key_pressed_;
-  /// Right mouse button (Fire)
-  bool is_right_mouse_button_down_;
+  bool is_A_key_pressed_;
+  /// O key pressed.
+  bool is_O_key_pressed_;
+  /// SpaceBar (Fire)
+  bool is_space_bar_key_down_;
 
 
 
