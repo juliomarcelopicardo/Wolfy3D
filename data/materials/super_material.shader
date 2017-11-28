@@ -1,11 +1,29 @@
-/*
-  CONSTANT BUFFERS
-*/
+/******************************************************************************/
+/********                          DEFINES                             ********/
+/******************************************************************************/
 
-cbuffer CustomConstantBuffer {
-	matrix model_matrix;
-	matrix view_matrix;
-	matrix projection_matrix;
+// Material type
+#define DIFFUSE 0
+#define ONE_TEXTURE 1
+#define NORMALS 2
+#define TERRAIN 3
+
+// Booleans
+#define TRUE 1
+#define FALSE 0
+
+/******************************************************************************/
+/********                      CONSTANT BUFFERS                        ********/
+/******************************************************************************/
+
+struct Matrices {
+  matrix model;
+  matrix view;
+  matrix projection;
+};
+
+cbuffer CustomConstantBuffer : register(b0) {
+  Matrices m;
   float4 albedo_color;
   unsigned int type;
   unsigned int num_textures;
@@ -13,9 +31,10 @@ cbuffer CustomConstantBuffer {
   unsigned int is_light_sensitive;
 };
 
-/* 
-  INPUT OUTPUT STRUCTS
-*/
+
+/******************************************************************************/
+/********                   INPUT OUTPUT STRUCTS                       ********/
+/******************************************************************************/
 struct VertexInfo {
 	float4 vPosition : POSITION; 
 	float4 vNormal : NORMAL;
@@ -35,6 +54,10 @@ struct PixelInfo {
   float4 MapColor : MAPCOLOR; // Terrain map texture.
 };
 
+/******************************************************************************/
+/********                         TEXTURES                             ********/
+/******************************************************************************/
+
 // All textures will use the same sampler
 SamplerState sampler_type : register(s0);
 // Textures
@@ -44,18 +67,29 @@ Texture2D texture_grass : register(t2);
 Texture2D texture_moss : register(t3);
 Texture2D texture_asphalt : register(t4);
 
-// Useful defines to make shader type enum values easier to understand.
-#define DIFFUSE 0
-#define ONE_TEXTURE 1
-#define NORMALS 2
-#define TERRAIN 3
 
-#define TRUE 1
-#define FALSE 0
 
-/*
-VERTEX SHADER
-*/
+/******************************************************************************/
+/********                      DATA STRUCTURES                         ********/
+/******************************************************************************/
+
+// EXAMPLE TO TEST LIGHTING.
+struct Light {
+  float4 dir;
+  float4 color;
+  float intensity;
+};
+
+
+/******************************************************************************/
+/********                      VERTEX FUNCTIONS                        ********/
+/******************************************************************************/
+
+
+
+/******************************************************************************/
+/********                       VERTEX SHADER                          ********/
+/******************************************************************************/
 
 PixelInfo VertexShaderFunction(VertexInfo vertex_info) {
 	PixelInfo pixel_info;
@@ -63,14 +97,14 @@ PixelInfo VertexShaderFunction(VertexInfo vertex_info) {
   // Calculate the position of the vertex.
   pixel_info.Position = vertex_info.vPosition;
   pixel_info.Position.w = 1.0f;
-	pixel_info.Position = mul(vertex_info.vPosition, model_matrix);
-	pixel_info.Position = mul(pixel_info.Position, view_matrix);
-	pixel_info.Position = mul(pixel_info.Position, projection_matrix);
+	pixel_info.Position = mul(vertex_info.vPosition, m.model);
+	pixel_info.Position = mul(pixel_info.Position, m.view);
+	pixel_info.Position = mul(pixel_info.Position, m.projection);
   
   // Calculate normal.
   pixel_info.Normal = vertex_info.vNormal;
   pixel_info.Normal.w = 0.0f;
-  pixel_info.Normal = mul(pixel_info.Normal, model_matrix);
+  pixel_info.Normal = mul(pixel_info.Normal, m.model);
   pixel_info.Normal = normalize(pixel_info.Normal);
 
   // UV
@@ -88,13 +122,9 @@ PixelInfo VertexShaderFunction(VertexInfo vertex_info) {
 }
 
 
-// EXAMPLE TO TEST LIGHTING.
-struct Light {
-  float4 dir;
-  float4 color;
-  float intensity;
-};
-
+/******************************************************************************/
+/********                      PIXEL FUNCTIONS                         ********/
+/******************************************************************************/
 
 float4 CalculateLightDiffuseColor(float4 normal) {
   Light light;
@@ -108,11 +138,9 @@ float4 CalculateLightDiffuseColor(float4 normal) {
   return diffuse * light.color * light.intensity;
 }
 
-
-
-/*
-PIXEL/FRAGMENT SHADER
-*/
+/******************************************************************************/
+/********                       PIXEL SHADER                           ********/
+/******************************************************************************/
 float4 PixelShaderFunction(PixelInfo pixel_info) : SV_TARGET {
   
   float4 color = pixel_info.Color * albedo_color;
