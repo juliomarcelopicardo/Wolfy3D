@@ -16,7 +16,7 @@ namespace Window {
 void Init(const int32 width = 800,
                 const int32 height = 600,
                 const bool mouse_cursor_visible = true,
-                const char* display_name = "Silverlynx Window");
+                const char* display_name = "Wolfy3D");
 void Close();
 bool IsOpened();
 bool StartFrame(const float32 delta_seconds);
