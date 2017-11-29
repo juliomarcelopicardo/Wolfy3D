@@ -16,6 +16,9 @@ namespace W3D {
   ***                                 TYPES                                    ***
   *******************************************************************************/
 
+  /// IDs
+  typedef uint32_t GeometryID;
+
   /// char
   typedef char char8;
   typedef char16_t char16;
