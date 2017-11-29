@@ -11,6 +11,7 @@
 #include "Wolfy3D.h"
 #include "directx.h"
 #include <stdio.h>
+#include <list>
 #include "core/cam.h"
 #include "core/wnd.h"
 #include "core/super_material.h"
@@ -103,6 +104,8 @@ class Core {
   Geo error_geometry_;
   /// Super material used to render all the objects.
   SuperMaterial super_material_;
+  /// Geometry factory list, where we will allocate all the geometries used.
+  std::vector<Geo*> geometry_factory_;
 
 /*******************************************************************************
 ***                         Private Copy Constructor                         ***

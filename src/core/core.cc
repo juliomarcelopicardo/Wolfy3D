@@ -86,7 +86,9 @@ Core& Core::instance() {
   return *singleton;
 }
 
-Core::Core() {}
+Core::Core() {
+  
+}
 
 Core::~Core() {}
 
