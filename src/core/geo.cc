@@ -22,6 +22,8 @@ Geo::Geo() {
   topology_ = D3D10_PRIMITIVE_TOPOLOGY_TRIANGLELIST;
   vertex_buffer_ = nullptr;
   vertex_index_buffer_ = nullptr;
+  name_ = "";
+  type_ = kType_None;
 }
 
 Geo::~Geo() {
@@ -35,8 +37,7 @@ Geo::~Geo() {
 ***                               Public methods                             ***
 *******************************************************************************/
 
-bool Geo::initTriangle(const DirectX::XMFLOAT2 size,
-                                const DirectX::XMFLOAT4 color) {
+bool Geo::initTriangle(const DirectX::XMFLOAT2 size, const DirectX::XMFLOAT4 color) {
 
   // CUBO de ejemplo
   num_vertices_ = 3;
@@ -74,8 +75,7 @@ bool Geo::initTriangle(const DirectX::XMFLOAT2 size,
   return true;
 }
 
-bool Geo::initQuad(const DirectX::XMFLOAT2 size,
-                            const DirectX::XMFLOAT4 color) {
+bool Geo::initQuad(const DirectX::XMFLOAT2 size, const DirectX::XMFLOAT4 color) {
 
   // CUBO de ejemplo
   num_vertices_ = 4;

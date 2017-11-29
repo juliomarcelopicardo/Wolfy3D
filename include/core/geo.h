@@ -15,15 +15,6 @@
 
 namespace W3D {
 
-
-/// Struct to save all the info of the vertices.
-struct VertexData {
-  DirectX::XMFLOAT3 position;
-  DirectX::XMFLOAT3 normal;
-  DirectX::XMFLOAT2 uv;
-  DirectX::XMFLOAT4 color;
-};
-
 class Geo {
   
  public:
@@ -157,6 +148,14 @@ class Geo {
 ***                               Attributes                                 ***
 *******************************************************************************/
 
+/// Struct to save all the info of the vertices.
+  struct VertexData {
+    DirectX::XMFLOAT3 position;
+    DirectX::XMFLOAT3 normal;
+    DirectX::XMFLOAT2 uv;
+    DirectX::XMFLOAT4 color;
+  };
+
   /// Verices info.
   std::vector<VertexData> vertex_data_;
   /// Vertices buffer.
@@ -167,9 +166,33 @@ class Geo {
   /// Indices buffer.
   ID3D11Buffer* vertex_index_buffer_;
 
-
   /// Topology = the way vertex are rendered (TriangleStrip, TriangleList, Point)
   D3D_PRIMITIVE_TOPOLOGY topology_;
+
+
+
+/*******************************************************************************
+***                              Factory Info                                ***
+*******************************************************************************/
+
+  /// Geometry types.
+  enum Type {
+    kType_None = 0,
+    kType_Triangle,
+    kType_Cube,
+    kType_Quad,
+    kType_Skybox,
+    kType_Terrain,
+    kType_Extruded,
+    kType_Pyramid,
+    kType_ExternalFile,
+  };
+
+  /// Filename path.
+  std::string name_;
+  /// Geometry type.
+  Type type_;
+
 
 
 /*******************************************************************************

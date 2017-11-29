@@ -72,7 +72,7 @@ void RenderComponent::setupDeviceContext() {
   memcpy(shader_constant_buffer.pData, &super_mat.settings_, sizeof(MaterialSettings));
   device_context->Unmap(super_mat.matrix_buffer_, 0);
 
-  uint32 stride = sizeof(VertexData);
+  uint32 stride = sizeof(Geo::VertexData);
   uint32 offset = 0;
 
   device_context->IASetVertexBuffers(0, 1, &geometry_->vertex_buffer_, &stride, &offset);
