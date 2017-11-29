@@ -28,7 +28,7 @@ Bullet::Bullet(const Bullet & copy) {
   projectile_velocity_ = copy.projectile_velocity_;
 }
 
-Bullet Bullet::operator=(const Bullet & copy) {
+Bullet& Bullet::operator=(const Bullet & copy) {
   projectile_speed_ = copy.projectile_speed_;
   projectile_velocity_ = copy.projectile_velocity_;
   return (*this);

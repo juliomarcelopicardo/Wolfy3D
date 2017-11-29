@@ -188,11 +188,36 @@ class Geo {
     kType_ExternalFile,
   };
 
+  struct Vec3 { float32 x, y, z; };
+  struct Vec4 { float32 x, y, z, w; };
+  struct Vec2 { float32 x, y, z; };
+
+  struct CubeInfo { Vec3 size; };
+  struct TriangleInfo { Vec2 size; };
+  struct QuadInfo { Vec2 size; };
+  struct SkyboxInfo { Vec3 size; };
+  struct TerrainInfo { Vec3 size; };
+  struct PyramidInfo { uint32 num_polygon_vertex; float32 base_radius; float32 height; };
+  struct ExtrudedInfo { uint32 num_polygon_vertex; float32 base_radius; float32 top_radius; float32 height; };
+  struct File {};
+  
+  union FactoryInfo {
+    CubeInfo cube;
+    TriangleInfo triangle;
+    QuadInfo quad;
+    SkyboxInfo skybox;
+    TerrainInfo terrain;
+    PyramidInfo pyramid;
+    ExtrudedInfo extruded;
+    File file;
+  };
+
   /// Filename path.
   std::string name_;
   /// Geometry type.
   Type type_;
-
+  /// Factory Geometry info. Will be used to now if a geometry already exists in the factory.
+  FactoryInfo info_;
 
 
 /*******************************************************************************

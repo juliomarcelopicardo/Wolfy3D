@@ -39,13 +39,12 @@ Geo::~Geo() {
 
 bool Geo::initTriangle(const DirectX::XMFLOAT2 size, const DirectX::XMFLOAT4 color) {
 
-  // CUBO de ejemplo
   num_vertices_ = 3;
   num_indices_ = 3;
   float32 half_width = size.x * 0.5f;
   float32 half_height = size.y * 0.5f;
 
-  // Rellenamos info de vertices e indices.
+  // Vertices info.
   vertex_data_.resize(num_vertices_);
   vertex_index_.resize(num_indices_);
 
@@ -71,19 +70,21 @@ bool Geo::initTriangle(const DirectX::XMFLOAT2 size, const DirectX::XMFLOAT4 col
   if (!createVertexBuffer()) { return false; }
   if (!createIndexBuffer()) { return false; }
   
+  type_ = kType_Triangle;
+  info_.triangle.size = { size.x, size.y };
+  name_ = "Triangle";
 
   return true;
 }
 
 bool Geo::initQuad(const DirectX::XMFLOAT2 size, const DirectX::XMFLOAT4 color) {
 
-  // CUBO de ejemplo
   num_vertices_ = 4;
   num_indices_ = 6;
   float32 half_width = size.x * 0.5f;
   float32 half_height = size.y * 0.5f;
 
-  // Rellenamos info de vertices e indices.
+  // Vertices info.
   vertex_data_.resize(num_vertices_);
   vertex_index_.resize(num_indices_);
 
@@ -126,17 +127,20 @@ bool Geo::initQuad(const DirectX::XMFLOAT2 size, const DirectX::XMFLOAT4 color) 
   if (!createVertexBuffer()) { return false; }
   if (!createIndexBuffer()) { return false; }
 
+  // Factory info.
+  type_ = kType_Quad;
+  info_.quad.size = { size.x, size.y };
+  name_ = "Quad";
+
   return true;
 }
 
-bool Geo::initCube(const DirectX::XMFLOAT3 size, 
-                            const DirectX::XMFLOAT4 color) {
-
-  // CUBO de ejemplo
+bool Geo::initCube(const DirectX::XMFLOAT3 size, const DirectX::XMFLOAT4 color) {
+ 
   num_vertices_ = 24;
   num_indices_ = 36;
 
-  // Rellenamos info de vertices e indices.
+  // Vertices info.
   vertex_data_.resize(num_vertices_);
   vertex_index_.resize(num_indices_);
 
@@ -235,15 +239,20 @@ bool Geo::initCube(const DirectX::XMFLOAT3 size,
   if (!createVertexBuffer()) { return false; }
   if (!createIndexBuffer()) { return false; }
 
+  // Factory info.
+  type_ = kType_Cube;
+  info_.cube.size = { size.x, size.y, size.z };
+  name_ = "Cube";
+
   return true;
 }
 
 bool Geo::initSkyBoxCube(const DirectX::XMFLOAT3 size, const DirectX::XMFLOAT4 color) {
-  // CUBO de ejemplo
+  
   num_vertices_ = 24;
   num_indices_ = 36;
 
-  // Rellenamos info de vertices e indices.
+  // Vertices info.
   vertex_data_.resize(num_vertices_);
   vertex_index_.resize(num_indices_);
 
@@ -344,12 +353,17 @@ bool Geo::initSkyBoxCube(const DirectX::XMFLOAT3 size, const DirectX::XMFLOAT4 c
   if (!createVertexBuffer()) { return false; }
   if (!createIndexBuffer()) { return false; }
 
+  // Factory info.
+  type_ = kType_Skybox;
+  info_.skybox.size = { size.x, size.y, size.z };
+  name_ = "Skybox";
+
   return true;
 }
 
 bool Geo::initTerrain(const char * height_map_filename, 
-                               const DirectX::XMFLOAT3 grid_size, 
-                               const DirectX::XMFLOAT4 color) {
+                      const DirectX::XMFLOAT3 grid_size, 
+                      const DirectX::XMFLOAT4 color) {
 
   DirectX::XMINT2 heightmap_size;
   std::vector<DirectX::XMFLOAT3> height_map_data;
@@ -455,14 +469,19 @@ bool Geo::initTerrain(const char * height_map_filename,
   if (!createVertexBuffer()) { return false; }
   if (!createIndexBuffer()) { return false; }
 
+  // Factory info.
+  type_ = kType_Terrain;
+  info_.terrain.size = { grid_size.x, grid_size.y, grid_size.z };
+  name_ = height_map_filename;
+
   return true;
 }
 
 bool Geo::initExtruded(const uint32 num_polygon_vertex,
-                                const float32 base_radius,
-                                const float32 top_radius,
-                                const float32 height,
-                                const DirectX::XMFLOAT4 color) {
+                       const float32 base_radius,
+                       const float32 top_radius,
+                       const float32 height,
+                       const DirectX::XMFLOAT4 color) {
 
   float32 angle = DirectX::XM_2PI / (float32)num_polygon_vertex;
   float half_height = height * 0.5f;
@@ -637,6 +656,14 @@ bool Geo::initExtruded(const uint32 num_polygon_vertex,
   if (!createVertexBuffer()) { return false; }
   if (!createIndexBuffer()) { return false; }
 
+  // Factory info.
+  type_ = kType_Extruded;
+  info_.extruded.base_radius = base_radius;
+  info_.extruded.top_radius = top_radius;
+  info_.extruded.height = height;
+  info_.extruded.num_polygon_vertex = num_polygon_vertex;
+  name_ = "Extruded";
+
   return true;
 }
 
@@ -740,7 +767,14 @@ bool Geo::initPyramid(const uint32 num_base_vertex,
   if (!createVertexBuffer()) { return false; }
   if (!createIndexBuffer()) { return false; }
 
-  return false;
+  // Factory info.
+  type_ = kType_Pyramid;
+  info_.pyramid.base_radius = base_radius;
+  info_.pyramid.height = height;
+  info_.pyramid.num_polygon_vertex = num_base_vertex;
+  name_ = "Pyramid";
+
+  return true;
 }
 
 bool Geo::initFromFile(const char * filename, const DirectX::XMFLOAT4 color) {
@@ -1003,6 +1037,9 @@ bool Geo::initFromFile(const char * filename, const DirectX::XMFLOAT4 color) {
 
   if (!createVertexBuffer()) { return false; }
   if (!createIndexBuffer()) { return false; }
+
+  type_ = kType_ExternalFile;
+  name_ = filename;
 
   return true;
 }

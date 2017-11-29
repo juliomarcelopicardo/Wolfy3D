@@ -32,7 +32,7 @@ public:
   /// copy constructor.
   Bullet(const Bullet& copy);
   /// operator of assignment.
-  Bullet operator=(const Bullet& copy);
+  Bullet& operator=(const Bullet& copy);
 
 /*******************************************************************************
 ***                               Public methods                             ***
