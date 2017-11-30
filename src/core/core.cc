@@ -99,4 +99,4 @@ void Core::init() {
   super_material_.init();
 }
 
-};/* JI */
+};/* W3D */
