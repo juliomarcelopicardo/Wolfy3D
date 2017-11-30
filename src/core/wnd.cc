@@ -30,7 +30,7 @@ Wnd::~Wnd() {}
 ***                               Public methods                             ***
 *******************************************************************************/
 
-void Wnd::init(const int32 width, const int32 height, const char * name) {
+void Wnd::init(const int32 width, const int32 height, const char* name) {
 
   auto& core = Core::instance();
 
@@ -43,7 +43,7 @@ void Wnd::init(const int32 width, const int32 height, const char * name) {
 
   core.d3d_.init();
   core.init();
-  core.cam_.setupPerspective(core.cam_.fovy_, width_ / height_, core.cam_.z_near_, core.cam_.z_far_);
+  core.cam_.setupPerspective(core.cam_.fovy_, (float32)width_ / (float32)height_, core.cam_.z_near_, core.cam_.z_far_);
 
   is_opened_ = true;
 }

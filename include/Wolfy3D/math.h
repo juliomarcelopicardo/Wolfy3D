@@ -185,6 +185,113 @@ DirectX::XMFLOAT3 LerpFloat3(DirectX::XMVECTOR origin, DirectX::XMVECTOR destiny
 
 #pragma endregion
 
+#pragma region XMFLOAT COMPARISON OPERATORS
+
+/* COMPARISON */
+
+///--------------------------------------------------------------------------
+/// @fn   bool operator==(DirectX::XMFLOAT2& first, DirectX::XMFLOAT2& second);
+///
+/// @brief Comparison operator.
+/// @param first First operand.
+/// @param second Second operand.
+/// @return true if both are equal, false otherwise.
+///--------------------------------------------------------------------------
+bool operator==(const DirectX::XMFLOAT2& first, const DirectX::XMFLOAT2& second);
+
+///--------------------------------------------------------------------------
+/// @fn   bool operator==(DirectX::XMFLOAT3& first, DirectX::XMFLOAT3& second);
+///
+/// @brief Comparison operator.
+/// @param first First operand.
+/// @param second Second operand.
+/// @return true if both are equal, false otherwise.
+///--------------------------------------------------------------------------
+bool operator==(const DirectX::XMFLOAT3& first, const DirectX::XMFLOAT3& second);
+
+///--------------------------------------------------------------------------
+/// @fn   bool operator==(DirectX::XMFLOAT4& first, DirectX::XMFLOAT4& second);
+///
+/// @brief Comparison operator.
+/// @param first First operand.
+/// @param second Second operand.
+/// @return true if both are equal, false otherwise.
+///--------------------------------------------------------------------------
+bool operator==(const DirectX::XMFLOAT4& first, const DirectX::XMFLOAT4& second);
+
+#pragma endregion
+
+#pragma region XMFLOAT ADDITION OPERATORS
+
+/* ADDITION */
+
+///--------------------------------------------------------------------------
+/// @fn   DirectX::XMFLOAT2 operator+(DirectX::XMFLOAT2& first, DirectX::XMFLOAT2& second);
+///
+/// @brief Addition operator.
+/// @param first First operand.
+/// @param second Second operand.
+/// @return result of the operation.
+///--------------------------------------------------------------------------
+DirectX::XMFLOAT2 operator+(const DirectX::XMFLOAT2& first, const DirectX::XMFLOAT2& second);
+
+///--------------------------------------------------------------------------
+/// @fn   DirectX::XMFLOAT3 operator+(DirectX::XMFLOAT3& first, DirectX::XMFLOAT3& second);
+///
+/// @brief Addition operator.
+/// @param first First operand.
+/// @param second Second operand.
+/// @return result of the operation.
+///--------------------------------------------------------------------------
+DirectX::XMFLOAT3 operator+(const DirectX::XMFLOAT3& first, const DirectX::XMFLOAT3& second);
+
+///--------------------------------------------------------------------------
+/// @fn   DirectX::XMFLOAT4 operator+(DirectX::XMFLOAT4& first, DirectX::XMFLOAT4& second);
+///
+/// @brief Addition operator.
+/// @param first First operand.
+/// @param second Second operand.
+/// @return result of the operation.
+///--------------------------------------------------------------------------
+DirectX::XMFLOAT4 operator+(const DirectX::XMFLOAT4& first, const DirectX::XMFLOAT4& second);
+
+
+/* SUBSTRACTION */
+
+///--------------------------------------------------------------------------
+/// @fn   DirectX::XMFLOAT2 operator-(DirectX::XMFLOAT2& first, DirectX::XMFLOAT2& second);
+///
+/// @brief Substraction operator.
+/// @param first First operand.
+/// @param second Second operand.
+/// @return result of the operation.
+///--------------------------------------------------------------------------
+DirectX::XMFLOAT2 operator-(const DirectX::XMFLOAT2& first, const DirectX::XMFLOAT2& second);
+
+///--------------------------------------------------------------------------
+/// @fn   DirectX::XMFLOAT3 operator-(DirectX::XMFLOAT3& first, DirectX::XMFLOAT3& second);
+///
+/// @brief Substraction operator.
+/// @param first First operand.
+/// @param second Second operand.
+/// @return result of the operation.
+///--------------------------------------------------------------------------
+DirectX::XMFLOAT3 operator-(const DirectX::XMFLOAT3& first, const DirectX::XMFLOAT3& second);
+
+///--------------------------------------------------------------------------
+/// @fn   DirectX::XMFLOAT4 operator-(DirectX::XMFLOAT4& first, DirectX::XMFLOAT4& second);
+///
+/// @brief Substraction operator.
+/// @param first First operand.
+/// @param second Second operand.
+/// @return result of the operation.
+///--------------------------------------------------------------------------
+DirectX::XMFLOAT4 operator-(const DirectX::XMFLOAT4& first, const DirectX::XMFLOAT4& second);
+
+#pragma endregion
+
+
+
 }; /* Math */
 }; /* W3D */
 

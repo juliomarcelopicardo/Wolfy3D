@@ -24,7 +24,7 @@ ChromeDebugger::ChromeDebugger() {
 
 void ChromeDebugger::StartChromeDebuggerFile() {
 
-  file = fopen(kChromeDebuggerJSonPath, "w");
+  fopen_s(&file, kChromeDebuggerJSonPath, "w");
   if (!file) {
     OutputDebugString(" ERROR: Cannot open chrome debugger file.");
     exit(EXIT_FAILURE);

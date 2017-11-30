@@ -85,7 +85,7 @@ DirectX::XMVECTOR ConvertEulerToQuaternionVector(DirectX::XMVECTOR euler) {
   DirectX::XMFLOAT3 GetEulerRotationFromModelMatrix(DirectX::XMFLOAT4X4 m) {
   DirectX::XMFLOAT3 euler;
 
-  float sp = -m._32;
+  float32 sp = -m._32;
   if (sp <= -1.0f) {
     euler.x = -1.570796f;
   }
@@ -240,8 +240,58 @@ DirectX::XMFLOAT3 LerpFloat3(DirectX::XMVECTOR origin,
   return result;
 }
 
+#pragma endregion
+
+#pragma region XMFLOAT COMPARISON OPERATORS
+
+/* COMPARISON */
+
+bool operator==(const DirectX::XMFLOAT2& f, const DirectX::XMFLOAT2& s) {
+  return (f.x == s.x && f.y == s.y);
+}
+
+bool operator==(const DirectX::XMFLOAT3 & f, const DirectX::XMFLOAT3 & s) {
+  return (f.x == s.x && f.y == s.y && f.z == s.z);
+}
+
+bool operator==(const DirectX::XMFLOAT4& f, const DirectX::XMFLOAT4& s) {
+  return (f.x == s.x && f.y == s.y && f.z == s.z && f.w == s.w);
+}
 
 #pragma endregion
+
+#pragma region XMFLOAT ADDITION OPERATORS
+
+/* ADDITION */
+
+DirectX::XMFLOAT2 operator+(const DirectX::XMFLOAT2 & f, const DirectX::XMFLOAT2 & s) {
+  return{ f.x + s.x, f.y + s.y };
+}
+
+DirectX::XMFLOAT3 operator+(const DirectX::XMFLOAT3 & f, const DirectX::XMFLOAT3 & s) {
+  return{ f.x + s.x, f.y + s.y, f.z + s.z };
+}
+
+DirectX::XMFLOAT4 operator+(const DirectX::XMFLOAT4 & f, const DirectX::XMFLOAT4 & s) {
+  return { f.x + s.x, f.y + s.y, f.z + s.z, f.w + s.w };
+}
+
+/* SUBSTRACTION */
+
+DirectX::XMFLOAT2 operator-(const DirectX::XMFLOAT2 & f, const DirectX::XMFLOAT2 & s) {
+  return{ f.x - s.x, f.y - s.y };
+}
+
+DirectX::XMFLOAT3 operator-(const DirectX::XMFLOAT3 & f, const DirectX::XMFLOAT3 & s) {
+  return{ f.x - s.x, f.y - s.y, f.z - s.z };
+}
+
+DirectX::XMFLOAT4 operator-(const DirectX::XMFLOAT4 & f, const DirectX::XMFLOAT4 & s) {
+  return{ f.x - s.x, f.y - s.y, f.z - s.z, f.w - s.w };
+}
+
+#pragma endregion
+
 
 
 }; /* Math */
