@@ -106,7 +106,7 @@ private:
   /// Material used to render the box. 
   MaterialTextured material_;
   /// SkyBox geometry.
-  Geo geometry_;
+  Geometry geometry_;
   /// Texture used as the skybox cube background.
   Texture texture_;;
 

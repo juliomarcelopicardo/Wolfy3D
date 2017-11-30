@@ -180,35 +180,35 @@ private:
   /* Render Properties */
   
   /// Body geometry.
-  Geo geo_body_;
+  Geometry geo_body_;
   /// Left Ankle geometry.
-  Geo geo_left_ankle_;
+  Geometry geo_left_ankle_;
   /// Left Elbow geometry.
-  Geo geo_left_elbow_;
+  Geometry geo_left_elbow_;
   /// Left Hip geometry.
-  Geo geo_left_hip_;
+  Geometry geo_left_hip_;
   /// Left Knee geometry.
-  Geo geo_left_knee_;
+  Geometry geo_left_knee_;
   /// Left Shoulder geometry.
-  Geo geo_left_shoulder_;
+  Geometry geo_left_shoulder_;
   /// Left Wrist geometry.
-  Geo geo_left_wrist_;
+  Geometry geo_left_wrist_;
   /// Right Ankle geometry.
-  Geo geo_right_ankle_;
+  Geometry geo_right_ankle_;
   /// Right Elbow geometry.
-  Geo geo_right_elbow_;
+  Geometry geo_right_elbow_;
   /// Right Hip geometry.
-  Geo geo_right_hip_;
+  Geometry geo_right_hip_;
   /// Right Knee geometry.
-  Geo geo_right_knee_;
+  Geometry geo_right_knee_;
   /// Right Shoulder geometry.
-  Geo geo_right_shoulder_;
+  Geometry geo_right_shoulder_;
   /// Right Wrist geometry.
-  Geo geo_right_wrist_;
+  Geometry geo_right_wrist_;
   /// Neck geometry.
-  Geo geo_neck_;
+  Geometry geo_neck_;
   /// Pelvis geometry.
-  Geo geo_pelvis_presley_;
+  Geometry geo_pelvis_presley_;
 
   /// Material used to render. 
   MaterialDiffuse material_;

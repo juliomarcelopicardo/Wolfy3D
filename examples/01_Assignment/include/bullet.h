@@ -115,7 +115,7 @@ private:
   /// Material used to render the plane. 
   MaterialDiffuse material_;
   /// Bullet geometry.
-  Geo geometry_;
+  Geometry geometry_;
 
 
 

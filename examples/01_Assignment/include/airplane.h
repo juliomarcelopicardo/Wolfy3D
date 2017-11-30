@@ -170,13 +170,13 @@ private:
   /// Material used to render the plane. 
   MaterialDiffuse material_;
     /// Main body of the plane geometry.
-  Geo geo_plane_;
+  Geometry geo_plane_;
   /// Gun geometry.
-  Geo geo_gun_;
+  Geometry geo_gun_;
   /// Prop geometry.
-  Geo geo_prop_;
+  Geometry geo_prop_;
   /// Turret geometry.
-  Geo geo_turret_;
+  Geometry geo_turret_;
  
 
   /* Rotation constraints */

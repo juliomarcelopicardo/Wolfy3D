@@ -106,7 +106,7 @@ private:
   /// Material used to render the plane. 
   MaterialTerrain material_;
   /// Terrain geometry.
-  Geo geo_terrain_;
+  Geometry geo_terrain_;
   /// Texture used as the material map.
   Texture map_;
   /// Texture used as grass.
