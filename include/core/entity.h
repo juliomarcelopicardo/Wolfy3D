@@ -11,6 +11,7 @@
 #include "core/components/transform.h"
 #include "core/components/render.h"
 #include "Wolfy3D/material.h"
+#include "Wolfy3D/geometry.h"
 #include "core/geo.h"
 #include <vector>
 
@@ -45,7 +46,7 @@ class Entity {
   /// @param mat material to be assigned in case ComponentType is Render3D
   /// @param geo geometry to be assigned in case ComponentType is Render3D
   ///--------------------------------------------------------------------------
-  void addComponent(ComponentType component, Material* mat, Geo* geo);
+  void addComponent(ComponentType component, Material* mat, Geometry* geo);
 
   ///--------------------------------------------------------------------------
   /// @fn     void addChild(Entity* entity);

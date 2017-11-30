@@ -18,6 +18,7 @@
 #include "core/geo.h"
 #include "core/texture.h"
 #include "core/input.h"
+#include "Wolfy3D/geometry.h"
 
 
 namespace W3D {
@@ -101,7 +102,7 @@ class Core {
   /// Default texture to be assigned to uninitialized 3DComponents.
   Texture error_texture_;
   /// Default geometry to be assigned to uninitialized 3DComponents.
-  Geo error_geometry_;
+  Geometry error_geometry_;
   /// Super material used to render all the objects.
   SuperMaterial super_material_;
   /// Geometry factory list, where we will allocate all the geometries used.

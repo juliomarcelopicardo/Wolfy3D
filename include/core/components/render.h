@@ -10,6 +10,8 @@
 
 #include <DirectXMath.h>
 #include "Wolfy3D/material.h"
+#include "Wolfy3D/geometry.h"
+#include "core/components/transform.h"
 
 namespace W3D {
 
@@ -38,7 +40,7 @@ public:
   /// @param  mat Material to assign to this component.
   /// @param  geo CoreGeometry to assign to this component.
   ///--------------------------------------------------------------------------
-  void init(class Material* mat, class Geo* geo);
+  void init(Material* mat, Geometry* geo);
 
   ///--------------------------------------------------------------------------
   /// @fn   void render(TransformComponent* transform);
@@ -46,7 +48,7 @@ public:
   /// @brief  renders this component using the specified transform.
   /// @param  transform TransformComponent use to obtain matrices for rendering.
   ///--------------------------------------------------------------------------
-  void render(class TransformComponent* transform);
+  void render(TransformComponent* transform);
 
 /*******************************************************************************
 ***                           Private                                        ***
@@ -73,9 +75,9 @@ private:
   /// Whether this component have been initialized or not
   bool initialized_;
   /// Material of the component.
-  class Material* material_;
+  Material* material_;
   /// Geometry of the component.
-  class Geo* geometry_;
+  Geometry* geometry_;
 
 
 }; /* RenderComponent */

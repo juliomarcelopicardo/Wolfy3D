@@ -46,7 +46,7 @@ namespace W3D {
   ***                               Public methods                             ***
   *******************************************************************************/
 
-  void Entity::addComponent(ComponentType component, Material *mat, Geo *geo) {
+  void Entity::addComponent(ComponentType component, Material *mat, Geometry *geo) {
     switch (component) {
       case W3D::kComponentType_Render: {
         if (!render3D_) {
