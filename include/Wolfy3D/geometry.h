@@ -32,20 +32,31 @@ class Geometry {
   /// operator of assignment.
   Geometry& operator=(const Geometry& copy);
 
+/*******************************************************************************
+***                           Setters & Getters                              ***
+*******************************************************************************/
+
+  ///--------------------------------------------------------------------------
+  /// @fn   GeometryID id();
+  ///
+  /// @brief  Geometry id getter.
+  /// @returns  Geometry id.
+  ///--------------------------------------------------------------------------
+  GeometryID id();
 
 /*******************************************************************************
 ***                              Initializers                                ***
 *******************************************************************************/
 
 
-///--------------------------------------------------------------------------
-/// @fn   void initCube(const DirectX::XMFLOAT3 size = { 1.0f, 1.0f, 1.0f },
-///                     const DirectX::XMFLOAT4 color = { 1.0f, 1.0f, 1.0f, 1.0f });
-///
-/// @brief  Initializes the Geometry.
-/// @param  size Size of the cube.
-/// @param  color Color of the geometr
-///--------------------------------------------------------------------------
+  ///--------------------------------------------------------------------------
+  /// @fn   void initCube(const DirectX::XMFLOAT3 size = { 1.0f, 1.0f, 1.0f },
+  ///                     const DirectX::XMFLOAT4 color = { 1.0f, 1.0f, 1.0f, 1.0f });
+  ///
+  /// @brief  Initializes the Geometry.
+  /// @param  size Size of the cube.
+  /// @param  color Color of the geometr
+  ///--------------------------------------------------------------------------
   void initCube(const DirectX::XMFLOAT3 size = { 1.0f, 1.0f, 1.0f },
                 const DirectX::XMFLOAT4 color = { 1.0f, 1.0f, 1.0f, 1.0f });
 
@@ -138,32 +149,24 @@ class Geometry {
   /// @param  filename Filename with the info of the geometry.
   /// @param  color Color of the geometry.
   ///--------------------------------------------------------------------------
-  void initFromFile(const char* filename, const DirectX::XMFLOAT4 color = { 1.0f, 1.0f, 1.0f, 1.0f });
+  void initFromFile(const char* filename, 
+                    const DirectX::XMFLOAT4 color = { 1.0f, 1.0f, 1.0f, 1.0f });
 
   
 
-/*******************************************************************************
-***                           Private Attributes                             ***
-*******************************************************************************/
-
-
-  /// Core Geo class id.
-  GeometryID id;
 
 /*******************************************************************************
 ***                           Private Attributes                             ***
 *******************************************************************************/
 
 private:
-  /// Will look if this geometry already is in the factory, in which case will set the id.
-  bool checkGeometryFactory();
+
+
+  /// Core Geo class id.
+  GeometryID id_;
+
 
 }; /* Geometry */
-
-
-
-
-
 
 }; /* W3D */
 
