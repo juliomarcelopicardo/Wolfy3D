@@ -8,9 +8,6 @@
 #include "core/geo.h"
 #include "Wolfy3D/geometry.h"
 #include "core/core.h"
-#include <list>
-#include <chrono>
-#include <thread>
 
 namespace W3D {
 
@@ -39,12 +36,12 @@ Geometry& Geometry::operator=(const Geometry& copy) {
 *******************************************************************************/
 
 ///--------------------------------------------------------------------------
-/// @fn   GeometryID id();
+/// @fn   ID id();
 ///
 /// @brief  Geometry id getter.
 /// @returns  Geometry id.
 ///--------------------------------------------------------------------------
-GeometryID Geometry::id() {
+ID Geometry::id() {
   return id_;
 }
 
@@ -68,11 +65,17 @@ void Geometry::initCube(const DirectX::XMFLOAT3 size, const DirectX::XMFLOAT4 co
   }
 
   /* If it doesnt exist in the factory, we will generate a new geometry. */
-  Geo* geo = new Geo();
-  geo->initCube(size, color);
-  factory.push_back(geo);
-  id_ = length;
-  geo = nullptr;
+  Geo* geometry = new Geo();
+  if (geometry->initCube(size, color)) {
+    factory.push_back(geometry);
+    id_ = length;
+  }
+  // If the geometry doesnt create properly, we will delete it and take the error one.
+  else {
+    delete geometry;
+    id_ = Core::instance().error_geometry_.id();
+  }
+  geometry = nullptr;
 }
 
 void Geometry::initSkyBoxCube(const DirectX::XMFLOAT3 size, const DirectX::XMFLOAT4 color) {
@@ -93,14 +96,22 @@ void Geometry::initSkyBoxCube(const DirectX::XMFLOAT3 size, const DirectX::XMFLO
   }
 
   /* If it doesnt exist in the factory, we will generate a new geometry. */
-  Geo* geo = new Geo();
-  geo->initSkyBoxCube(size, color);
-  factory.push_back(geo);
-  id_ = length;
-  geo = nullptr;
+  Geo* geometry = new Geo();
+  if (geometry->initSkyBoxCube(size, color)) {
+    factory.push_back(geometry);
+    id_ = length;
+  }
+  // If the geometry doesnt create properly, we will delete it and take the error one.
+  else {
+    delete geometry;
+    id_ = Core::instance().error_geometry_.id();
+  }
+  geometry = nullptr;
 }
 
-void Geometry::initTerrain(const char * height_map_filename, const DirectX::XMFLOAT3 grid_size, const DirectX::XMFLOAT4 color) {
+void Geometry::initTerrain(const char* height_map_filename,  
+                           const DirectX::XMFLOAT3 grid_size, 
+                           const DirectX::XMFLOAT4 color) {
 
   auto& factory = Core::instance().geometry_factory_;
 
@@ -120,11 +131,17 @@ void Geometry::initTerrain(const char * height_map_filename, const DirectX::XMFL
   }
 
   /* If it doesnt exist in the factory, we will generate a new geometry. */
-  Geo* geo = new Geo();
-  geo->initTerrain(height_map_filename, grid_size, color);
-  factory.push_back(geo);
-  id_ = length;
-  geo = nullptr;
+  Geo* geometry = new Geo();
+  if (geometry->initTerrain(height_map_filename, grid_size, color)) {
+    factory.push_back(geometry);
+    id_ = length;
+  }
+  // If the geometry doesnt create properly, we will delete it and take the error one.
+  else {
+    delete geometry;
+    id_ = Core::instance().error_geometry_.id();
+  }
+  geometry = nullptr;
 }
 
 void Geometry::initQuad(const DirectX::XMFLOAT2 size, const DirectX::XMFLOAT4 color) {
@@ -144,11 +161,17 @@ void Geometry::initQuad(const DirectX::XMFLOAT2 size, const DirectX::XMFLOAT4 co
   }
 
   /* If it doesnt exist in the factory, we will generate a new geometry. */
-  Geo* geo = new Geo();
-  geo->initQuad(size, color);
-  factory.push_back(geo);
-  id_ = length;
-  geo = nullptr;
+  Geo* geometry = new Geo();
+  if (geometry->initQuad(size, color)) {
+    factory.push_back(geometry);
+    id_ = length;
+  }
+  // If the geometry doesnt create properly, we will delete it and take the error one.
+  else {
+    delete geometry;
+    id_ = Core::instance().error_geometry_.id();
+  }
+  geometry = nullptr;
 }
 
 void Geometry::initTriangle(const DirectX::XMFLOAT2 size, const DirectX::XMFLOAT4 color) {
@@ -168,11 +191,17 @@ void Geometry::initTriangle(const DirectX::XMFLOAT2 size, const DirectX::XMFLOAT
   }
 
   /* If it doesnt exist in the factory, we will generate a new geometry. */
-  Geo* geo = new Geo();
-  geo->initTriangle(size, color);
-  factory.push_back(geo);
-  id_ = length;
-  geo = nullptr;
+  Geo* geometry = new Geo();
+  if (geometry->initTriangle(size, color)) {
+    factory.push_back(geometry);
+    id_ = length;
+  }
+  // If the geometry doesnt create properly, we will delete it and take the error one.
+  else {
+    delete geometry;
+    id_ = Core::instance().error_geometry_.id();
+  }
+  geometry = nullptr;
 }
 
 void Geometry::initExtruded(const uint32 num_polygon_vertex, 
@@ -197,12 +226,19 @@ void Geometry::initExtruded(const uint32 num_polygon_vertex,
     }
   }
 
+
   /* If it doesnt exist in the factory, we will generate a new geometry. */
-  Geo* geo = new Geo();
-  geo->initExtruded(num_polygon_vertex, base_radius, top_radius, height, color);
-  factory.push_back(geo);
-  id_ = length;
-  geo = nullptr;
+  Geo* geometry = new Geo();
+  if (geometry->initExtruded(num_polygon_vertex, base_radius, top_radius, height, color)) {
+    factory.push_back(geometry);
+    id_ = length;
+  }
+  // If the geometry doesnt create properly, we will delete it and take the error one.
+  else {
+    delete geometry;
+    id_ = Core::instance().error_geometry_.id();
+  }
+  geometry = nullptr;
 }
 
 void Geometry::initPyramid(const uint32 num_base_vertex, 
@@ -226,11 +262,17 @@ void Geometry::initPyramid(const uint32 num_base_vertex,
   }
 
   /* If it doesnt exist in the factory, we will generate a new geometry. */
-  Geo* geo = new Geo();
-  geo->initPyramid(num_base_vertex, base_radius, height, color);
-  factory.push_back(geo);
-  id_ = length;
-  geo = nullptr;
+  Geo* geometry = new Geo();
+  if (geometry->initPyramid(num_base_vertex, base_radius, height, color)) {
+    factory.push_back(geometry);
+    id_ = length;
+  }
+  // If the geometry doesnt create properly, we will delete it and take the error one.
+  else {
+    delete geometry;
+    id_ = Core::instance().error_geometry_.id();
+  }
+  geometry = nullptr;
 }
 
 void Geometry::initFromFile(const char* filename, const DirectX::XMFLOAT4 color) {
@@ -250,11 +292,17 @@ void Geometry::initFromFile(const char* filename, const DirectX::XMFLOAT4 color)
   }
 
   /* If it doesnt exist in the factory, we will generate a new geometry. */
-  Geo* geo = new Geo();
-  geo->initFromFile(filename, color);
-  factory.push_back(geo);
-  id_ = length;
-  geo = nullptr;
+  Geo* geometry = new Geo();
+  if (geometry->initFromFile(filename, color)) {
+    factory.push_back(geometry);
+    id_ = length;
+  }
+  // If the geometry doesnt create properly, we will delete it and take the error one.
+  else {
+    delete geometry;
+    id_ = Core::instance().error_geometry_.id();
+  }
+  geometry = nullptr;
 }
 
 /*******************************************************************************

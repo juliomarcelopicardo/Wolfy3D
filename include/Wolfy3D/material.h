@@ -9,7 +9,7 @@
 #define __WOLFY3D_MATERIAL_H__ 1
 
 #include "Wolfy3D/globals.h"
-#include "core/texture.h"
+#include "Wolfy3D/texture2D.h"
 #include <DirectXMath.h>
 
 namespace W3D {
@@ -47,12 +47,11 @@ public:
   ~MaterialTextured();
 
   void setupSuperMaterial() override;
-  void set_texture(class Texture* texture);
+  void set_texture(Texture2D* texture);
 
 private:
 
-  // Se borrara cuando se cree la capa de usuario para texturas.
-  class Texture* texture_;
+  Texture2D* texture_;
 
 
   MaterialTextured(const MaterialTextured& copy);
@@ -112,10 +111,10 @@ public:
 
   void setupSuperMaterial() override;
 
-  Texture* texture_materialmap_;
-  Texture* texture_grass_;
-  Texture* texture_moss_;
-  Texture* texture_asphalt_;
+  Texture2D* texture_materialmap_;
+  Texture2D* texture_grass_;
+  Texture2D* texture_moss_;
+  Texture2D* texture_asphalt_;
 
 private:
 

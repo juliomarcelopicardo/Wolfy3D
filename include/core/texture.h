@@ -10,6 +10,7 @@
 
 #include "Wolfy3D.h"
 #include "D3DX11.h"
+#include <string>
 
 namespace W3D {
 
@@ -32,12 +33,12 @@ class Texture {
 *******************************************************************************/
 
   ///--------------------------------------------------------------------------
-  /// @fn   bool load(const char* texture_path);
+  /// @fn   bool initFromFile(const char* texture_path);
   ///
   /// @brief  Loads a texture froma a file.
   /// @return true if successfully initialized, false otherwise.
   ///--------------------------------------------------------------------------
-  bool load(const char* texture_path);
+  bool initFromFile(const char* texture_path);
 
   ///--------------------------------------------------------------------------
   /// @fn   use(const uint32 texture_slot);
@@ -55,6 +56,8 @@ class Texture {
   ID3D11ShaderResourceView* texture_handle_;
   /// Texture sampler.
   ID3D11SamplerState* sampler_state_;
+  /// Name, file path.
+  std::string name_;
 
 /*******************************************************************************
 ***                           Private                                        ***

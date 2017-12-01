@@ -108,7 +108,7 @@ private:
   /// SkyBox geometry.
   Geometry geometry_;
   /// Texture used as the skybox cube background.
-  Texture texture_;;
+  Texture2D texture_;
 
 
 }; /* SkyBox */

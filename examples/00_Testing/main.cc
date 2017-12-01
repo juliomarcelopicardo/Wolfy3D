@@ -97,7 +97,7 @@ int32 main() {
   cube1.addChild(&cube3);
   while (Window::StartFrame(1.0f) && Window::IsOpened() &&
         !Input::IsKeyboardButtonDown(Input::kKeyboardButton_Escape)) {
-    static float32 last_time_updated = (float32)std::timeGetTime();
+    static float32 last_time_updated = Time();
     float32 tick = Time();
     float32 delta = tick - last_time_updated;
 

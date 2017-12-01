@@ -21,6 +21,7 @@ namespace W3D {
 Texture::Texture() {
   texture_handle_ = nullptr;
   sampler_state_ = nullptr;
+  name_ = "";
 }
 
 Texture::~Texture() {
@@ -38,7 +39,7 @@ Texture::~Texture() {
 ***                               Public methods                             ***
 *******************************************************************************/
 
-bool Texture::load(const char* texture_path) {
+bool Texture::initFromFile(const char* texture_path) {
 
   HRESULT result;
 
@@ -49,10 +50,12 @@ bool Texture::load(const char* texture_path) {
                                                   &texture_handle_, 
                                                   NULL);
 
+  auto& core = Core::instance();
   if (FAILED(result)) {
     MessageBox(NULL, "Error loading texture", "ERROR", MB_OK);
-    sampler_state_ = Core::instance().error_texture_.sampler_state_;
-    texture_handle_ = Core::instance().error_texture_.texture_handle_;
+    uint32 id = core.error_texture_.id();
+    sampler_state_ = core.texture_factory_[id]->sampler_state_;
+    texture_handle_ = core.texture_factory_[id]->texture_handle_;
     return false;
   }
 
@@ -72,13 +75,17 @@ bool Texture::load(const char* texture_path) {
   sampler_description.MaxLOD = D3D11_FLOAT32_MAX;
 
   // Create the texture sampler state.
-  result = Core::instance().d3d_.device()->CreateSamplerState(&sampler_description, &sampler_state_);
+  result = core.d3d_.device()->CreateSamplerState(&sampler_description, &sampler_state_);
   
   if (FAILED(result)) {
     MessageBox(NULL, "Error sampling texture", "ERROR", MB_OK);
+    uint32 id = core.error_texture_.id();
+    sampler_state_ = core.texture_factory_[id]->sampler_state_;
+    texture_handle_ = core.texture_factory_[id]->texture_handle_;
     return false;
   }
 
+  name_ = texture_path;
   return true;
 }
 

@@ -47,10 +47,10 @@ void Terrain::initGeometries() {
 }
 
 void Terrain::initTextures() {
-  map_.load("../data/textures/terrain/materialmap.dds");
-  grass_.load("../data/textures/terrain/grass.dds");
-  moss_.load("../data/textures/terrain/moss.dds");
-  asphalt_.load("../data/textures/terrain/asphalt.dds");
+  map_.initFromFile("../data/textures/terrain/materialmap.dds");
+  grass_.initFromFile("../data/textures/terrain/grass.dds");
+  moss_.initFromFile("../data/textures/terrain/moss.dds");
+  asphalt_.initFromFile("../data/textures/terrain/asphalt.dds");
 }
 
 void Terrain::initTransforms() {

@@ -100,13 +100,15 @@ class Core {
   /// Application input module.
   CoreInput input_;
   /// Default texture to be assigned to uninitialized 3DComponents.
-  Texture error_texture_;
+  Texture2D error_texture_;
   /// Default geometry to be assigned to uninitialized 3DComponents.
   Geometry error_geometry_;
   /// Super material used to render all the objects.
   SuperMaterial super_material_;
   /// Geometry factory list, where we will allocate all the geometries used.
   std::vector<Geo*> geometry_factory_;
+  /// Texture factory list, where we will allocate all the textures used.
+  std::vector<Texture*> texture_factory_;
 
 /*******************************************************************************
 ***                         Private Copy Constructor                         ***

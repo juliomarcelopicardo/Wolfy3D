@@ -108,13 +108,13 @@ private:
   /// Terrain geometry.
   Geometry geo_terrain_;
   /// Texture used as the material map.
-  Texture map_;
+  Texture2D map_;
   /// Texture used as grass.
-  Texture grass_;
+  Texture2D grass_;
   /// Texture moss.
-  Texture moss_;
+  Texture2D moss_;
   /// Texture used to render asphalt.
-  Texture asphalt_;
+  Texture2D asphalt_;
 
 
 }; /* Terrain */

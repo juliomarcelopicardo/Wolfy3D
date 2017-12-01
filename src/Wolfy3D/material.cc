@@ -44,22 +44,23 @@ MaterialTextured::~MaterialTextured() {
 }
 
 void MaterialTextured::setupSuperMaterial() {
-  auto& super_mat = Core::instance().super_material_;
+  auto& core = Core::instance();
+  auto& super_mat = core.super_material_;
 
   super_mat.settings_.type = MaterialType::kMaterialType_OneTexture;
   super_mat.settings_.num_textures = 1;
   super_mat.settings_.albedo_color = { 1.0f, 1.0f, 1.0f, 1.0f };
   super_mat.settings_.is_light_sensitive = is_light_sensitive_;
   
-  if (texture_ && texture_->texture_handle_) {
-    texture_->use();
+  if (texture_) {
+    core.texture_factory_[texture_->id()]->use();
   }
   else {
-    Core::instance().error_texture_.use();
+    core.texture_factory_[core.error_texture_.id()]->use();
   }
 }
 
-void MaterialTextured::set_texture(Texture* texture) {
+void MaterialTextured::set_texture(Texture2D* texture) {
   if (texture) {
     texture_ = texture;
   }
@@ -122,17 +123,18 @@ MaterialTerrain::MaterialTerrain() : Material() {}
 MaterialTerrain::~MaterialTerrain() {}
 
 void MaterialTerrain::setupSuperMaterial() {
-  auto& super_mat = Core::instance().super_material_;
+  auto& core = Core::instance();
+  auto& super_mat = core.super_material_;
 
   super_mat.settings_.type = MaterialType::kMaterialType_Terrain;
   super_mat.settings_.num_textures = 4;
   super_mat.settings_.albedo_color = { 1.0f, 1.0f, 1.0f, 1.0f };
   super_mat.settings_.is_light_sensitive = is_light_sensitive_;
 
-  texture_materialmap_->use(1, false);
-  texture_grass_->use(2);
-  texture_moss_->use(3);
-  texture_asphalt_->use(4);
+  core.texture_factory_[texture_materialmap_->id()]->use(1, false);
+  core.texture_factory_[texture_grass_->id()]->use(2);
+  core.texture_factory_[texture_moss_->id()]->use(3);
+  core.texture_factory_[texture_asphalt_->id()]->use(4);
 }
 
 

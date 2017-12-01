@@ -47,7 +47,7 @@ void SkyBox::initGeometries() {
 }
 
 void SkyBox::initTextures() {
-  texture_.load("../data/textures/skybox.jpg");
+  texture_.initFromFile("../data/textures/skybox.jpg");
 }
 
 void SkyBox::initTransforms() {
