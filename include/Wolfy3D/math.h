@@ -120,7 +120,7 @@ DirectX::XMFLOAT4 QuaternionLerpFloat4(DirectX::XMVECTOR origin, DirectX::XMVECT
 ///--------------------------------------------------------------------------
 /// @fn   DirectX::XMVECTOR LerpVector(DirectX::XMFLOAT4 origin, DirectX::XMFLOAT4 destiny, float32 alpha);
 ///
-/// @brief  interpolation (simple lerp).
+/// @brief Interpolation (simple lerp).
 /// @param origin Origin of the interpolation.
 /// @param destiny Destiny of the interpolation.
 /// @param alpha Values between 0.0f and 1.0f where 0 is origin and 1 is destiny.
@@ -131,7 +131,7 @@ DirectX::XMVECTOR LerpVector(DirectX::XMFLOAT4 origin, DirectX::XMFLOAT4 destiny
 ///--------------------------------------------------------------------------
 /// @fn   DirectX::XMVECTOR LerpVector(DirectX::XMVECTOR origin, DirectX::XMVECTOR destiny, float32 alpha);
 ///
-/// @brief  interpolation (simple lerp).
+/// @brief Interpolation (simple lerp).
 /// @param origin Origin of the interpolation.
 /// @param destiny Destiny of the interpolation.
 /// @param alpha Values between 0.0f and 1.0f where 0 is origin and 1 is destiny.
@@ -142,7 +142,7 @@ DirectX::XMVECTOR LerpVector(DirectX::XMVECTOR origin, DirectX::XMVECTOR destiny
 ///--------------------------------------------------------------------------
 /// @fn   DirectX::XMFLOAT4 LerpFloat4(DirectX::XMFLOAT4 origin, DirectX::XMFLOAT4 destiny, float32 alpha);
 ///
-/// @brief  interpolation (simple lerp).
+/// @brief Interpolation (simple lerp).
 /// @param origin Origin of the interpolation.
 /// @param destiny Destiny of the interpolation.
 /// @param alpha Values between 0.0f and 1.0f where 0 is origin and 1 is destiny.
@@ -153,7 +153,7 @@ DirectX::XMFLOAT4 LerpFloat4(DirectX::XMFLOAT4 origin, DirectX::XMFLOAT4 destiny
 ///--------------------------------------------------------------------------
 /// @fn   DirectX::XMFLOAT4 LerpFloat4(DirectX::XMVECTOR origin, DirectX::XMVECTOR destiny, float32 alpha);
 ///
-/// @brief  interpolation (simple lerp).
+/// @brief Interpolation (simple lerp).
 /// @param origin Origin of the interpolation.
 /// @param destiny Destiny of the interpolation.
 /// @param alpha Values between 0.0f and 1.0f where 0 is origin and 1 is destiny.
@@ -164,7 +164,7 @@ DirectX::XMFLOAT4 LerpFloat4(DirectX::XMVECTOR origin, DirectX::XMVECTOR destiny
 ///--------------------------------------------------------------------------
 /// @fn   DirectX::XMFLOAT3 LerpFloat3(DirectX::XMFLOAT3 origin, DirectX::XMFLOAT3 destiny, float32 alpha);
 ///
-/// @brief  interpolation (simple lerp).
+/// @brief Interpolation (simple lerp).
 /// @param origin Origin of the interpolation.
 /// @param destiny Destiny of the interpolation.
 /// @param alpha Values between 0.0f and 1.0f where 0 is origin and 1 is destiny.
@@ -175,7 +175,7 @@ DirectX::XMFLOAT3 LerpFloat3(DirectX::XMFLOAT3 origin, DirectX::XMFLOAT3 destiny
 ///--------------------------------------------------------------------------
 /// @fn   DirectX::XMFLOAT3 LerpFloat3(DirectX::XMVECTOR origin, DirectX::XMVECTOR destiny, float32 alpha);
 ///
-/// @brief  interpolation (simple lerp).
+/// @brief Interpolation (simple lerp).
 /// @param origin Origin of the interpolation.
 /// @param destiny Destiny of the interpolation.
 /// @param alpha Values between 0.0f and 1.0f where 0 is origin and 1 is destiny.
@@ -293,6 +293,16 @@ DirectX::XMFLOAT4 operator-(const DirectX::XMFLOAT4& first, const DirectX::XMFLO
 
 
 }; /* Math */
+   ///--------------------------------------------------------------------------
+   /// @fn   bool operator== (const DirectX::XMVECTOR &c1, const DirectX::XMVECTOR &c2);
+   ///
+   /// @brief Comparison operator overloaded.
+   /// @param v1 first vector to compare.
+   /// @param v1 second vector to compare.
+   /// @return result of the comparison.
+   ///--------------------------------------------------------------------------
+bool operator== (const DirectX::XMVECTOR &v1, const DirectX::XMVECTOR &v2);
+
 }; /* W3D */
 
 #endif

@@ -23,6 +23,15 @@
 #include "core/cam.h"
 #include "tinyxml2\tinyxml2.h"
 
+
+#include <windows.h>
+#include <windowsx.h>
+#include <mmsystem.h>
+#include <iostream>
+#include <string>
+#include <ctime>
+#include <cstdlib>
+
 namespace W3D {
   
 void ImGuiGenerateNodeStats(Entity* entity) {
@@ -88,9 +97,9 @@ int32 main() {
   cube1.addChild(&cube3);
   while (Window::StartFrame(1.0f) && Window::IsOpened() &&
         !Input::IsKeyboardButtonDown(Input::kKeyboardButton_Escape)) {
-    static uint64 last_time_updated = Time();
-    uint64 tick = Time();
-    uint64 delta = tick - last_time_updated;
+    static float32 last_time_updated = (float32)std::timeGetTime();
+    float32 tick = Time();
+    float32 delta = tick - last_time_updated;
 
 
     if (Input::IsKeyboardButtonDown(Input::kKeyboardButton_SpaceBar)) {
@@ -100,6 +109,8 @@ int32 main() {
    
     Core::instance().cam_.render(&cube1);
 
+    float32 a= delta * 0.001f;
+    ImGui::Text("%.4f", a);
     ImGui::Text("Wolfy3D speed: %.3f ms/frame (%.1f FPS)",
       1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
     Window::EndFrame();
