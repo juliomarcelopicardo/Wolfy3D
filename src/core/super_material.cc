@@ -25,7 +25,7 @@ SuperMaterial::~SuperMaterial() {
   if (vertex_shader_) { vertex_shader_->Release(); }
   if (pixel_shader_) { pixel_shader_->Release(); }
   if (input_layout_) { input_layout_->Release(); }
-  if (matrix_buffer_) { matrix_buffer_->Release(); }
+  if (buffer_) { buffer_->Release(); }
 }
 
 /*******************************************************************************
@@ -119,7 +119,7 @@ bool SuperMaterial::createMatrixBuffer() {
 
   auto* device = Core::instance().d3d_.device();
 
-  if (FAILED(device->CreateBuffer(&matrix_description, NULL, &matrix_buffer_))) {
+  if (FAILED(device->CreateBuffer(&matrix_description, NULL, &buffer_))) {
     MessageBox(NULL, "ERROR - Matrix buffer not created", "ERROR", MB_OK);
     return false;
   }

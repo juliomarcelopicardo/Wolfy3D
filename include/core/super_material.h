@@ -74,8 +74,8 @@ class SuperMaterial {
   ID3D11PixelShader* pixel_shader_;
   /// Input Layout
   ID3D11InputLayout* input_layout_;
-  /// Matrices buffer
-  ID3D11Buffer* matrix_buffer_;
+  /// Buffer where will be allocate all the data which will be sent to the shader.
+  ID3D11Buffer* buffer_;
 
   MaterialSettings settings_;
 

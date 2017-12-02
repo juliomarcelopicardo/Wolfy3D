@@ -68,9 +68,9 @@ void RenderComponent::setupDeviceContext() {
 
   D3D11_MAPPED_SUBRESOURCE shader_constant_buffer;
   ZeroMemory(&shader_constant_buffer, sizeof(D3D11_MAPPED_SUBRESOURCE));
-  device_context->Map(super_mat.matrix_buffer_, 0, D3D11_MAP_WRITE_DISCARD, 0, &shader_constant_buffer);
+  device_context->Map(super_mat.buffer_, 0, D3D11_MAP_WRITE_DISCARD, 0, &shader_constant_buffer);
   memcpy(shader_constant_buffer.pData, &super_mat.settings_, sizeof(MaterialSettings));
-  device_context->Unmap(super_mat.matrix_buffer_, 0);
+  device_context->Unmap(super_mat.buffer_, 0);
 
   uint32 stride = sizeof(Geo::VertexData);
   uint32 offset = 0;
@@ -80,8 +80,8 @@ void RenderComponent::setupDeviceContext() {
   device_context->IASetPrimitiveTopology(geometry->topology_);
   device_context->VSSetShader(super_mat.vertex_shader_, 0, 0);
   device_context->PSSetShader(super_mat.pixel_shader_, 0, 0);
-  device_context->VSSetConstantBuffers(0, 1, &super_mat.matrix_buffer_);
-  device_context->PSSetConstantBuffers(0, 1, &super_mat.matrix_buffer_);
+  device_context->VSSetConstantBuffers(0, 1, &super_mat.buffer_);
+  device_context->PSSetConstantBuffers(0, 1, &super_mat.buffer_);
   device_context->IASetInputLayout(super_mat.input_layout_);
   device_context->DrawIndexed(geometry->vertex_index_.size(), 0, 0);
 }
