@@ -80,6 +80,13 @@ class CoreInput {
   void refreshButtonsUp();
 
   ///--------------------------------------------------------------------------
+  /// @fn   refreshButtonsDown();
+  ///
+  /// @brief  Refresh all the buttons down setting their Down state to false.
+  ///--------------------------------------------------------------------------
+  void refreshButtonsDown();
+
+  ///--------------------------------------------------------------------------
   /// @fn   checkCursorPosition();
   ///
   /// @brief  Checks if the cursor is out of the window.
