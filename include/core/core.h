@@ -18,6 +18,7 @@
 #include "core/geo.h"
 #include "core/texture.h"
 #include "core/input.h"
+#include "core/super_sprite.h"
 #include "Wolfy3D/geometry.h"
 
 
@@ -103,6 +104,10 @@ class Core {
   Texture2D error_texture_;
   /// Default geometry to be assigned to uninitialized 3DComponents.
   Geometry error_geometry_;
+  /// Default quad geometry to be used with the sprites.
+  Geometry base_quad_geometry_;
+  /// Super sprite used to render all the sprites.
+  SuperSprite super_sprite_;
   /// Super material used to render all the objects.
   SuperMaterial super_material_;
   /// Geometry factory list, where we will allocate all the geometries used.

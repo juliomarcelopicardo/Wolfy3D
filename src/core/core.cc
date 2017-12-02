@@ -95,8 +95,10 @@ Core::~Core() {}
 
 void Core::init() {
   error_geometry_.initCube();
+  base_quad_geometry_.initQuad();
   error_texture_.initFromFile("../data/textures/error_texture.jpg");
   super_material_.init();
+  super_sprite_.init();
 }
 
 };/* W3D */
