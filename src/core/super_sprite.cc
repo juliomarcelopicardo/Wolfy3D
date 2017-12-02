@@ -103,6 +103,7 @@ void SuperSprite::render(Sprite* sprite) {
   uint32 offset = 0;
 
   // Setup the render.
+  device_context->OMSetBlendState(core.d3d_.blendState(), 0, 0xffffffff);
   device_context->IASetVertexBuffers(0, 1, &geometry->vertex_buffer_, &stride, &offset);
   device_context->IASetIndexBuffer(geometry->vertex_index_buffer_, DXGI_FORMAT_R32_UINT, 0);
   device_context->IASetPrimitiveTopology(geometry->topology_);

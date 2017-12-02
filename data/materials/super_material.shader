@@ -135,7 +135,9 @@ float4 CalculateLightDiffuseColor(float4 normal) {
   light.color = float4(1.0f, 1.0f, 1.0f, 1.0f);
   light.intensity = 0.9f;
   float diffuse = max(dot(normalize(normal), light.dir), 0.0);
-  return diffuse * light.color * light.intensity;
+  float4 result = diffuse * light.color * light.intensity;
+  result.w = 1.0f; // as diffuse * light_color will modify the alpha.
+  return result;
 }
 
 /******************************************************************************/
@@ -150,7 +152,7 @@ float4 PixelShaderFunction(PixelInfo pixel_info) : SV_TARGET {
 
   switch (type) {
 
-    case DIFFUSE:{}break;
+    case DIFFUSE: {}break;
   
     case ONE_TEXTURE: {
       color *= texture_.Sample(sampler_type, pixel_info.TexCoord);
@@ -171,9 +173,16 @@ float4 PixelShaderFunction(PixelInfo pixel_info) : SV_TARGET {
       moss_color *= matmap_color.r;
       asphalt_color *= matmap_color.b;
       
+      
       color *= (grass_color + moss_color + asphalt_color);
+      color.w = 1.0f;
     }break;
   }
 
   return color;
+  /*
+  float4 colorrrr = albedo_color;
+  color.w = 0.1f;
+  return colorrrr;
+  */
 }

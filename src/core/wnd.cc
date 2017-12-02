@@ -49,12 +49,15 @@ void Wnd::init(const int32 width, const int32 height, const char* name) {
 }
 
 bool Wnd::startFrame(const float32 delta_seconds) {
-  Core::instance().input_.refreshButtonsUp();
+  auto& core = Core::instance();
+  core.input_.refreshButtonsDown();
+  core.input_.refreshButtonsUp();
+  
   if (!updateMessages()) {
     return false;
   }
-  Core::instance().cam_.update(delta_seconds);
-  Core::instance().d3d_.startRenderFrame();
+  core.cam_.update(delta_seconds);
+  core.d3d_.startRenderFrame(0.4f, 0.5f, 1.0f, 1.0f);
   return true;
 }
 

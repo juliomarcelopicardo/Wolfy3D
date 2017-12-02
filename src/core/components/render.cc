@@ -62,9 +62,10 @@ void RenderComponent::render(TransformComponent* transform) {
 *******************************************************************************/
 
 void RenderComponent::setupDeviceContext() {
-  auto* device_context = Core::instance().d3d_.deviceContext();
-  auto& super_mat = Core::instance().super_material_;
-  Geo* geometry = Core::instance().geometry_factory_[geometry_->id()];
+  auto& core = Core::instance();
+  auto* device_context = core.d3d_.deviceContext();
+  auto& super_mat = core.super_material_;
+  Geo* geometry = core.geometry_factory_[geometry_->id()];
 
   D3D11_MAPPED_SUBRESOURCE shader_constant_buffer;
   ZeroMemory(&shader_constant_buffer, sizeof(D3D11_MAPPED_SUBRESOURCE));
@@ -75,6 +76,7 @@ void RenderComponent::setupDeviceContext() {
   uint32 stride = sizeof(Geo::VertexData);
   uint32 offset = 0;
 
+  device_context->OMSetBlendState(core.d3d_.blendState(), 0, 0xffffffff);
   device_context->IASetVertexBuffers(0, 1, &geometry->vertex_buffer_, &stride, &offset);
   device_context->IASetIndexBuffer(geometry->vertex_index_buffer_, DXGI_FORMAT_R32_UINT, 0);
   device_context->IASetPrimitiveTopology(geometry->topology_);

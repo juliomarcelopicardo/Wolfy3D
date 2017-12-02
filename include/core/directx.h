@@ -104,6 +104,14 @@ class DirectXFramework {
   ///--------------------------------------------------------------------------
   ID3D11DeviceContext* deviceContext();
 
+  ///--------------------------------------------------------------------------
+  /// @fn   ID3D11BlendState* blendState();
+  ///
+  /// @brief  blend state getter.
+  /// @return pointer to the Direct3D blend state used.
+  ///--------------------------------------------------------------------------
+  ID3D11BlendState* blendState();
+
   /*******************************************************************************
   ***                           Private                                        ***
   *******************************************************************************/
@@ -135,6 +143,8 @@ class DirectXFramework {
   ID3D11DepthStencilState* depth_stencil_state_;
   /// Raster state controls how the raster is used.
   ID3D11RasterizerState* raster_state_;
+  /// Blend state.
+  ID3D11BlendState* blend_state_;
 
   /*******************************************************************************
   ***                              Private methods                             ***
@@ -210,6 +220,15 @@ class DirectXFramework {
   /// @return true if successfully initialized, false otherwise.
   ///--------------------------------------------------------------------------
   bool initRaster();
+
+  ///--------------------------------------------------------------------------
+  /// @fn   initBlending();
+  ///
+  /// @brief  Creates a blend state in the device which will give us the control
+  ///         over the final color of each pixel, based on its alpha component.
+  /// @return true if successfully initialized, false otherwise.
+  ///--------------------------------------------------------------------------
+  bool initBlending();
 
 }; /* DirectXFramework */
 
