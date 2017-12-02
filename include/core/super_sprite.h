@@ -40,11 +40,12 @@ class SuperSprite {
   void init();
 
   ///--------------------------------------------------------------------------
-  /// @fn   void render();
+  /// @fn   void render(Sprite* sprite = nullptr);
   ///
   /// @brief  Renders the SuperSprite.
+  /// @param sprite Sprite data to setup the rendering.
   ///--------------------------------------------------------------------------
-  void render();
+  void render(Sprite* sprite = nullptr);
 
   ///--------------------------------------------------------------------------
   /// @fn   void calculateOrthographicMatrix();

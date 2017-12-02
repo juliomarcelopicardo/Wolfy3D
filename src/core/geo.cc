@@ -100,19 +100,19 @@ bool Geo::initQuad(const DirectX::XMFLOAT2 size, const DirectX::XMFLOAT4 color) 
 
   vertex_data_[0] = { { -half_width, half_height, 0.0f },       // Position
                       { 0.0f, 0.0f, 1.0f },                     // Normal
-                      { 0.0f, 0.0f },                           // UV / TexCoord
+                      { 1.0f, 0.0f },                           // UV / TexCoord
                         color };                                // Color
   vertex_data_[1] = { { half_width, half_height, 0.0f },
                       { 0.0f, 0.0f, 1.0f },
-                      { 1.0f, 0.0f },
+                      { 0.0f, 0.0f },
                         color };
   vertex_data_[2] = { { half_width, -half_height, 0.0f },
                       { 0.0f, 0.0f, 1.0f },
-                      { 1.0f, 1.0f },
+                      { 0.0f, 1.0f },
                         color };
   vertex_data_[3] = { { -half_width, -half_height, 0.0f },
                       { 0.0f, 0.0f, 1.0f },
-                      { 0.0f, 1.0f },
+                      { 1.0f, 1.0f },
                         color };
 
   vertex_index_[0] = 0;

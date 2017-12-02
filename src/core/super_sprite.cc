@@ -33,24 +33,63 @@ void SuperSprite::init() {
 }
 
 
-void SuperSprite::render() {
+void SuperSprite::render(Sprite* sprite) {
+
+  if (!sprite) { return; }
 
   auto& core = Core::instance();
   auto* device_context = core.d3d_.deviceContext();
   auto& super_mat = core.super_material_;
   Geo* geometry = core.geometry_factory_[core.base_quad_geometry_.id()];
 
-
   // Transform.
-  DirectX::XMMATRIX rot, tr, sc;
-  rot = DirectX::XMMatrixRotationRollPitchYaw(0.0f, 0.0f, 1.0f);  tr = DirectX::XMMatrixTranslation(200.0f, 200.0f, 0.0f);  sc = DirectX::XMMatrixScaling(100.0f, 100.0f, 1.0);
+  DirectX::XMFLOAT3 initial_offset = { 0.0f, 0.0f, 0.0f };
+  DirectX::XMFLOAT2 half_size = { sprite->size().x * 0.5f, sprite->size().y * 0.5f };
+
+  switch (sprite->pivot()) {
+    case Sprite::kPivotPoint_UpLeft: {
+      initial_offset.x = -half_size.x;
+      initial_offset.y = -half_size.y;
+    }break;
+    case Sprite::kPivotPoint_Up: {
+      initial_offset.x = 0.0f;
+      initial_offset.y = -half_size.y;
+    }break;
+    case Sprite::kPivotPoint_UpRight: {
+      initial_offset.x = half_size.x;
+      initial_offset.y = -half_size.y;
+    }break;
+    case Sprite::kPivotPoint_Right: {
+      initial_offset.x = half_size.x;
+      initial_offset.y = 0.0f;
+    }break;
+    case Sprite::kPivotPoint_Downight: {
+      initial_offset.x = half_size.x;
+      initial_offset.y = half_size.y;
+    }break;
+    case Sprite::kPivotPoint_Down: {
+      initial_offset.x = 0.0f;
+      initial_offset.y = half_size.y;
+    }break;
+    case Sprite::kPivotPoint_DownLeft: {
+      initial_offset.x = -half_size.x;
+      initial_offset.y = half_size.y;
+    }break;
+    case Sprite::kPivotPoint_Left: {
+      initial_offset.x = -half_size.x;
+      initial_offset.y = 0.0f;
+    }break;
+  }
+
   // Saving all the matrices and common data of the super material.
-  DirectX::XMStoreFloat4x4(&super_mat.settings_.matrices.model, DirectX::XMMatrixTranspose(sc * rot * tr));
+  DirectX::XMMATRIX init_tr, rot, tr, sc;
+  rot = DirectX::XMMatrixRotationRollPitchYaw(0.0f, 0.0f, sprite->rotation() + DirectX::XMConvertToRadians(180.0f));  tr = DirectX::XMMatrixTranslation(sprite->position().x, sprite->position().y, 0.0f);  sc = DirectX::XMMatrixScaling(sprite->size().x, sprite->size().y, 1.0);  init_tr = DirectX::XMMatrixTranslation(initial_offset.x, initial_offset.y, 0.0f);  DirectX::XMStoreFloat4x4(&super_mat.settings_.matrices.model, DirectX::XMMatrixTranspose(sc * init_tr * rot * tr));
   DirectX::XMStoreFloat4x4(&super_mat.settings_.matrices.view, DirectX::XMMatrixIdentity());
   DirectX::XMStoreFloat4x4(&super_mat.settings_.matrices.projection, DirectX::XMMatrixTranspose(ortho_matrix()));
   super_mat.settings_.time = (float32)Time();
 
   // Setup the super material depending on the type of user's material associated.
+  material_.set_texture(sprite->texture());
   material_.setupSuperMaterial();
 
   // Allocating the constant buffer used in the material.

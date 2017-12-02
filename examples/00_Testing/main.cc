@@ -78,6 +78,7 @@ int32 main() {
   Window::Init(1200, 978);
 
   MaterialDiffuse mat;
+  MaterialTextured mat_tex;
 
   Entity cube1, cube2, cube3;
   cube2.transform().set_position(2.0f, 0.0f, 0.0f);
@@ -86,11 +87,20 @@ int32 main() {
   Geometry geo1, geo2, geo3;
   geo1.initCube();
   geo2.initCube({ 2.0f, 2.0, 2.0f });
-  geo3.initCube();
+  geo3.initQuad();
+
+  Texture2D texture;
+  texture.initFromFile("../data/textures/texture.png");
+  Sprite sprite;
+  sprite.set_texture(&texture);
+  sprite.set_position({ 100.0f, 100.0f });
+  mat_tex.set_texture(&texture);
 
   cube1.addComponent(kComponentType_Render, &mat, &geo1);
   cube2.addComponent(kComponentType_Render, &mat, &geo2);
-  cube3.addComponent(kComponentType_Render, &mat, &geo3);
+  cube3.addComponent(kComponentType_Render, &mat_tex, &geo3);
+  sprite.set_pivot(Sprite::kPivotPoint_UpRight);
+
 
   cube1.addChild(&cube2);
 
@@ -106,9 +116,16 @@ int32 main() {
      
     }
 
-   
+    DirectX::XMFLOAT2 pos = sprite.position();
+    if (ImGui::DragFloat2("position", &pos.x)) {
+      sprite.set_position(pos);
+    }
+    float rot = sprite.rotation();
+    if (ImGui::SliderFloat("rotation", &rot, -5.0f, 5.0f)) {
+      sprite.set_rotation(rot);
+    }
+    sprite.render();
     Core::instance().cam_.render(&cube1);
-
     float32 a= delta * 0.001f;
     ImGui::Text("%.4f", a);
     ImGui::Text("Wolfy3D speed: %.3f ms/frame (%.1f FPS)",

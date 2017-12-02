@@ -16,5 +16,6 @@
 #include "Wolfy3D/geometry.h"
 #include "Wolfy3D/math.h"
 #include "Wolfy3D/texture2D.h"
+#include "Wolfy3D/sprite.h"
 
 #endif

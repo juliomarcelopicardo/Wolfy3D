@@ -54,8 +54,6 @@ bool Texture::initFromFile(const char* texture_path) {
   if (FAILED(result)) {
     MessageBox(NULL, "Error loading texture", "ERROR", MB_OK);
     uint32 id = core.error_texture_.id();
-    sampler_state_ = core.texture_factory_[id]->sampler_state_;
-    texture_handle_ = core.texture_factory_[id]->texture_handle_;
     return false;
   }
 
@@ -80,8 +78,6 @@ bool Texture::initFromFile(const char* texture_path) {
   if (FAILED(result)) {
     MessageBox(NULL, "Error sampling texture", "ERROR", MB_OK);
     uint32 id = core.error_texture_.id();
-    sampler_state_ = core.texture_factory_[id]->sampler_state_;
-    texture_handle_ = core.texture_factory_[id]->texture_handle_;
     return false;
   }
 
