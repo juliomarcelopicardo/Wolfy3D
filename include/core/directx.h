@@ -11,7 +11,6 @@
 #include "Wolfy3D.h"
 #include <d3d11.h>
 #include <d3dx11.h>
-#include <d3dx10.h>
 #include <Windows.h>
 
 
@@ -26,11 +25,11 @@ class DirectXFramework {
   *******************************************************************************/
 
    /// Projection matrix.
-   D3DXMATRIX projection_matrix_;
+   DirectX::XMFLOAT4X4 projection_matrix_;
    /// World 3D matrix.
-   D3DXMATRIX world_matrix_;
+   DirectX::XMFLOAT4X4 world_matrix_;
    /// Orthographic matrix for 2D rendering.
-   D3DXMATRIX ortho_matrix_;
+   DirectX::XMFLOAT4X4 ortho_matrix_;
    /// Video card memory in megabytes.
    W3D::int32 video_card_memory_;
    /// Video card name.

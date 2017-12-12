@@ -19,7 +19,7 @@ namespace W3D {
 *******************************************************************************/
 
 Geo::Geo() {
-  topology_ = D3D10_PRIMITIVE_TOPOLOGY_TRIANGLELIST;
+  topology_ = D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST;
   vertex_buffer_ = nullptr;
   vertex_index_buffer_ = nullptr;
   name_ = "";
@@ -65,7 +65,7 @@ bool Geo::initTriangle(const DirectX::XMFLOAT2 size, const DirectX::XMFLOAT4 col
   vertex_index_[1] = 2;
   vertex_index_[2] = 1;
   
-  topology_ = D3D10_PRIMITIVE_TOPOLOGY_TRIANGLELIST;
+  topology_ = D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST;
 
   if (!createVertexBuffer()) { return false; }
   if (!createIndexBuffer()) { return false; }
@@ -122,7 +122,7 @@ bool Geo::initQuad(const DirectX::XMFLOAT2 size, const DirectX::XMFLOAT4 color) 
   vertex_index_[4] = 3;
   vertex_index_[5] = 2;
 
-  topology_ = D3D10_PRIMITIVE_TOPOLOGY_TRIANGLELIST;
+  topology_ = D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST;
 
   if (!createVertexBuffer()) { return false; }
   if (!createIndexBuffer()) { return false; }
@@ -234,7 +234,7 @@ bool Geo::initCube(const DirectX::XMFLOAT3 size, const DirectX::XMFLOAT4 color) 
   vertex_index_[34] = 23;
   vertex_index_[35] = 22;
 
-  topology_ = D3D10_PRIMITIVE_TOPOLOGY_TRIANGLELIST;
+  topology_ = D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST;
 
   if (!createVertexBuffer()) { return false; }
   if (!createIndexBuffer()) { return false; }
@@ -348,7 +348,7 @@ bool Geo::initSkyBoxCube(const DirectX::XMFLOAT3 size, const DirectX::XMFLOAT4 c
   vertex_index_[34] = 22;
   vertex_index_[35] = 23;
 
-  topology_ = D3D10_PRIMITIVE_TOPOLOGY_TRIANGLELIST;
+  topology_ = D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST;
 
   if (!createVertexBuffer()) { return false; }
   if (!createIndexBuffer()) { return false; }
@@ -464,7 +464,7 @@ bool Geo::initTerrain(const char * height_map_filename,
 	  }
   }
   
-  topology_ = D3D10_PRIMITIVE_TOPOLOGY_TRIANGLESTRIP;
+  topology_ = D3D11_PRIMITIVE_TOPOLOGY_TRIANGLESTRIP;
 
   if (!createVertexBuffer()) { return false; }
   if (!createIndexBuffer()) { return false; }

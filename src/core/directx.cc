@@ -41,8 +41,8 @@ DirectXFramework::~DirectXFramework() {
 
 bool DirectXFramework::init() {
 
-  uint32 screen_width = (uint32)Core::instance().window_.width_;
-  uint32 screen_height = (uint32)Core::instance().window_.height_;
+  float32 screen_width = (float32)Core::instance().window_.width_;
+  float32 screen_height = (float32)Core::instance().window_.height_;
 
   // Init Video card adapter and settings
   if (!initVideoCard()) {
@@ -96,8 +96,8 @@ bool DirectXFramework::init() {
   viewport.TopLeftY = 0;
   viewport.MinDepth = 0.0f;
   viewport.MaxDepth = 1.0f;
-  viewport.Width = (float32)W3D::Core::instance().window_.width_;
-  viewport.Height = (float32)W3D::Core::instance().window_.height_;
+  viewport.Width = screen_width;
+  viewport.Height = screen_height;
 
   // RSSetViewports() is a function that activates viewport structs.
   // The first parameter is the number of viewports being used, 
@@ -108,18 +108,17 @@ bool DirectXFramework::init() {
   // Setup The Projection Matrix
 
   // Setup the projection matrix.
-  float32 fov = (float32)D3DX_PI / 4.0f;
-  float32 aspect = (float32)W3D::Core::instance().window_.width_ / (float32)W3D::Core::instance().window_.height_;
+  float32 fov = DirectX::XM_PI / 4.0f;
+  float32 aspect = screen_width / (float32)Core::instance().window_.height_;
 
   // Create the projection matrix for 3D rendering.
-  D3DXMatrixPerspectiveFovLH(&projection_matrix_, fov, aspect, SCREEN_NEAR, SCREEN_DEPTH);
+  DirectX::XMStoreFloat4x4(&projection_matrix_, DirectX::XMMatrixPerspectiveFovLH(fov, aspect, SCREEN_NEAR, SCREEN_DEPTH));
 
   // Initialize the world matrix to the identity matrix.
-  D3DXMatrixIdentity(&world_matrix_);
+  DirectX::XMStoreFloat4x4(&world_matrix_, DirectX::XMMatrixIdentity());
 
   // Create an orthographic projection matrix for 2D rendering.
-  D3DXMatrixOrthoLH(&ortho_matrix_, (float32)W3D::Core::instance().window_.width_,
-    (float32)W3D::Core::instance().window_.height_, SCREEN_NEAR, SCREEN_DEPTH);
+  DirectX::XMStoreFloat4x4(&ortho_matrix_, DirectX::XMMatrixOrthographicLH(screen_width, screen_height, SCREEN_NEAR, SCREEN_DEPTH));
 
 	
 //////////////////////////////////////////////
@@ -132,7 +131,8 @@ ImGui_ImplDX11_Init(W3D::Core::instance().window_.window_handle_, device_, devic
 
 void DirectXFramework::startRenderFrame(float32 r, float32 g, float32 b, float32 a) {
   // clear the back buffer to a deep blue
-  device_context_->ClearRenderTargetView(render_target_view_, D3DXCOLOR(r, g, b, a));
+  float32 color[4] = { r, g, b, a };
+  device_context_->ClearRenderTargetView(render_target_view_, color);
   device_context_->ClearDepthStencilView(depth_stencil_view_, D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0);
 ImGui_ImplDX11_NewFrame();
 }
