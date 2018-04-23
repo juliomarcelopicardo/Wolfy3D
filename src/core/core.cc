@@ -1,8 +1,7 @@
-/** Copyright Julio Picardo and Antonio Diaz. SouthBros 2017-18, all rights reserved.
+/** Copyright Julio Picardo 2017-18, all rights reserved.
 *
-*  @project SilverLynx
-*  @authors Julio Marcelo Picardo <picardope@esat-alumni.com>
-*           Antonio Diaz <antoniozero@outlook.com>
+*  @project Wolfy3D
+*  @authors Julio Marcelo Picardo <juliomarcelopicardo@gmail.com>
 *
 */
 
@@ -12,7 +11,7 @@
 #include <process.h>
 #include <thread>
 
-namespace SLX {
+namespace W3D {
 
 /*******************************************************************************
 ***                             Chrome Debugger                              ***
@@ -25,7 +24,7 @@ ChromeDebugger::ChromeDebugger() {
 
 void ChromeDebugger::StartChromeDebuggerFile() {
 
-  file = fopen(kChromeDebuggerJSonPath, "w");
+  fopen_s(&file, kChromeDebuggerJSonPath, "w");
   if (!file) {
     OutputDebugString(" ERROR: Cannot open chrome debugger file.");
     exit(EXIT_FAILURE);
@@ -87,15 +86,19 @@ Core& Core::instance() {
   return *singleton;
 }
 
-Core::Core() {}
+Core::Core() {
+  
+}
 
 Core::~Core() {}
 
 
 void Core::init() {
   error_geometry_.initCube();
-  error_texture_.load("../data/error_texture.jpg");
+  base_quad_geometry_.initQuad();
+  error_texture_.initFromFile("../data/textures/error_texture.jpg");
   super_material_.init();
+  super_sprite_.init();
 }
 
-};/* JI */
+};/* W3D */

@@ -1,8 +1,7 @@
-/** Copyright Julio Picardo and Antonio Diaz. SouthBros 2017-18, all rights reserved.
+/** Copyright Julio Picardo 2017-18, all rights reserved.
 *
-*  @project SilverLynx
-*  @authors Julio Marcelo Picardo <picardope@esat-alumni.com>
-*           Antonio Diaz <antoniozero@outlook.com>
+*  @project Wolfy3D
+*  @authors Julio Marcelo Picardo <juliomarcelopicardo@gmail.com>
 *
 */
 
@@ -10,9 +9,10 @@
 #define __TRANSFORM_H__ 1
 
 #include <DirectXMath.h>
-#include "SilverLynx/globals.h"
+#include "Wolfy3D/globals.h"
+#include "Wolfy3D/math.h"
 
-namespace SLX {
+namespace W3D {
 
 class TransformComponent {
 
@@ -38,7 +38,7 @@ public:
   /// @brief  Owner of this component setter
   /// @param  Object owner pointer of this component to be set.
   ///--------------------------------------------------------------------------
-  void set_owner(class Object* owner);
+  void set_owner(class Entity* owner);
 
 #pragma region POSITION
 
@@ -51,12 +51,20 @@ public:
   DirectX::XMVECTOR position_vector() const;
 
   ///--------------------------------------------------------------------------
-  /// @fn   DirectX::XMVECTOR position_float3() const;
+  /// @fn   DirectX::XMFLOAT3 position_float3() const;
   ///
   /// @brief  Transform position getter.
   /// @return XMFLOAT3 containing X,Y,Z Position.
   ///--------------------------------------------------------------------------
   DirectX::XMFLOAT3 position_float3() const;
+
+  ///--------------------------------------------------------------------------
+  /// @fn   DirectX::XMFLOAT4 position_float3() const;
+  ///
+  /// @brief  Transform position getter.
+  /// @return XMFLOAT4 containing X,Y,Z Position.
+  ///--------------------------------------------------------------------------
+  DirectX::XMFLOAT4 position_float4() const;
 
   ///--------------------------------------------------------------------------
   /// @fn   DirectX::XMVECTOR world_position_vector();
@@ -67,7 +75,7 @@ public:
   DirectX::XMVECTOR world_position_vector();
 
   ///--------------------------------------------------------------------------
-  /// @fn   DirectX::XMVECTOR world_position_float3();
+  /// @fn   DirectX::XMFLOAT3 world_position_float3();
   ///
   /// @brief  Transform world position getter.
   /// @return XMVECTOR containing X,Y,Z World Position.
@@ -79,14 +87,14 @@ public:
   ///
   /// @brief  Transform position setter.
   ///--------------------------------------------------------------------------
-  void set_position(const DirectX::XMVECTOR position);
+  void set_position(const DirectX::XMVECTOR position_vector);
 
   ///--------------------------------------------------------------------------
   /// @fn   void set_position(const DirectX::XMFLOAT3 position);
   ///
   /// @brief  Transform position setter.
   ///--------------------------------------------------------------------------
-  void set_position(const DirectX::XMFLOAT3 position);
+  void set_position(const DirectX::XMFLOAT3 position_vector);
 
   ///--------------------------------------------------------------------------
   /// @fn   void set_position(float x, float y, float z);
@@ -100,14 +108,14 @@ public:
   ///
   /// @brief  Transform world position setter.
   ///--------------------------------------------------------------------------
-  void set_world_position(const DirectX::XMVECTOR position);
+  void set_world_position(const DirectX::XMVECTOR position_vector);
 
   ///--------------------------------------------------------------------------
   /// @fn   void set_world_position(const DirectX::XMFLOAT3 position);
   ///
   /// @brief  Transform world position setter.
   ///--------------------------------------------------------------------------
-  void set_world_position(const DirectX::XMFLOAT3 position);
+  void set_world_position(const DirectX::XMFLOAT3 position_vector);
 
   ///--------------------------------------------------------------------------
   /// @fn   void set_world_position(float x, float y, float z);
@@ -121,78 +129,138 @@ public:
 #pragma region ROTATION
 
   ///--------------------------------------------------------------------------
-  /// @fn   DirectX::XMVECTOR rotation() const;
+  /// @fn   DirectX::XMVECTOR euler_rotation_vector();
   ///
   /// @brief  Transform rotation getter.
   /// @return XMVECTOR containing X,Y,Z Rotation.
   ///--------------------------------------------------------------------------
-  DirectX::XMVECTOR rotation_vector() const;
+  DirectX::XMVECTOR euler_rotation_vector();
 
   ///--------------------------------------------------------------------------
-  /// @fn   DirectX::XMFLOAT3 rotation() const;
+  /// @fn   DirectX::XMVECTOR quaternion_rotation_vector();
+  ///
+  /// @brief  Transform rotation quaternion getter.
+  /// @return XMVECTOR containing Rotation in quaternion.
+  ///--------------------------------------------------------------------------
+  DirectX::XMVECTOR quaternion_rotation_vector();
+
+  ///--------------------------------------------------------------------------
+  /// @fn   DirectX::XMFLOAT3 euler_rotation_float3();
   ///
   /// @brief  Transform rotation getter.
   /// @return XMFLOAT3 containing X,Y,Z Rotation.
   ///--------------------------------------------------------------------------
-  DirectX::XMFLOAT3 rotation_float3() const;
+  DirectX::XMFLOAT3 euler_rotation_float3();
 
   ///--------------------------------------------------------------------------
-  /// @fn   DirectX::XMVECTOR world_rotation();
+  /// @fn   DirectX::XMFLOAT3 quaternion_rotation_float4();
+  ///
+  /// @brief  Transform rotation in quaterionsgetter.
+  /// @return XMFLOAT4 containing Rotation in quaterions.
+  ///--------------------------------------------------------------------------
+  DirectX::XMFLOAT4 quaternion_rotation_float4();
+
+  ///--------------------------------------------------------------------------
+  /// @fn   DirectX::XMVECTOR euler_world_rotation_vector();
   ///
   /// @brief  Transform world rotation getter.
   /// @return XMVECTOR containing X,Y,Z world Rotation.
   ///--------------------------------------------------------------------------
-  DirectX::XMVECTOR world_rotation_vector();
+  DirectX::XMVECTOR euler_world_rotation_vector();
 
   ///--------------------------------------------------------------------------
-  /// @fn   DirectX::XMFLOAT3 world_rotation();
+  /// @fn   DirectX::XMVECTOR quaternion_world_rotation_vector();
+  ///
+  /// @brief  Transform world rotation getter.
+  /// @return XMVECTOR containing Quaternions world Rotation.
+  ///--------------------------------------------------------------------------
+  DirectX::XMVECTOR quaternion_world_rotation_vector();
+
+  ///--------------------------------------------------------------------------
+  /// @fn   DirectX::XMFLOAT3 euler_world_rotation_float3();
   ///
   /// @brief  Transform world rotation getter.
   /// @return XMFLOAT3 containing X,Y,Z world Rotation.
   ///--------------------------------------------------------------------------
-  DirectX::XMFLOAT3 world_rotation_float3();
+  DirectX::XMFLOAT3 euler_world_rotation_float3();
 
   ///--------------------------------------------------------------------------
-  /// @fn   void set_rotation(float x, float y, float z);
+  /// @fn   DirectX::XMFLOAT4 quaternion_world_rotation_float4();
+  ///
+  /// @brief  Transform world rotation getter.
+  /// @return XMFLOAT4 containing Quaternions world Rotation.
+  ///--------------------------------------------------------------------------
+  DirectX::XMFLOAT4 quaternion_world_rotation_float4();
+
+  ///--------------------------------------------------------------------------
+  /// @fn   void set_euler_rotation(float x, float y, float z);
+  ///
+  /// @brief  Transform rotation euler angles setter.
+  ///--------------------------------------------------------------------------
+  void set_euler_rotation(const float32 x, const float32 y, const float32 z);
+
+  ///--------------------------------------------------------------------------
+  /// @fn   void set_euler_rotation(const DirectX::XMFLOAT3 rotation);
   ///
   /// @brief  Transform rotation setter.
   ///--------------------------------------------------------------------------
-  void set_rotation(const float32 x, const float32 y, const float32 z);
+  void set_euler_rotation(const DirectX::XMFLOAT3 rotation);
 
   ///--------------------------------------------------------------------------
-  /// @fn   void set_rotation(const DirectX::XMFLOAT3 rotation);
+  /// @fn   void set_quaternion_rotation(const DirectX::XMFLOAT4 quaternion);
   ///
   /// @brief  Transform rotation setter.
   ///--------------------------------------------------------------------------
-  void set_rotation(const DirectX::XMFLOAT3 rotation);
+  void set_quaternion_rotation(const DirectX::XMFLOAT4 quaternion);
 
   ///--------------------------------------------------------------------------
-  /// @fn   void set_rotation(const DirectX::XMVECTOR rotation);
+  /// @fn   void set_euler_rotation(const DirectX::XMVECTOR rotation);
   ///
   /// @brief  Transform rotation setter.
   ///--------------------------------------------------------------------------
-  void set_rotation(const DirectX::XMVECTOR rotation);
+  void set_euler_rotation(const DirectX::XMVECTOR rotation);
 
   ///--------------------------------------------------------------------------
-  /// @fn   void set_world_rotation(float x, float y, float z);
+  /// @fn   void set_quaternion_rotation(const DirectX::XMVECTOR quaternion);
   ///
   /// @brief  Transform rotation setter.
   ///--------------------------------------------------------------------------
-  void set_world_rotation(const float32 x, const float32 y, const float32 z);
+  void set_quaternion_rotation(const DirectX::XMVECTOR quaternion);
 
   ///--------------------------------------------------------------------------
-  /// @fn   void set_world_rotation(const DirectX::XMFLOAT3 rotation);
+  /// @fn   void set_euler_world_rotation(float x, float y, float z);
   ///
   /// @brief  Transform rotation setter.
   ///--------------------------------------------------------------------------
-  void set_world_rotation(const DirectX::XMFLOAT3 rotation);
+  void set_euler_world_rotation(const float32 x, const float32 y, const float32 z);
 
   ///--------------------------------------------------------------------------
-  /// @fn   void set_world_rotation(const DirectX::XMVECTOR rotation);
+  /// @fn   void set_euler_world_rotation(const DirectX::XMFLOAT3 rotation);
   ///
   /// @brief  Transform rotation setter.
   ///--------------------------------------------------------------------------
-  void set_world_rotation(const DirectX::XMVECTOR rotation);
+  void set_euler_world_rotation(const DirectX::XMFLOAT3 rotation);
+
+  ///--------------------------------------------------------------------------
+  /// @fn   void set_quaternion_world_rotation(const DirectX::XMFLOAT4 quaternion);
+  ///
+  /// @brief  Transform rotation setter.
+  ///--------------------------------------------------------------------------
+  void set_quaternion_world_rotation(const DirectX::XMFLOAT4 quaternion);
+
+  ///--------------------------------------------------------------------------
+  /// @fn   void set_euler_world_rotation(const DirectX::XMVECTOR rotation);
+  ///
+  /// @brief  Transform rotation setter.
+  ///--------------------------------------------------------------------------
+  void set_euler_world_rotation(const DirectX::XMVECTOR rotation);
+
+  ///--------------------------------------------------------------------------
+  /// @fn   void set_quaternion_world_rotation(const DirectX::XMVECTOR quaternion);
+  ///
+  /// @brief  Transform rotation setter.
+  ///--------------------------------------------------------------------------
+  void set_quaternion_world_rotation(const DirectX::XMVECTOR quaternion);
 
 #pragma endregion
 
@@ -338,7 +406,7 @@ public:
 #pragma endregion
 
   
-#pragma region FORWARD
+#pragma region FORWARD/RIGHT/UP VECTORS
   
   ///--------------------------------------------------------------------------
   /// @fn   DirectX::XMVECTOR world_forward_vector();
@@ -371,6 +439,70 @@ public:
   /// @return forward vector of the local matrix.
   ///--------------------------------------------------------------------------
   DirectX::XMFLOAT3 forward_float3();
+
+  ///--------------------------------------------------------------------------
+  /// @fn   DirectX::XMVECTOR world_right_vector();
+  ///
+  /// @brief World object right vector getter.
+  /// @return World right vector.
+  ///--------------------------------------------------------------------------
+  DirectX::XMVECTOR world_right_vector();
+
+  ///--------------------------------------------------------------------------
+  /// @fn   DirectX::XMVECTOR right_vector();
+  ///
+  /// @brief right vector of local matrix getter.
+  /// @return right vector of local matrix.
+  ///--------------------------------------------------------------------------
+  DirectX::XMVECTOR right_vector();
+
+  ///--------------------------------------------------------------------------
+  /// @fn   DirectX::XMFLOAT3 world_right_float3();
+  ///
+  /// @brief World right vector getter.
+  /// @return World right vector.
+  ///--------------------------------------------------------------------------
+  DirectX::XMFLOAT3 world_right_float3();
+
+  ///--------------------------------------------------------------------------
+  /// @fn   DirectX::XMFLOAT3 right_float3()
+  ///
+  /// @brief right vector of the local matrix getter.
+  /// @return right vector of the local matrix.
+  ///--------------------------------------------------------------------------
+  DirectX::XMFLOAT3 right_float3();
+
+  ///--------------------------------------------------------------------------
+  /// @fn   DirectX::XMVECTOR world_up_vector();
+  ///
+  /// @brief World object up vector getter.
+  /// @return World up vector.
+  ///--------------------------------------------------------------------------
+  DirectX::XMVECTOR world_up_vector();
+
+  ///--------------------------------------------------------------------------
+  /// @fn   DirectX::XMVECTOR up_vector();
+  ///
+  /// @brief up vector of local matrix getter.
+  /// @return up vector of local matrix.
+  ///--------------------------------------------------------------------------
+  DirectX::XMVECTOR up_vector();
+
+  ///--------------------------------------------------------------------------
+  /// @fn   DirectX::XMFLOAT3 world_up_float3();
+  ///
+  /// @brief World up vector getter.
+  /// @return World up vector.
+  ///--------------------------------------------------------------------------
+  DirectX::XMFLOAT3 world_up_float3();
+
+  ///--------------------------------------------------------------------------
+  /// @fn   DirectX::XMFLOAT3 up_float3()
+  ///
+  /// @brief up vector of the local matrix getter.
+  /// @return up vector of the local matrix.
+  ///--------------------------------------------------------------------------
+  DirectX::XMFLOAT3 up_float3();
 
 #pragma endregion
   
@@ -411,20 +543,21 @@ private:
   *******************************************************************************/
   /// Transform Position.
   DirectX::XMFLOAT3 position_;
-  /// Transform Rotation.
-  DirectX::XMFLOAT3 rotation_;
+  /// Transform Quaternions Rotation.
+  DirectX::XMFLOAT4 quaternion_;
   /// Transform Scale.
   DirectX::XMFLOAT3 scale_;
   /// Object who possess the component.
-  class Object* owner_;
+  class Entity* owner_;
  
   /*******************************************************************************
   ***                              Private methods                             ***
   *******************************************************************************/
 
 
+
 };
 
-}; /* SLX */
+}; /* W3D */
 
 #endif

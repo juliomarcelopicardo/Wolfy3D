@@ -1,15 +1,14 @@
-﻿/** Copyright Julio Picardo and Antonio Diaz. SouthBros 2017-18, all rights reserved.
+﻿/** Copyright Julio Picardo 2017-18, all rights reserved.
 *
-*  @project SilverLynx
-*  @authors Julio Marcelo Picardo <picardope@esat-alumni.com>
-*           Antonio Diaz <antoniozero@outlook.com>
+*  @project Wolfy3D
+*  @authors Julio Marcelo Picardo <juliomarcelopicardo@gmail.com>
 *
 */
 
 #include "core/components/transform.h"
-#include "core/object.h"
+#include "core/entity.h"
 
-namespace SLX {
+namespace W3D {
 
 /*******************************************************************************
 ***                        Constructor and destructor                        ***
@@ -17,7 +16,7 @@ namespace SLX {
 
 TransformComponent::TransformComponent() {
   position_ = DirectX::XMFLOAT3(0.0f, 0.0f, 0.0f);
-  rotation_ = DirectX::XMFLOAT3(0.0f, 0.0f, 0.0f);
+  quaternion_ = DirectX::XMFLOAT4(0.0f, 0.0f, 0.0f, 1.0f); // Identity
   scale_ = DirectX::XMFLOAT3(1.0f, 1.0f, 1.0f);
   DirectX::XMStoreFloat4x4(&local_model_matrix_, DirectX::XMMatrixIdentity());
   parent_model_matrix_ = local_model_matrix_;
@@ -34,7 +33,7 @@ TransformComponent::~TransformComponent() {
 ***                                 Methods                                  ***
 *******************************************************************************/
 
-void TransformComponent::set_owner(SLX::Object* owner) {
+void TransformComponent::set_owner(W3D::Entity* owner) {
   owner_ = owner;
 }
 
@@ -48,6 +47,10 @@ DirectX::XMFLOAT3 TransformComponent::position_float3() const {
   return position_;
 }
 
+DirectX::XMFLOAT4 TransformComponent::position_float4() const {
+  return { position_.x, position_.y, position_.z, 1.0f };
+}
+
 DirectX::XMVECTOR TransformComponent::world_position_vector() {
   return DirectX::XMLoadFloat3(&world_position_float3());
 }
@@ -59,13 +62,13 @@ DirectX::XMFLOAT3 TransformComponent::world_position_float3() {
   return world_position;
 }
 
-void TransformComponent::set_position(const DirectX::XMVECTOR position) {
-  DirectX::XMStoreFloat3(&position_, position);
+void TransformComponent::set_position(const DirectX::XMVECTOR position_vector) {
+  DirectX::XMStoreFloat3(&position_, position_vector);
   owner_->updateLocalModelAndChildrenMatrices();
 }
 
-void TransformComponent::set_position(const DirectX::XMFLOAT3 position) {
-  position_ = position;
+void TransformComponent::set_position(const DirectX::XMFLOAT3 position_vector) {
+  position_ = position_vector;
   owner_->updateLocalModelAndChildrenMatrices();
 }
 
@@ -74,18 +77,18 @@ void TransformComponent::set_position(const float32 x, const float32 y, const fl
   owner_->updateLocalModelAndChildrenMatrices();
 }
 
-void TransformComponent::set_world_position(const DirectX::XMVECTOR position) {
+void TransformComponent::set_world_position(const DirectX::XMVECTOR position_vector) {
   DirectX::XMFLOAT3 pos;
-  DirectX::XMStoreFloat3(&pos, position);
+  DirectX::XMStoreFloat3(&pos, position_vector);
   set_position(pos.x - parent_model_matrix_.m[0][3],
                pos.y - parent_model_matrix_.m[1][3],
                pos.z - parent_model_matrix_.m[2][3]);
 }
 
-void TransformComponent::set_world_position(const DirectX::XMFLOAT3 position) {
-  set_position(position.x - parent_model_matrix_.m[0][3],
-               position.y - parent_model_matrix_.m[1][3],
-               position.z - parent_model_matrix_.m[2][3]);
+void TransformComponent::set_world_position(const DirectX::XMFLOAT3 position_vector) {
+  set_position(position_vector.x - parent_model_matrix_.m[0][3],
+               position_vector.y - parent_model_matrix_.m[1][3],
+               position_vector.z - parent_model_matrix_.m[2][3]);
 }
 
 void TransformComponent::set_world_position(const float32 x, const float32 y, const float32 z) {
@@ -98,100 +101,111 @@ void TransformComponent::set_world_position(const float32 x, const float32 y, co
 
 #pragma region ROTATION
 
-DirectX::XMVECTOR TransformComponent::rotation_vector() const {
-  return DirectX::XMLoadFloat3(&rotation_);
+DirectX::XMVECTOR TransformComponent::euler_rotation_vector() {
+  return DirectX::XMLoadFloat3(&euler_rotation_float3());
 }
 
-DirectX::XMFLOAT3 TransformComponent::rotation_float3() const {
-  return rotation_;
+DirectX::XMVECTOR TransformComponent::quaternion_rotation_vector() {
+  return DirectX::XMLoadFloat4(&quaternion_);
 }
 
-DirectX::XMVECTOR TransformComponent::world_rotation_vector() {
+DirectX::XMFLOAT3 TransformComponent::euler_rotation_float3() {
+  DirectX::XMFLOAT4X4 m;
+  DirectX::XMStoreFloat4x4(&m, DirectX::XMMatrixTranspose(local_model_matrix()));
+  return Math::GetEulerRotationFromModelMatrix(m);
+}
+
+DirectX::XMFLOAT4 TransformComponent::quaternion_rotation_float4() {
+  return quaternion_;
+}
+
+DirectX::XMVECTOR TransformComponent::euler_world_rotation_vector() {
 
   DirectX::XMFLOAT4X4 m;
-  DirectX::XMFLOAT3 euler;
 
   DirectX::XMStoreFloat4x4(&m, DirectX::XMMatrixTranspose(global_model_matrix()));
-  float sp = -m._32;
-  if (sp <= -1.0f) {
-    euler.x = -1.570796f;
-  }
-  else if (sp >= 1.0f) {
-    euler.x = 1.570796f;
-  }
-  else {
-    euler.x = asin(sp);
-  }
-  if (fabs(sp) > 0.9999f) {
-    euler.z = 0.0f;
-    euler.y = atan2(-m._13, m._11);
-  }
-  else {
-    euler.y = atan2(m._31, m._33);
-    euler.z = atan2(m._12, m._22);
-  }
-  return DirectX::XMLoadFloat3(&euler);
+  
+  return DirectX::XMLoadFloat3(&Math::GetEulerRotationFromModelMatrix(m));
 }
 
-DirectX::XMFLOAT3 TransformComponent::world_rotation_float3() {
+DirectX::XMVECTOR TransformComponent::quaternion_world_rotation_vector() {
+  DirectX::XMVECTOR temp, quat;
+  DirectX::XMMatrixDecompose(&temp, &quat, &temp, DirectX::XMMatrixTranspose(global_model_matrix()));
+  return DirectX::XMQuaternionNormalize(quat);
+}
+
+DirectX::XMFLOAT3 TransformComponent::euler_world_rotation_float3() {
   DirectX::XMFLOAT4X4 m;
-  DirectX::XMFLOAT3 euler;
 
   DirectX::XMStoreFloat4x4(&m, DirectX::XMMatrixTranspose(global_model_matrix()));
-  float sp = -m._32;
-  if (sp <= -1.0f) {
-    euler.x = -1.570796f;
-  }
-  else if (sp >= 1.0f) {
-    euler.x = 1.570796f;
-  }
-  else {
-    euler.x = asin(sp);
-  }
-  if (fabs(sp) > 0.9999f) {
-    euler.z = 0.0f;
-    euler.y = atan2(-m._13, m._11);
-  }
-  else {
-    euler.y = atan2(m._31, m._33);
-    euler.z = atan2(m._12, m._22);
-  }
-  return euler;
+
+  return Math::GetEulerRotationFromModelMatrix(m);
 }
 
-void TransformComponent::set_rotation(const float32 x, const float32 y, const float32 z) {
-  rotation_ = DirectX::XMFLOAT3(x, y, z);
+DirectX::XMFLOAT4 TransformComponent::quaternion_world_rotation_float4() {
+  DirectX::XMVECTOR temp, quat;
+  DirectX::XMMatrixDecompose(&temp, &quat, &temp, DirectX::XMMatrixTranspose(global_model_matrix()));
+  DirectX::XMFLOAT4 quaternions;
+  DirectX::XMStoreFloat4(&quaternions, DirectX::XMQuaternionNormalize(quat));
+  return quaternions;
+}
+
+void TransformComponent::set_euler_rotation(const float32 x, const float32 y, const float32 z) {
+  DirectX::XMFLOAT3 rotation = { x, y, z };
+  quaternion_ = Math::ConvertEulerToQuaternionFloat4(rotation);
   owner_->updateLocalModelAndChildrenMatrices();
 }
 
-void TransformComponent::set_rotation(const DirectX::XMFLOAT3 rotation) {
-  rotation_ = rotation;
+void TransformComponent::set_euler_rotation(const DirectX::XMFLOAT3 rotation) {
+  quaternion_ = Math::ConvertEulerToQuaternionFloat4(rotation);
   owner_->updateLocalModelAndChildrenMatrices();
 }
 
-void TransformComponent::set_rotation(const DirectX::XMVECTOR rotation) {
-  DirectX::XMStoreFloat3(&rotation_, rotation);
+void TransformComponent::set_quaternion_rotation(const DirectX::XMFLOAT4 quaternion) {
+  quaternion_ = quaternion;
   owner_->updateLocalModelAndChildrenMatrices();
 }
 
-void TransformComponent::set_world_rotation(const float32 x, const float32 y, const float32 z) {
+void TransformComponent::set_euler_rotation(const DirectX::XMVECTOR rotation) {
+  DirectX::XMFLOAT3 euler;
+  DirectX::XMStoreFloat3(&euler, rotation);
+  quaternion_ = Math::ConvertEulerToQuaternionFloat4(rotation);
+  owner_->updateLocalModelAndChildrenMatrices();
+}
+
+void TransformComponent::set_quaternion_rotation(const DirectX::XMVECTOR quaternion) {
+  DirectX::XMStoreFloat4(&quaternion_, quaternion);
+  owner_->updateLocalModelAndChildrenMatrices();
+}
+
+void TransformComponent::set_euler_world_rotation(const float32 x, const float32 y, const float32 z) {
   if (owner_->parent_) {
-    DirectX::XMFLOAT3 rot = owner_->parent_->transform().world_rotation_float3();
-    set_rotation(x - rot.x, y - rot.y, z - rot.z);
+    DirectX::XMFLOAT3 rot = owner_->parent_->transform().euler_world_rotation_float3();
+    set_euler_rotation(x - rot.x, y - rot.y, z - rot.z);
   }
   else {
-    set_rotation(x, y, z);
+    set_euler_rotation(x, y, z);
   }
 }
 
-void TransformComponent::set_world_rotation(const DirectX::XMFLOAT3 rotation) {
-  set_world_rotation(rotation.x, rotation.y, rotation.z);
+void TransformComponent::set_euler_world_rotation(const DirectX::XMFLOAT3 rotation) {
+  set_euler_world_rotation(rotation.x, rotation.y, rotation.z);
 }
 
-void TransformComponent::set_world_rotation(const DirectX::XMVECTOR rotation) {
+void TransformComponent::set_quaternion_world_rotation(const DirectX::XMFLOAT4 rotation) {
+  // TODO
+  MessageBox(NULL, "SET QUATERNION WORLD ROTATION NOT IMPLEMENTED YET", "ERROR", MB_OK);
+}
+
+void TransformComponent::set_euler_world_rotation(const DirectX::XMVECTOR rotation) {
   DirectX::XMFLOAT3 rot;
   DirectX::XMStoreFloat3(&rot, rotation);
-  set_world_position(rot);
+  set_euler_world_rotation(rot);
+}
+
+void TransformComponent::set_quaternion_world_rotation(const DirectX::XMVECTOR quaternion) {
+  // TODO 
+  MessageBox(NULL, "SET QUATERNION WORLD ROTATION NOT IMPLEMENTED YET", "ERROR", MB_OK);
 }
 
 #pragma endregion
@@ -252,17 +266,17 @@ void TransformComponent::worldTraslate(const DirectX::XMVECTOR traslation) {
 }
 
 void TransformComponent::worldTraslate(const DirectX::XMFLOAT3 traslation) {
-  DirectX::XMFLOAT3 position;
-  DirectX::XMStoreFloat3(&position, world_position_vector());
-  set_world_position(position.x + traslation.x,
-                      position.y + traslation.y,
-                      position.z + traslation.z);
+  DirectX::XMFLOAT3 position_vector;
+  DirectX::XMStoreFloat3(&position_vector, world_position_vector());
+  set_world_position(position_vector.x + traslation.x,
+                      position_vector.y + traslation.y,
+                      position_vector.z + traslation.z);
 }
 
 void TransformComponent::worldTraslate(const float32 x, const float32 y, const float32 z) {
-  DirectX::XMFLOAT3 position;
-  DirectX::XMStoreFloat3(&position, world_position_vector());
-  set_world_position(position.x + x, position.y + y, position.z + z);
+  DirectX::XMFLOAT3 position_vector;
+  DirectX::XMStoreFloat3(&position_vector, world_position_vector());
+  set_world_position(position_vector.x + x, position_vector.y + y, position_vector.z + z);
 }
 
 #pragma endregion
@@ -270,17 +284,18 @@ void TransformComponent::worldTraslate(const float32 x, const float32 y, const f
 #pragma region ROTATE
 
 void TransformComponent::rotate(const float32 x, const float32 y, const float32 z) {
-  set_rotation(rotation_.x + x, rotation_.y + y, rotation_.z + z);
+  DirectX::XMFLOAT3 euler = euler_rotation_float3();
+  set_euler_rotation(euler.x + x, euler.y + y, euler.z + z);
 }
 
 void TransformComponent::rotate(const DirectX::XMFLOAT3 rotation) {
-  set_rotation(rotation.x + rotation.x, rotation.y + rotation.y, rotation.z + rotation.z);
+  set_euler_rotation(rotation.x + rotation.x, rotation.y + rotation.y, rotation.z + rotation.z);
 }
 
 void TransformComponent::worldRotate(const float32 x, const float32 y, const float32 z) {
   DirectX::XMFLOAT3 rotation;
-  DirectX::XMStoreFloat3(&rotation, world_rotation_vector());
-  set_world_rotation(rotation.x + x, rotation.y + y, rotation.z + z);
+  DirectX::XMStoreFloat3(&rotation, euler_world_rotation_vector());
+  set_euler_world_rotation(rotation.x + x, rotation.y + y, rotation.z + z);
 }
 
 void TransformComponent::worldRotate(const DirectX::XMVECTOR rotation) {
@@ -294,15 +309,16 @@ void TransformComponent::worldRotate(const DirectX::XMFLOAT3 rotation) {
 }
 
 void TransformComponent::rotate(const DirectX::XMVECTOR rotation) {
-  DirectX::XMFLOAT3 rot;
+  DirectX::XMFLOAT3 rot, local_rot;
   DirectX::XMStoreFloat3(&rot, rotation);
-  set_rotation(rot.x + rotation_.x, rot.y + rotation_.y, rot.z + rotation_.z);
+  local_rot = euler_rotation_float3();
+  set_euler_rotation(rot.x + local_rot.x, rot.y + local_rot.y, rot.z + local_rot.z);
 }
 
 #pragma endregion
 
 
-#pragma region FORWARD
+#pragma region FORWARD/RIGHT/UP VECTORS
 
 DirectX::XMVECTOR TransformComponent::world_forward_vector() {
   return DirectX::XMVector4Normalize(DirectX::XMVector4Transform({ 0.0f, 0.0f, 1.0f, 0.0f }, DirectX::XMMatrixTranspose(global_model_matrix())));
@@ -327,6 +343,52 @@ DirectX::XMFLOAT3 TransformComponent::forward_float3() {
   return fwd_float3;
 }
 
+DirectX::XMVECTOR TransformComponent::world_right_vector() {
+  return DirectX::XMVector4Normalize(DirectX::XMVector4Transform({ 1.0f, 0.0f, 0.0f, 0.0f }, DirectX::XMMatrixTranspose(global_model_matrix())));
+}
+
+DirectX::XMVECTOR TransformComponent::right_vector() {
+  calculateLocalModelMatrix();
+  return DirectX::XMVector4Normalize(DirectX::XMVector4Transform({ 1.0f, 0.0f, 0.0f, 0.0f }, DirectX::XMMatrixTranspose(local_model_matrix())));
+}
+
+DirectX::XMFLOAT3 TransformComponent::world_right_float3() {
+  DirectX::XMFLOAT3 fwd_float3;
+  DirectX::XMStoreFloat3(&fwd_float3, DirectX::XMVector4Normalize(DirectX::XMVector4Transform({ 1.0f, 0.0f, 0.0f, 0.0f },
+    DirectX::XMMatrixTranspose(global_model_matrix()))));
+  return fwd_float3;
+}
+
+DirectX::XMFLOAT3 TransformComponent::right_float3() {
+  DirectX::XMFLOAT3 fwd_float3;
+  DirectX::XMStoreFloat3(&fwd_float3, DirectX::XMVector4Normalize(DirectX::XMVector4Transform({ 1.0f, 0.0f, 0.0f, 0.0f },
+    DirectX::XMMatrixTranspose(local_model_matrix()))));
+  return fwd_float3;
+}
+
+DirectX::XMVECTOR TransformComponent::world_up_vector() {
+  return DirectX::XMVector4Normalize(DirectX::XMVector4Transform({ 0.0f, 1.0f, 0.0f, 0.0f }, DirectX::XMMatrixTranspose(global_model_matrix())));
+}
+
+DirectX::XMVECTOR TransformComponent::up_vector() {
+  calculateLocalModelMatrix();
+  return DirectX::XMVector4Normalize(DirectX::XMVector4Transform({ 0.0f, 1.0f, 0.0f, 0.0f }, DirectX::XMMatrixTranspose(local_model_matrix())));
+}
+
+DirectX::XMFLOAT3 TransformComponent::world_up_float3() {
+  DirectX::XMFLOAT3 fwd_float3;
+  DirectX::XMStoreFloat3(&fwd_float3, DirectX::XMVector4Normalize(DirectX::XMVector4Transform({ 0.0f, 1.0f, 0.0f, 0.0f },
+    DirectX::XMMatrixTranspose(global_model_matrix()))));
+  return fwd_float3;
+}
+
+DirectX::XMFLOAT3 TransformComponent::up_float3() {
+  DirectX::XMFLOAT3 fwd_float3;
+  DirectX::XMStoreFloat3(&fwd_float3, DirectX::XMVector4Normalize(DirectX::XMVector4Transform({ 0.0f, 1.0f, 0.0f, 0.0f },
+    DirectX::XMMatrixTranspose(local_model_matrix()))));
+  return fwd_float3;
+}
+
 #pragma endregion
 
 #pragma region MATRICES
@@ -341,26 +403,26 @@ DirectX::XMMATRIX TransformComponent::global_model_matrix() {
                                     local_model_matrix());
 }
 
+
+
 void TransformComponent::calculateLocalModelMatrix() {
 
-DirectX::XMMATRIX ret;
-DirectX::XMVECTOR origin;
-origin = DirectX::XMVectorSet(0.0f, 0.0f, 0.0f, 1.0f);
-
-DirectX::XMVECTOR quat_x, quat_y, quat_z;
-quat_x = DirectX::XMQuaternionRotationAxis(DirectX::XMVectorSet(1.0f, 0.0f, 0.0f, 0.0f), rotation_.x);
-quat_y = DirectX::XMQuaternionRotationAxis(DirectX::XMVectorSet(0.0f, 1.0f, 0.0f, 0.0f), rotation_.y);
-quat_z = DirectX::XMQuaternionRotationAxis(DirectX::XMVectorSet(0.0f, 0.0f, 1.0f, 0.0f), rotation_.z);
+  DirectX::XMMATRIX result;
+  DirectX::XMVECTOR origin;
+  origin = DirectX::XMVectorSet(0.0f, 0.0f, 0.0f, 1.0f);
 	
-ret = DirectX::XMMatrixTransformation(origin,
-	                                    DirectX::XMQuaternionIdentity(),
-											                DirectX::XMLoadFloat3(&scale_),
-											                origin,
-											                DirectX::XMQuaternionNormalize(DirectX::XMQuaternionMultiply(DirectX::XMQuaternionMultiply(quat_z, quat_x), quat_y)),
-											                DirectX::XMLoadFloat3(&position_));
-DirectX::XMStoreFloat4x4(&local_model_matrix_, DirectX::XMMatrixTranspose(ret));
+  result = DirectX::XMMatrixTransformation(origin,
+	                                         DirectX::XMQuaternionIdentity(),
+											                     DirectX::XMLoadFloat3(&scale_),
+											                     origin,
+											                     DirectX::XMQuaternionNormalize(DirectX::XMLoadFloat4(&quaternion_)),
+											                     DirectX::XMLoadFloat3(&position_));
+  DirectX::XMStoreFloat4x4(&local_model_matrix_, DirectX::XMMatrixTranspose(result));
 }
 
 #pragma endregion
 
-}; /* SLX */
+
+
+
+}; /* W3D */

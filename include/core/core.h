@@ -1,26 +1,28 @@
-/** Copyright Julio Picardo and Antonio Diaz. SouthBros 2017-18, all rights reserved.
- *
- *  @project SilverLynx
- *  @authors Julio Marcelo Picardo <picardope@esat-alumni.com>
- *           Antonio Diaz <antoniozero@outlook.com>
- *
- */
+/** Copyright Julio Picardo 2017-18, all rights reserved.
+*
+*  @project Wolfy3D
+*  @authors Julio Marcelo Picardo <juliomarcelopicardo@gmail.com>
+*
+*/
 
-#ifndef __SILVERLYNX_CORE_H__
-#define __SILVERLYNX_CORE_H__ 1
+#ifndef __WOLFY3D_CORE_H__
+#define __WOLFY3D_CORE_H__ 1
 
-#include "silverlynx.h"
-#include "window.h"
-#include "d3d.h"
+#include "Wolfy3D.h"
+#include "directx.h"
 #include <stdio.h>
-#include "core/camera.h"
-#include "core/material.h"
-#include "core/geometry.h"
+#include <list>
+#include "core/cam.h"
+#include "core/wnd.h"
+#include "core/super_material.h"
+#include "core/geo.h"
 #include "core/texture.h"
 #include "core/input.h"
+#include "core/super_sprite.h"
+#include "Wolfy3D/geometry.h"
 
 
-namespace SLX {
+namespace W3D {
 
 
 /*******************************************************************************
@@ -52,7 +54,7 @@ struct ChromeDebugger {
 /*******************************************************************************
 ********************************************************************************
 ***                                                                          ***
-***                         SILVERLYNX CORE CLASS                            ***
+***                         WOLFY3D CORE CLASS                            ***
 ***                                                                          ***
 ********************************************************************************
 *******************************************************************************/
@@ -87,7 +89,7 @@ class Core {
 *******************************************************************************/
 
   /// Core Window containing the main application window.
-  CoreWindow window_;
+  Wnd window_;
   /// DirectX11 Framework.
   DirectXFramework d3d_;
   /// Chrome debugger.
@@ -95,15 +97,23 @@ class Core {
   /// Application start time. Used for timestamp purposes.
   uint64 start_time_;
   /// Main application camera.
-  CoreCamera cam_;
+  Cam cam_;
   /// Application input module.
   CoreInput input_;
   /// Default texture to be assigned to uninitialized 3DComponents.
-  CoreTexture error_texture_;
+  Texture2D error_texture_;
   /// Default geometry to be assigned to uninitialized 3DComponents.
-  CoreGeometry error_geometry_;
+  Geometry error_geometry_;
+  /// Default quad geometry to be used with the sprites.
+  Geometry base_quad_geometry_;
+  /// Super sprite used to render all the sprites.
+  SuperSprite super_sprite_;
   /// Super material used to render all the objects.
   SuperMaterial super_material_;
+  /// Geometry factory list, where we will allocate all the geometries used.
+  std::vector<Geo*> geometry_factory_;
+  /// Texture factory list, where we will allocate all the textures used.
+  std::vector<Texture*> texture_factory_;
 
 /*******************************************************************************
 ***                         Private Copy Constructor                         ***
@@ -114,6 +124,6 @@ class Core {
 
 }; /* CORE */
 
-}; /* SLX */
+}; /* W3D */
 
 #endif

@@ -1,32 +1,37 @@
-﻿/** Copyright Julio Picardo and Antonio Diaz. SouthBros 2017-18, all rights reserved.
+﻿/** Copyright Julio Picardo 2017-18, all rights reserved.
 *
-*  @project SilverLynx
-*  @authors Julio Marcelo Picardo <picardope@esat-alumni.com>
-*           Antonio Diaz <antoniozero@outlook.com>
+*  @project Wolfy3D
+*  @authors Julio Marcelo Picardo <juliomarcelopicardo@gmail.com>
 *
 */
 
-#include "SilverLynx/globals.h"
+#include "Wolfy3D/globals.h"
 #include "core/texture.h"
-#include "core/d3d.h"
+#include "core/directx.h"
 #include "core/core.h"
 #include "D3D11.h"
 
-namespace SLX {
+namespace W3D {
 
   
 /*******************************************************************************
 ***                        Constructor and destructor                        ***
 *******************************************************************************/
 
-CoreTexture::CoreTexture() {
+Texture::Texture() {
   texture_handle_ = nullptr;
+  sampler_state_ = nullptr;
+  name_ = "";
 }
 
-CoreTexture::~CoreTexture() {
+Texture::~Texture() {
   if (texture_handle_) {
     texture_handle_->Release();
     texture_handle_ = nullptr;
+  }
+  if (sampler_state_) {
+    sampler_state_->Release();
+    sampler_state_ = nullptr;
   }
 }
 
@@ -34,7 +39,7 @@ CoreTexture::~CoreTexture() {
 ***                               Public methods                             ***
 *******************************************************************************/
 
-bool CoreTexture::load(const char* texture_path) {
+bool Texture::initFromFile(const char* texture_path) {
 
   HRESULT result;
 
@@ -45,21 +50,51 @@ bool CoreTexture::load(const char* texture_path) {
                                                   &texture_handle_, 
                                                   NULL);
 
+  auto& core = Core::instance();
   if (FAILED(result)) {
     MessageBox(NULL, "Error loading texture", "ERROR", MB_OK);
+    uint32 id = core.error_texture_.id();
     return false;
   }
 
+  D3D11_SAMPLER_DESC sampler_description;
+  sampler_description.Filter = D3D11_FILTER_MIN_MAG_MIP_LINEAR;
+  sampler_description.AddressU = D3D11_TEXTURE_ADDRESS_WRAP;
+  sampler_description.AddressV = D3D11_TEXTURE_ADDRESS_WRAP;
+  sampler_description.AddressW = D3D11_TEXTURE_ADDRESS_WRAP;
+  sampler_description.MipLODBias = 0.0f;
+  sampler_description.MaxAnisotropy = 1;
+  sampler_description.ComparisonFunc = D3D11_COMPARISON_ALWAYS;
+  sampler_description.BorderColor[0] = 0;
+  sampler_description.BorderColor[1] = 0;
+  sampler_description.BorderColor[2] = 0;
+  sampler_description.BorderColor[3] = 0;
+  sampler_description.MinLOD = 0;
+  sampler_description.MaxLOD = D3D11_FLOAT32_MAX;
+
+  // Create the texture sampler state.
+  result = core.d3d_.device()->CreateSamplerState(&sampler_description, &sampler_state_);
+  
+  if (FAILED(result)) {
+    MessageBox(NULL, "Error sampling texture", "ERROR", MB_OK);
+    uint32 id = core.error_texture_.id();
+    return false;
+  }
+
+  name_ = texture_path;
   return true;
 }
 
-void CoreTexture::use(const uint32 texture_slot, const bool pixel_shader_access) {
+void Texture::use(const uint32 texture_slot, const bool pixel_shader_access) {
   if (texture_handle_) {
+    auto* dev_context = Core::instance().d3d_.deviceContext();
     if (pixel_shader_access) {
-      Core::instance().d3d_.deviceContext()->PSSetShaderResources(texture_slot, 1, &texture_handle_);
+      dev_context->PSSetShaderResources(texture_slot, 1, &texture_handle_);
+      dev_context->PSSetSamplers(0, 1, &sampler_state_);
     }
     else {
-      Core::instance().d3d_.deviceContext()->VSSetShaderResources(texture_slot, 1, &texture_handle_);
+      dev_context->VSSetShaderResources(texture_slot, 1, &texture_handle_);
+      dev_context->VSSetSamplers(0, 1, &sampler_state_);
     }
   }
   else {
@@ -70,4 +105,4 @@ void CoreTexture::use(const uint32 texture_slot, const bool pixel_shader_access)
 
 
 
-}; /* SLX */
+}; /* W3D */

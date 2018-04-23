@@ -1,19 +1,18 @@
-/** Copyright Julio Picardo and Antonio Diaz. SouthBros 2017-18, all rights reserved.
+/** Copyright Julio Picardo 2017-18, all rights reserved.
 *
-*  @project SilverLynx
-*  @authors Julio Marcelo Picardo <picardope@esat-alumni.com>
-*           Antonio Diaz <antoniozero@outlook.com>
+*  @project Wolfy3D
+*  @authors Julio Marcelo Picardo <juliomarcelopicardo@gmail.com>
 *
 */
 
 #ifndef __CORE_INPUT_H__
 #define __CORE_INPUT_H__ 1
 
-#include "SilverLynx/globals.h"
-#include "SilverLynx/input.h"
+#include "Wolfy3D/globals.h"
+#include "Wolfy3D/input.h"
 #include "DirectXMath.h"
 
-namespace SLX {
+namespace W3D {
 
 const int32 kNumMouseButtons = 3;
 
@@ -79,6 +78,13 @@ class CoreInput {
   /// @brief  Refresh all the buttons up setting their UP state to false.
   ///--------------------------------------------------------------------------
   void refreshButtonsUp();
+
+  ///--------------------------------------------------------------------------
+  /// @fn   refreshButtonsDown();
+  ///
+  /// @brief  Refresh all the buttons down setting their Down state to false.
+  ///--------------------------------------------------------------------------
+  void refreshButtonsDown();
 
   ///--------------------------------------------------------------------------
   /// @fn   checkCursorPosition();
@@ -162,6 +168,14 @@ class CoreInput {
   ButtonStatus keyboard_Q_button_;
   /// Keyboard E button status.
   ButtonStatus keyboard_E_button_;
+  /// Keyboard C button status.
+  ButtonStatus keyboard_C_button_;
+  /// Keyboard F button status.
+  ButtonStatus keyboard_F_button_;
+  /// Keyboard O button status.
+  ButtonStatus keyboard_O_button_;
+  /// Keyboard P button status.
+  ButtonStatus keyboard_P_button_;
   /// Keyboard Tab button status.
   ButtonStatus keyboard_Tab_button_;
   /// Keyboard SpaceBar button status.
@@ -176,6 +190,10 @@ class CoreInput {
   ButtonStatus keyboard_Right_button_;
   /// Keyboard Escape button status.
   ButtonStatus keyboard_Escape_button_;
+  /// Keyboard Enter button status.
+  ButtonStatus keyboard_Enter_button_;
+  /// Keyboard Number button status
+  ButtonStatus keyboard_Number_button_[10];
   /// Mouse wheel status
   float mouse_wheel_;
   /// Mouse cursor position.
@@ -196,6 +214,6 @@ private:
 
 }; /* INPUTMANAGER */
 
-}; /* SLX */
+}; /* W3D */
 
 #endif

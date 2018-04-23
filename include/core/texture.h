@@ -1,20 +1,20 @@
-/** Copyright Julio Picardo and Antonio Diaz. SouthBros 2017-18, all rights reserved.
+/** Copyright Julio Picardo 2017-18, all rights reserved.
 *
-*  @project SilverLynx
-*  @authors Julio Marcelo Picardo <picardope@esat-alumni.com>
-*           Antonio Diaz <antoniozero@outlook.com>
+*  @project Wolfy3D
+*  @authors Julio Marcelo Picardo <juliomarcelopicardo@gmail.com>
 *
 */
 
 #ifndef __TEXTURE_H__
 #define __TEXTURE_H__ 1
 
-#include "silverlynx.h"
+#include "Wolfy3D.h"
 #include "D3DX11.h"
+#include <string>
 
-namespace SLX {
+namespace W3D {
 
-class CoreTexture {
+class Texture {
 
  public:
 
@@ -23,22 +23,22 @@ class CoreTexture {
 *******************************************************************************/
 
   /// Default class constructor.
-  CoreTexture();
+  Texture();
 
   /// Default class destructor.
-  ~CoreTexture();
+  ~Texture();
 
 /*******************************************************************************
 ***                               Public methods                             ***
 *******************************************************************************/
 
   ///--------------------------------------------------------------------------
-  /// @fn   bool load(const char* texture_path);
+  /// @fn   bool initFromFile(const char* texture_path);
   ///
   /// @brief  Loads a texture froma a file.
   /// @return true if successfully initialized, false otherwise.
   ///--------------------------------------------------------------------------
-  bool load(const char* texture_path);
+  bool initFromFile(const char* texture_path);
 
   ///--------------------------------------------------------------------------
   /// @fn   use(const uint32 texture_slot);
@@ -54,10 +54,11 @@ class CoreTexture {
 *******************************************************************************/
   /// Texture handle.
   ID3D11ShaderResourceView* texture_handle_;
+  /// Texture sampler.
+  ID3D11SamplerState* sampler_state_;
+  /// Name, file path.
+  std::string name_;
 
-/*******************************************************************************
-***                           Private                                        ***
-*******************************************************************************/
 
  private:
 
@@ -72,8 +73,8 @@ class CoreTexture {
 
 
 
-}; /* CoreTexture */
+}; /* Texture */
 
-}; /* SLX */
+}; /* W3D */
 
 #endif

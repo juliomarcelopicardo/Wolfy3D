@@ -1,10 +1,9 @@
 -- GENIe solution to build the project.
 -- Julio Marcelo Picardo <juliomarcelopicardo@gmail.com>
--- Antonio Diaz <antoniozero@outlook.com>
 
 PROJ_DIR = path.getabsolute("../")
 
-solution "SilverLynx_Solution"
+solution "Wolfy3D_Solution"
   configurations {
     "Release",
     "Debug",
@@ -22,7 +21,7 @@ solution "SilverLynx_Solution"
 			"d3dx10"
   	}
     defines {
-      "DEBUGUEA_PREMOH"
+      "DEBUG_MODE"
 	  }
 
   configuration "Release"
@@ -34,7 +33,7 @@ solution "SilverLynx_Solution"
 			"d3dx10"
   	}
     defines {
-      "DEJATE_DE_DEBUGUEOS"
+      "RELEASE_MODE"
 	  }
 
   configuration "x32"
@@ -43,7 +42,7 @@ solution "SilverLynx_Solution"
   configuration "x64"
     libdirs     { "$(DXSDK_DIR)Lib/x64" }
 
-project "SilverLynx"
+project "Wolfy3D"
   kind "staticlib"
   language "C++"
 
@@ -52,20 +51,23 @@ project "SilverLynx"
     "$(DXSDK_DIR)Include",
     path.join(PROJ_DIR, "include/"),
 	  path.join(PROJ_DIR, "external/"),
-	  path.join(PROJ_DIR, "external/imgui/")
+    path.join(PROJ_DIR, "external/imgui/"),
+    path.join(PROJ_DIR, "external/tinyxml2/")
   }
 
   files {
     path.join(PROJ_DIR, "src/*.cc"),
     path.join(PROJ_DIR, "src/core/*.cc"),
-    path.join(PROJ_DIR, "src/SilverLynx/*.cc"),
-	path.join(PROJ_DIR, "src/core/components/*.cc"),
+    path.join(PROJ_DIR, "src/Wolfy3D/*.cc"),
+	  path.join(PROJ_DIR, "src/core/components/*.cc"),
     path.join(PROJ_DIR, "include/*.h"),
     path.join(PROJ_DIR, "include/core/*.h"),
-    path.join(PROJ_DIR, "include/SilverLynx/*.h"),
-	path.join(PROJ_DIR, "include/core/components/*.h"),
-	path.join(PROJ_DIR, "external/imgui/*.cpp"),
-	path.join(PROJ_DIR, "external/imgui/*.h"),
+    path.join(PROJ_DIR, "include/Wolfy3D/*.h"),
+	  path.join(PROJ_DIR, "include/core/components/*.h"),
+	  path.join(PROJ_DIR, "external/imgui/*.cpp"),
+    path.join(PROJ_DIR, "external/imgui/*.h"),
+    path.join(PROJ_DIR, "external/tinyxml2/*.cpp"),
+	  path.join(PROJ_DIR, "external/tinyxml2/*.h"),
     path.join(PROJ_DIR, "data/**.**"),
   }
 
@@ -73,20 +75,20 @@ project "SilverLynx"
     targetdir ("../bin/")
     links {
 	    "dxgi",
-		"d3d11",
-		"d3dx11",
-		"d3dx10",
-		"d3dcompiler"
+      "d3d11",
+      "d3dx11",
+      "d3dx10",
+      "d3dcompiler"
 	  }
 
   configuration "Release"
     targetdir ("../bin/")
   	links {
-  	    "dxgi",
-		"d3d11",
-		"d3dx11",
-		"d3dx10",
-		"d3dcompiler"
+  	  "dxgi",
+      "d3d11",
+      "d3dx11",
+      "d3dx10",
+      "d3dcompiler"
   	}
 
 -- Function to generate the different mains or projects.
@@ -98,17 +100,17 @@ function GenerateProject(name)
 
   includedirs {
     "$(DXSDK_DIR)Include",
-	path.join(PROJ_DIR, "external/"),
+	  path.join(PROJ_DIR, "external/"),
     path.join(PROJ_DIR, "include/"),
     path.join(PROJ_DIR, "src/"),
-	path.join(PROJ_DIR, "examples/"..name.."/include/")
+	  path.join(PROJ_DIR, "examples/"..name.."/include/")
   }
 
   files {
     path.join(PROJ_DIR, "data/"..name.."/*.*"),
     path.join(PROJ_DIR, "examples/"..name.."/*.*"),
-	path.join(PROJ_DIR, "examples/"..name.."/src/*.*"),
-	path.join(PROJ_DIR, "examples/"..name.."/include/*.*"),
+	  path.join(PROJ_DIR, "examples/"..name.."/src/*.*"),
+	  path.join(PROJ_DIR, "examples/"..name.."/include/*.*"),
   }
 
   configuration "Debug"
@@ -118,7 +120,7 @@ function GenerateProject(name)
 			"d3d11",
 			"d3dx11",
 			"d3dx10",
-			"SilverLynx",
+			"Wolfy3D",
 	  	"d3dcompiler"
 	  }
 
@@ -129,20 +131,12 @@ function GenerateProject(name)
 			"d3d11",
 			"d3dx11",
 			"d3dx10",
-			"SilverLynx",
+			"Wolfy3D",
 	  	"d3dcompiler"
   	}
---[[
-
-  configuration "x32"
-    libdirs     { "$(DXSDK_DIR)Lib/x86" }
-
-  configuration "x64"
-    libdirs     { "$(DXSDK_DIR)Lib/x64" }
-]]
 
 end
 
 -- PROJECTS
-GenerateProject("01_InitWindow")
-GenerateProject("02_Assignment_01")
+GenerateProject("00_Testing")
+GenerateProject("01_Assignment")

@@ -51,3 +51,5 @@ build/obj/
 *.db
 
 build/chrome_debugger\.json
+
+build/\.vs/Wolfy3D_Solution/v14/
